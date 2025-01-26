@@ -29,7 +29,7 @@ class ActiveWorkout extends StatelessWidget {
                 ),
                 Spacer(),
                 IconButton(
-                  onPressed: () => workoutState.toggleWorkoutFocused(),
+                  onPressed: () => workoutState.setWorkoutFocused(false),
                   icon: Icon(
                     Icons.close_outlined,
                   ),
@@ -38,8 +38,8 @@ class ActiveWorkout extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  workoutState.toggleActiveWorkout();
-                  workoutState.toggleWorkoutFocused();
+                  workoutState.setActiveWorkout(false);
+                  workoutState.setWorkoutFocused(false);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.withAlpha(150)),
