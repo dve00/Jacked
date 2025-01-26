@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/main.dart';
+import 'package:jacked/jacked_home_page.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({

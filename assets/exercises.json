@@ -1,0 +1,31 @@
+[
+    {
+        "id": 1,
+        "name": "Bench Press",
+        "description": "Chest Exercise"
+    },
+    {
+        "id": 2,
+        "name": "Lat-Pulldown",
+        "description": "Back Exercise"
+    },
+    {
+        "id": 3,
+        "name": "Overhead Press",
+        "description": "Shoulder Exercise"
+    },
+    {
+        "id": 4,
+        "name": "Seated Row",
+        "description": "Back Exercise"
+    },
+    {
+        "id": 5,
+        "name": "Custom Exercise w/o description"
+    },
+    {
+        "id": 6,
+        "name": "Back Squat",
+        "description": "Leg Exercise"
+    }
+]
