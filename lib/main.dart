@@ -1,13 +1,33 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:jacked/active_workout.dart';
-import 'package:jacked/minimized_active_workout.dart';
-import 'package:jacked/pages/diary_page.dart';
-import 'package:jacked/pages/exercises_page.dart';
-import 'package:jacked/pages/program_page.dart';
-import 'package:jacked/pages/workout_page.dart';
-import 'package:jacked/pages/you_page.dart';
+import 'package:flutter/services.dart';
+import 'package:jacked/database/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jacked/database/repositories.dart';
+import 'package:jacked/database/database.dart';
+import 'package:jacked/jacked_home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.instance.database;
+
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstRun = prefs.getBool('first_run') ?? true;
+  if (isFirstRun) {
+    final jsonString = await rootBundle.loadString('assets/exercises.json');
+    List<dynamic> exerciseData = json.decode(jsonString);
+    final exercises = exerciseData
+        .map((map) => Exercise(
+            exerciseId: map['id'],
+            name: map['name'],
+            description: map['description'],
+            entries: List<ExerciseEntry>.empty()))
+        .toList();
+    final exerciseRepo = ExerciseRepository();
+    await Future.wait(exercises.map((ex) => exerciseRepo.insert(ex)));
+    final exs = await exerciseRepo.getAll();
+    assert(exs.isNotEmpty, "No exercise were inserted");
+  }
   runApp(const MyApp());
 }
 
@@ -25,128 +45,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const JackedHomePage(),
-    );
-  }
-}
-
-class WorkoutState extends InheritedWidget {
-  const WorkoutState(
-      {super.key,
-      required this.activeWorkout,
-      required this.workoutFocused,
-      required this.setActiveWorkout,
-      required this.setWorkoutFocused,
-      required super.child});
-
-  final bool activeWorkout;
-  final bool workoutFocused;
-  final void Function(bool) setActiveWorkout;
-  final void Function(bool) setWorkoutFocused;
-
-  static WorkoutState? maybeOf(BuildContext context) {
-    return context.getInheritedWidgetOfExactType<WorkoutState>();
-  }
-
-  static WorkoutState of(BuildContext context) {
-    final WorkoutState? result = maybeOf(context);
-    assert(result != null, 'No WorkoutState found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(WorkoutState oldWidget) =>
-      activeWorkout != oldWidget.activeWorkout ||
-      workoutFocused != oldWidget.workoutFocused;
-}
-
-class JackedHomePage extends StatefulWidget {
-  const JackedHomePage({super.key});
-
-  @override
-  State<JackedHomePage> createState() => _JackedHomePageState();
-}
-
-class _JackedHomePageState extends State<JackedHomePage> {
-  int currentPageIndex = 0;
-  bool activeWorkout = false;
-  bool workoutFocused = false;
-
-  void setActiveWorkout(bool value) {
-    setState(() {
-      activeWorkout = value;
-    });
-  }
-
-  void setWorkoutFocused(bool value) {
-    setState(() {
-      workoutFocused = value;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return WorkoutState(
-      activeWorkout: activeWorkout,
-      workoutFocused: workoutFocused,
-      setActiveWorkout: setActiveWorkout,
-      setWorkoutFocused: setWorkoutFocused,
-      child: Stack(children: [
-        Scaffold(
-          bottomNavigationBar: NavigationBar(
-              onDestinationSelected: (index) => setState(() {
-                    currentPageIndex = index;
-                  }),
-              selectedIndex: currentPageIndex,
-              destinations: const <Widget>[
-                NavigationDestination(
-                    icon: Icon(Icons.person_2_outlined),
-                    selectedIcon: Icon(Icons.person_2),
-                    label: "You"),
-                NavigationDestination(
-                    icon: Icon(Icons.auto_stories_outlined),
-                    selectedIcon: Icon(Icons.auto_stories),
-                    label: "Diary"),
-                NavigationDestination(
-                    icon: Icon(Icons.add_box_outlined),
-                    selectedIcon: Icon(Icons.add_box),
-                    label: "Workout"),
-                NavigationDestination(
-                    icon: Icon(Icons.edit_calendar_outlined),
-                    selectedIcon: Icon(Icons.edit_calendar),
-                    label: "Program"),
-                NavigationDestination(
-                    icon: Icon(Icons.fitness_center_outlined),
-                    selectedIcon: Icon(Icons.fitness_center),
-                    label: "Exercises")
-              ]),
-          body: <Widget>[
-            YouPage(),
-            DiaryPage(),
-            WorkoutPage(),
-            ProgramPage(),
-            ExercisesPage(),
-          ][currentPageIndex],
-        ),
-        if (activeWorkout && workoutFocused)
-          SafeArea(
-            child: ActiveWorkout(),
-          ),
-        if (activeWorkout && !workoutFocused)
-          Column(
-            children: [
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () => setWorkoutFocused(true),
-                    child: MinimizedActiveWorkout(),
-                  ),
-                ),
-              ),
-            ],
-          )
-      ]),
     );
   }
 }

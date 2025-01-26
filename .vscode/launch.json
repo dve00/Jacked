@@ -1,0 +1,125 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "jacked",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "jacked (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "jacked (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "appbar",
+            "cwd": "samples/appbar",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "appbar (profile mode)",
+            "cwd": "samples/appbar",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "appbar (release mode)",
+            "cwd": "samples/appbar",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "colorscheme",
+            "cwd": "samples/colorscheme",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "colorscheme (profile mode)",
+            "cwd": "samples/colorscheme",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "colorscheme (release mode)",
+            "cwd": "samples/colorscheme",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "floatinactionbutton",
+            "cwd": "samples/floatinactionbutton",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "floatinactionbutton (profile mode)",
+            "cwd": "samples/floatinactionbutton",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "floatinactionbutton (release mode)",
+            "cwd": "samples/floatinactionbutton",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "iconbutton",
+            "cwd": "samples/iconbutton",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "iconbutton (profile mode)",
+            "cwd": "samples/iconbutton",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "iconbutton (release mode)",
+            "cwd": "samples/iconbutton",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "modalbottomsheet",
+            "cwd": "samples/modalbottomsheet",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "modalbottomsheet (profile mode)",
+            "cwd": "samples/modalbottomsheet",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "modalbottomsheet (release mode)",
+            "cwd": "samples/modalbottomsheet",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
