@@ -129,31 +129,4 @@ class _WorkoutPageState extends State<WorkoutPage> {
               : null),
     ]);
   }
-
-  Future<dynamic> showWorkoutForm(BuildContext context) {
-    return showAdaptiveDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Scaffold(
-          body: Stack(
-            children: [
-              // Full screen content
-              Center(child: Text('Full Screen Content')),
-
-              // Close button
-              Positioned(
-                top: 40,
-                right: 16,
-                child: IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      barrierDismissible: false,
-    );
-  }
 }
