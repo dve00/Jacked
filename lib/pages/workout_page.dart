@@ -11,6 +11,14 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
+  var showStartWorkoutCard = false;
+
+  void setShowStartWorkout(bool value) {
+    setState(() {
+      showStartWorkoutCard = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -56,7 +64,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       children: [
                         Text("Program", style: headlineStyle),
                         const Text(
-                            "Next workout and history of the running program live here")
+                            "Next workout and history of the running program live here!")
                       ],
                     ),
                   ),
@@ -66,67 +74,113 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Templates", style: headlineStyle),
-                        const Text("Previews for templates live here")
+                        const Text("Previews for templates live here!")
                       ],
                     ),
                   ),
                 ],
               ),
             ]),
-            if (workoutState.activeWorkout)
-              if (!workoutState.workoutFocused)
-                Column(
-                  children: [
-                    Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () => workoutState.toggleWorkoutFocused(),
-                          child: Card(
-                            color: theme.colorScheme.primaryContainer,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
+            if (showStartWorkoutCard)
+              Column(
+                children: [
+                  Spacer(),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Workout Title"),
+                                  Text(
+                                    "Start workout",
+                                    style: theme.textTheme.headlineMedium,
                                   ),
                                   Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("n/m exercises"),
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "47:25",
-                                      style: TextStyle(
-                                          color: theme
-                                              .colorScheme.onPrimaryContainer),
+                                  IconButton(
+                                    onPressed: () => setShowStartWorkout(false),
+                                    icon: Icon(
+                                      Icons.close_outlined,
                                     ),
                                   )
                                 ],
                               ),
-                            ),
+                              Text("Choose what kind of workout to start."),
+                              Container(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Your Program",
+                                      style: theme.textTheme.headlineSmall,
+                                    ),
+                                    Text(
+                                        "Preview to next program workout lives here!")
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Your Templates",
+                                      style: theme.textTheme.headlineSmall,
+                                    ),
+                                    Text("Preview for templates live here!")
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(top: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Quick Workout",
+                                      style: theme.textTheme.headlineSmall,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: FloatingActionButton.extended(
+                                          elevation: 2,
+                                          onPressed: () {},
+                                          label: Text(
+                                            "Start empty workout",
+                                            style: theme.textTheme.labelLarge,
+                                          ),
+                                          icon: Icon(Icons.add),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
-                )
+                  ),
+                ],
+              )
           ]),
-          floatingActionButton: !workoutState.activeWorkout
-              ? FloatingActionButton(
-                  onPressed: () {
-                    workoutState.toggleActiveWorkout();
-                    workoutState.toggleWorkoutFocused();
-                  },
-                  child: const Icon(Icons.add),
-                )
-              : null),
+          floatingActionButton:
+              (!workoutState.activeWorkout && !showStartWorkoutCard)
+                  ? FloatingActionButton(
+                      onPressed: () => setShowStartWorkout(true),
+                      child: const Icon(Icons.add),
+                    )
+                  : null),
     ]);
   }
 }

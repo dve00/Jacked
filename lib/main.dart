@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/active_workout.dart';
+import 'package:jacked/minimized_active_workout.dart';
 import 'package:jacked/pages/diary_page.dart';
 import 'package:jacked/pages/exercises_page.dart';
 import 'package:jacked/pages/program_page.dart';
@@ -33,14 +34,14 @@ class WorkoutState extends InheritedWidget {
       {super.key,
       required this.activeWorkout,
       required this.workoutFocused,
-      required this.toggleActiveWorkout,
-      required this.toggleWorkoutFocused,
+      required this.setActiveWorkout,
+      required this.setWorkoutFocused,
       required super.child});
 
   final bool activeWorkout;
   final bool workoutFocused;
-  final void Function() toggleActiveWorkout;
-  final void Function() toggleWorkoutFocused;
+  final void Function(bool) setActiveWorkout;
+  final void Function(bool) setWorkoutFocused;
 
   static WorkoutState? maybeOf(BuildContext context) {
     return context.getInheritedWidgetOfExactType<WorkoutState>();
@@ -70,15 +71,15 @@ class _JackedHomePageState extends State<JackedHomePage> {
   bool activeWorkout = false;
   bool workoutFocused = false;
 
-  void toggleActiveWorkout() {
+  void setActiveWorkout(bool value) {
     setState(() {
-      activeWorkout = !activeWorkout;
+      activeWorkout = value;
     });
   }
 
-  void toggleWorkoutFocused() {
+  void setWorkoutFocused(bool value) {
     setState(() {
-      workoutFocused = !workoutFocused;
+      workoutFocused = value;
     });
   }
 
@@ -87,8 +88,8 @@ class _JackedHomePageState extends State<JackedHomePage> {
     return WorkoutState(
       activeWorkout: activeWorkout,
       workoutFocused: workoutFocused,
-      toggleActiveWorkout: toggleActiveWorkout,
-      toggleWorkoutFocused: toggleWorkoutFocused,
+      setActiveWorkout: setActiveWorkout,
+      setWorkoutFocused: setWorkoutFocused,
       child: Stack(children: [
         Scaffold(
           bottomNavigationBar: NavigationBar(
@@ -118,23 +119,32 @@ class _JackedHomePageState extends State<JackedHomePage> {
                     selectedIcon: Icon(Icons.fitness_center),
                     label: "Exercises")
               ]),
-          body: Container(
-            decoration: BoxDecoration(
-              color:
-                  Colors.black.withOpacity(0.2), // Background slightly darker
-            ),
-            child: <Widget>[
-              YouPage(),
-              DiaryPage(),
-              WorkoutPage(),
-              ProgramPage(),
-              ExercisesPage(),
-            ][currentPageIndex],
-          ),
+          body: <Widget>[
+            YouPage(),
+            DiaryPage(),
+            WorkoutPage(),
+            ProgramPage(),
+            ExercisesPage(),
+          ][currentPageIndex],
         ),
         if (activeWorkout && workoutFocused)
           SafeArea(
             child: ActiveWorkout(),
+          ),
+        if (activeWorkout && !workoutFocused)
+          Column(
+            children: [
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () => setWorkoutFocused(true),
+                    child: MinimizedActiveWorkout(),
+                  ),
+                ),
+              ),
+            ],
           )
       ]),
     );
