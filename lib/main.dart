@@ -26,7 +26,7 @@ void main() async {
     final exerciseRepo = ExerciseRepository();
     await Future.wait(exercises.map((ex) => exerciseRepo.insert(ex)));
     final exs = await exerciseRepo.getAll();
-    assert(exs.isNotEmpty, "No exercise were inserted");
+    assert(exs.isNotEmpty, 'No exercise were inserted');
   }
   runApp(const MyApp());
 }

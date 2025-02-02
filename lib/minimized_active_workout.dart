@@ -17,18 +17,18 @@ class MinimizedActiveWorkout extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Workout Title"),
+              child: Text('Workout Title'),
             ),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("n/m exercises"),
+              child: Text('n/m exercises'),
             ),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "47:25",
+                '47:25',
                 style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
               ),
             )

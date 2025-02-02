@@ -79,23 +79,23 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 NavigationDestination(
                     icon: Icon(Icons.person_2_outlined),
                     selectedIcon: Icon(Icons.person_2),
-                    label: "You"),
+                    label: 'You'),
                 NavigationDestination(
                     icon: Icon(Icons.auto_stories_outlined),
                     selectedIcon: Icon(Icons.auto_stories),
-                    label: "Diary"),
+                    label: 'Diary'),
                 NavigationDestination(
                     icon: Icon(Icons.add_box_outlined),
                     selectedIcon: Icon(Icons.add_box),
-                    label: "Workout"),
+                    label: 'Workout'),
                 NavigationDestination(
                     icon: Icon(Icons.edit_calendar_outlined),
                     selectedIcon: Icon(Icons.edit_calendar),
-                    label: "Program"),
+                    label: 'Program'),
                 NavigationDestination(
                     icon: Icon(Icons.fitness_center_outlined),
                     selectedIcon: Icon(Icons.fitness_center),
-                    label: "Exercises")
+                    label: 'Exercises')
               ]),
           body: <Widget>[
             YouPage(),

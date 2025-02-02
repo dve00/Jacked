@@ -8,7 +8,7 @@ class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("Diary")),
+      body: Center(child: Text('Diary')),
     );
   }
 }
