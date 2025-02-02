@@ -22,7 +22,7 @@ class ActiveWorkout extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "Workout Title",
+                    'Workout Title',
                     style: theme.textTheme.headlineMedium?.copyWith(
                         color: theme.colorScheme.onSecondaryContainer),
                   ),
@@ -44,7 +44,7 @@ class ActiveWorkout extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.withAlpha(150)),
                 child: Text(
-                  "Cancel Workout",
+                  'Cancel Wor kout',
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.onSecondary),
                 )),
