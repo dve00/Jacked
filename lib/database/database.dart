@@ -19,9 +19,5 @@ class DatabaseHelper {
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  Future<void> _createDB(Database db, int version) async {
-    return db.execute(
-      'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT NOT NULL, description Text)',
-    );
-  }
+  Future<void> _createDB(Database db, int version) async {}
 }

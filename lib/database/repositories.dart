@@ -4,10 +4,10 @@ import 'package:sqflite/sqflite.dart';
 
 abstract class BaseRepository<T> {
   Future<List<T>> getAll();
-  Future<T?> getById(int id);
+  Future<T?> getById(int exerciseId);
   Future<int> insert(T item);
   Future<bool> update(T item);
-  Future<bool> delete(int id);
+  Future<bool> delete(int exerciseId);
 }
 
 class ExerciseRepository implements BaseRepository<Exercise> {
@@ -22,26 +22,29 @@ class ExerciseRepository implements BaseRepository<Exercise> {
 
     return exerciseMaps.map((map) {
       return Exercise(
-          exerciseId: map['id'] as int,
+          exerciseId: map['exerciseId'] as int,
           name: map['name'] as String,
           entries: List<ExerciseEntry>.empty()); // this is not right
     }).toList();
   }
 
   @override
-  Future<bool> delete(int id) async {
+  Future<bool> delete(int exerciseId) async {
     final db = await _db;
 
-    return await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0;
+    return await db
+            .delete(table, where: 'exerciseId = ?', whereArgs: [exerciseId]) >
+        0;
   }
 
   @override
-  Future<Exercise?> getById(int id) async {
+  Future<Exercise?> getById(int exerciseId) async {
     final db = await _db;
 
-    final maps = await db.query(table, where: 'id = ?', whereArgs: [id]);
+    final maps =
+        await db.query(table, where: 'exerciseId = ?', whereArgs: [exerciseId]);
     return Exercise(
-        exerciseId: maps[0]['id'] as int,
+        exerciseId: maps[0]['exerciseId'] as int,
         name: maps[0] as String,
         entries: List<ExerciseEntry>.empty());
   }
@@ -53,7 +56,7 @@ class ExerciseRepository implements BaseRepository<Exercise> {
     return db.insert(
         table,
         {
-          'id': item.exerciseId,
+          'exerciseId': item.exerciseId,
           'name': item.name,
           'description': item.description,
         },
@@ -67,11 +70,11 @@ class ExerciseRepository implements BaseRepository<Exercise> {
     return await db.update(
             table,
             {
-              'id': item.exerciseId,
+              'exerciseId': item.exerciseId,
               'name': item.name,
               'description': item.description
             },
-            where: 'id = ?',
+            where: 'exerciseId = ?',
             whereArgs: [item.exerciseId]) >
         0;
   }

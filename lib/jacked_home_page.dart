@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/active_workout.dart';
+import 'package:jacked/database/models.dart';
 import 'package:jacked/minimized_active_workout.dart';
 import 'package:jacked/pages/diary_page.dart';
 import 'package:jacked/pages/exercises_page.dart';
@@ -68,63 +69,69 @@ class _JackedHomePageState extends State<JackedHomePage> {
       workoutFocused: workoutFocused,
       setActiveWorkout: setActiveWorkout,
       setWorkoutFocused: setWorkoutFocused,
-      child: Stack(children: [
-        Scaffold(
-          bottomNavigationBar: NavigationBar(
-              onDestinationSelected: (index) => setState(() {
-                    currentPageIndex = index;
-                  }),
-              selectedIndex: currentPageIndex,
-              destinations: const <Widget>[
-                NavigationDestination(
-                    icon: Icon(Icons.person_2_outlined),
-                    selectedIcon: Icon(Icons.person_2),
-                    label: 'You'),
-                NavigationDestination(
-                    icon: Icon(Icons.auto_stories_outlined),
-                    selectedIcon: Icon(Icons.auto_stories),
-                    label: 'Diary'),
-                NavigationDestination(
-                    icon: Icon(Icons.add_box_outlined),
-                    selectedIcon: Icon(Icons.add_box),
-                    label: 'Workout'),
-                NavigationDestination(
-                    icon: Icon(Icons.edit_calendar_outlined),
-                    selectedIcon: Icon(Icons.edit_calendar),
-                    label: 'Program'),
-                NavigationDestination(
-                    icon: Icon(Icons.fitness_center_outlined),
-                    selectedIcon: Icon(Icons.fitness_center),
-                    label: 'Exercises')
-              ]),
-          body: <Widget>[
-            YouPage(),
-            DiaryPage(),
-            WorkoutPage(),
-            ProgramPage(),
-            ExercisesPage(),
-          ][currentPageIndex],
+      child: Scaffold(
+        bottomNavigationBar: NavigationBar(
+          onDestinationSelected: (index) => setState(() {
+            currentPageIndex = index;
+          }),
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+                icon: Icon(Icons.person_2_outlined),
+                selectedIcon: Icon(Icons.person_2),
+                label: 'You'),
+            NavigationDestination(
+                icon: Icon(Icons.auto_stories_outlined),
+                selectedIcon: Icon(Icons.auto_stories),
+                label: 'Diary'),
+            NavigationDestination(
+                icon: Icon(Icons.add_box_outlined),
+                selectedIcon: Icon(Icons.add_box),
+                label: 'Workout'),
+            NavigationDestination(
+                icon: Icon(Icons.edit_calendar_outlined),
+                selectedIcon: Icon(Icons.edit_calendar),
+                label: 'Program'),
+            NavigationDestination(
+                icon: Icon(Icons.fitness_center_outlined),
+                selectedIcon: Icon(Icons.fitness_center),
+                label: 'Exercises')
+          ],
         ),
-        if (activeWorkout && workoutFocused)
-          SafeArea(
-            child: ActiveWorkout(),
-          ),
-        if (activeWorkout && !workoutFocused)
-          Column(
-            children: [
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () => setWorkoutFocused(true),
-                    child: MinimizedActiveWorkout(),
-                  ),
+        body: Stack(
+          children: [
+            <Widget>[
+              YouPage(),
+              DiaryPage(),
+              WorkoutPage(),
+              ProgramPage(),
+              ExercisesPage(),
+            ][currentPageIndex],
+            if (activeWorkout && workoutFocused)
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ActiveWorkout(),
                 ),
               ),
-            ],
-          )
-      ]),
+            if (activeWorkout && !workoutFocused)
+              Column(
+                children: [
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () => setWorkoutFocused(true),
+                        child: MinimizedActiveWorkout(),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          ],
+        ),
+      ),
     );
   }
 }

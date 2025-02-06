@@ -153,7 +153,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         width: double.infinity,
                                         child: FloatingActionButton.extended(
                                           elevation: 2,
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            workoutState.setActiveWorkout(true);
+                                            workoutState
+                                                .setWorkoutFocused(true);
+                                          },
                                           label: Text(
                                             'Start empty workout',
                                             style: theme.textTheme.labelLarge,
