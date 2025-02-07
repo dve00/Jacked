@@ -24,7 +24,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     final theme = Theme.of(context);
     final displayStyle = theme.textTheme.displaySmall;
     final headlineStyle = theme.textTheme.headlineMedium;
-    final workoutState = WorkoutState.of(context);
+    final workoutState = ActiveWorkoutDisplayState.of(context);
 
     return Stack(children: [
       Scaffold(
@@ -154,9 +154,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         child: FloatingActionButton.extended(
                                           elevation: 2,
                                           onPressed: () {
-                                            workoutState.setActiveWorkout(true);
                                             workoutState
-                                                .setWorkoutFocused(true);
+                                                .setHasActiveWorkout(true);
+                                            workoutState
+                                                .setIsWorkoutFocused(true);
                                           },
                                           label: Text(
                                             'Start empty workout',
@@ -179,7 +180,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               )
           ]),
           floatingActionButton:
-              (!workoutState.activeWorkout && !showStartWorkoutCard)
+              (!workoutState.hasActiveWorkout && !showStartWorkoutCard)
                   ? FloatingActionButton(
                       onPressed: () => setShowStartWorkout(true),
                       child: const Icon(Icons.add),
