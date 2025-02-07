@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/jacked_home_page.dart';
 
-import 'database/models.dart';
-
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({
     super.key,
