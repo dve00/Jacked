@@ -42,27 +42,13 @@ class _ExercisesPageState extends State<ExercisesPage> {
             ),
           ],
         ),
-        body: FutureBuilder(
-            future: ExerciseRepository().getAll(),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<Exercise>> asyncSnapshot) {
-              if (!asyncSnapshot.hasData) return const SizedBox();
-              return ListView.separated(
-                  itemBuilder: (context, index) {
-                    final exercise = asyncSnapshot.data![index];
-                    return ListTile(
-                      title: Text(exercise.name),
-                      onTap: () => setState(() {
-                        selectedExercise = exercise;
-                      }),
-                    );
-                  },
-                  separatorBuilder: (context, index) => Divider(
-                        indent: 10,
-                        endIndent: 10,
-                      ),
-                  itemCount: asyncSnapshot.data!.length);
-            }),
+        body: ExerciseList(
+          onSelectedExercise: (exercise) {
+            setState(() {
+              selectedExercise = exercise;
+            });
+          },
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: const Icon(Icons.add),
@@ -78,6 +64,51 @@ class _ExercisesPageState extends State<ExercisesPage> {
           ),
         )
     ]);
+  }
+}
+
+class ExerciseList extends StatelessWidget {
+  final void Function(Exercise?) onSelectedExercise;
+
+  const ExerciseList({super.key, required this.onSelectedExercise});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: ExerciseRepository().getAll(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<Exercise>> asyncSnapshot) {
+          if (!asyncSnapshot.hasData) return const SizedBox();
+          return ListView.separated(
+              itemBuilder: (context, index) {
+                final exercise = asyncSnapshot.data![index];
+                return ExerciseListItem(
+                  exercise: exercise,
+                  onSelectedExercise: onSelectedExercise,
+                );
+              },
+              separatorBuilder: (context, index) => Divider(
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+              itemCount: asyncSnapshot.data!.length);
+        });
+  }
+}
+
+class ExerciseListItem extends StatelessWidget {
+  final Exercise exercise;
+  final void Function(Exercise?) onSelectedExercise;
+
+  const ExerciseListItem(
+      {super.key, required this.exercise, required this.onSelectedExercise});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(exercise.name),
+      onTap: () => onSelectedExercise(exercise),
+    );
   }
 }
 

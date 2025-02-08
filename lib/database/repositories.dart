@@ -22,9 +22,9 @@ class ExerciseRepository implements BaseRepository<Exercise> {
 
     return exerciseMaps.map((map) {
       return Exercise(
-          exerciseId: map['exerciseId'] as int,
-          name: map['name'] as String,
-          entries: List<ExerciseEntry>.empty()); // this is not right
+        exerciseId: map['exerciseId'] as int,
+        name: map['name'] as String,
+      ); // this is not right
     }).toList();
   }
 
@@ -44,9 +44,9 @@ class ExerciseRepository implements BaseRepository<Exercise> {
     final maps =
         await db.query(table, where: 'exerciseId = ?', whereArgs: [exerciseId]);
     return Exercise(
-        exerciseId: maps[0]['exerciseId'] as int,
-        name: maps[0] as String,
-        entries: List<ExerciseEntry>.empty());
+      exerciseId: maps[0]['exerciseId'] as int,
+      name: maps[0] as String,
+    );
   }
 
   @override

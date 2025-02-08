@@ -35,10 +35,10 @@ void main() async {
     List<dynamic> exerciseData = json.decode(jsonString);
     final exercises = exerciseData
         .map((map) => Exercise(
-            exerciseId: map['exerciseId'],
-            name: map['name'],
-            description: map['description'],
-            entries: List<ExerciseEntry>.empty()))
+              exerciseId: map['exerciseId'],
+              name: map['name'],
+              description: map['description'],
+            ))
         .toList();
     final exerciseRepo = ExerciseRepository();
     await Future.wait(exercises.map((ex) => exerciseRepo.insert(ex)));

@@ -158,6 +158,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                 .setHasActiveWorkout(true);
                                             workoutState
                                                 .setIsWorkoutFocused(true);
+                                            setState(() {
+                                              showStartWorkoutCard = false;
+                                            });
                                           },
                                           label: Text(
                                             'Start empty workout',
