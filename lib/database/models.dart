@@ -38,6 +38,14 @@ class Workout {
     return copWith(exerciseEntries: updatedEntries);
   }
 
+  Workout deleteExerciseEntry(ExerciseEntry exerciseEntry) {
+    final currentEntries = exerciseEntries ?? <ExerciseEntry>[];
+    final updatedEntries =
+        currentEntries.where((entry) => entry != exerciseEntry).toList();
+
+    return copWith(exerciseEntries: updatedEntries);
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -47,8 +55,7 @@ class Workout {
         startTime == other.startTime &&
         stopTime == other.stopTime &&
         description == other.description &&
-        listEquals(
-            exerciseEntries, other.exerciseEntries); // Check List Equality
+        listEquals(exerciseEntries, other.exerciseEntries);
   }
 
   @override
@@ -74,6 +81,18 @@ class ExerciseEntry {
       exercise: exercise,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ExerciseEntry &&
+        exerciseEntryId == other.exerciseEntryId &&
+        listEquals(sets, other.sets) &&
+        exercise == other.exercise;
+  }
+
+  @override
+  get hashCode => Object.hash(exerciseEntryId, Object.hashAll(sets), exercise);
 }
 
 class ExerciseSet {
@@ -96,6 +115,21 @@ class ExerciseSet {
         weight: weight ?? this.weight,
         rpe: rpe ?? this.rpe);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ExerciseSet &&
+        exerciseSetId == other.exerciseSetId &&
+        reps == other.reps &&
+        weight == other.weight &&
+        exerciseEntryId == exerciseEntryId &&
+        rpe == other.rpe;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(exerciseEntryId, reps, weight, exerciseEntryId, rpe);
 }
 
 class Exercise {
@@ -113,4 +147,16 @@ class Exercise {
     return Exercise(
         name: name ?? this.name, description: description ?? this.description);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Exercise &&
+        exerciseId == other.exerciseId &&
+        name == other.name &&
+        description == other.description;
+  }
+
+  @override
+  int get hashCode => Object.hash(exerciseId, name, description);
 }
