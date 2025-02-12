@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/database/models.dart';
 import 'package:jacked/jacked_home_page.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -158,6 +159,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                 .setHasActiveWorkout(true);
                                             workoutState
                                                 .setIsWorkoutFocused(true);
+                                            setState(() {
+                                              showStartWorkoutCard = false;
+                                            });
                                           },
                                           label: Text(
                                             'Start empty workout',
@@ -179,13 +183,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ],
               )
           ]),
-          floatingActionButton:
-              (!workoutState.hasActiveWorkout && !showStartWorkoutCard)
-                  ? FloatingActionButton(
-                      onPressed: () => setShowStartWorkout(true),
-                      child: const Icon(Icons.add),
-                    )
-                  : null),
+          floatingActionButton: (!workoutState.hasActiveWorkout &&
+                  !showStartWorkoutCard)
+              ? FloatingActionButton(
+                  onPressed: () {
+                    setShowStartWorkout(true);
+                    ActiveWorkoutData.of(context).updateActiveWorkout(Workout(
+                        title: 'New Workout', startTime: DateTime.now()));
+                  },
+                  child: const Icon(Icons.add),
+                )
+              : null),
     ]);
   }
 }
