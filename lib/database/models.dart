@@ -65,20 +65,20 @@ class Workout {
 
 class ExerciseEntry {
   final int? exerciseEntryId;
-  final List<ExerciseSet> sets;
   final Exercise exercise;
+  final List<ExerciseSet> sets;
 
   const ExerciseEntry({
     this.exerciseEntryId,
-    required this.sets,
     required this.exercise,
+    required this.sets,
   });
 
   ExerciseEntry copyWith(List<ExerciseSet>? sets) {
     return ExerciseEntry(
       exerciseEntryId: exerciseEntryId,
-      sets: sets ?? this.sets,
       exercise: exercise,
+      sets: sets ?? this.sets,
     );
   }
 
@@ -99,15 +99,10 @@ class ExerciseSet {
   final int? exerciseSetId;
   final int reps;
   final double weight;
-  final int? exerciseEntryId;
   final int? rpe;
 
   const ExerciseSet(
-      {this.exerciseSetId,
-      required this.reps,
-      required this.weight,
-      this.exerciseEntryId,
-      this.rpe});
+      {this.exerciseSetId, required this.reps, required this.weight, this.rpe});
 
   ExerciseSet copWith(int? reps, double? weight, int? rpe) {
     return ExerciseSet(
@@ -123,13 +118,11 @@ class ExerciseSet {
         exerciseSetId == other.exerciseSetId &&
         reps == other.reps &&
         weight == other.weight &&
-        exerciseEntryId == exerciseEntryId &&
         rpe == other.rpe;
   }
 
   @override
-  int get hashCode =>
-      Object.hash(exerciseEntryId, reps, weight, exerciseEntryId, rpe);
+  int get hashCode => Object.hash(exerciseSetId, reps, weight, rpe);
 }
 
 class Exercise {

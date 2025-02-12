@@ -219,9 +219,11 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             showAddExerciseCard = false;
           }),
           onSelectedExercise: (exercise) {
-            ExerciseEntry newExerciseEntry = ExerciseEntry(
-                sets: List<ExerciseSet>.empty(),
-                exercise: Exercise(name: exercise!.name));
+            ExerciseEntry newExerciseEntry = ExerciseEntry(sets: <ExerciseSet>[
+              ExerciseSet(reps: 0, weight: 0.0),
+              ExerciseSet(reps: 0, weight: 0.0),
+              ExerciseSet(reps: 0, weight: 0.0),
+            ], exercise: Exercise(name: exercise!.name));
             Workout updatedWorkout = activeWorkoutData.activeWorkout
                 .addExerciseEntry(newExerciseEntry);
             activeWorkoutData.updateActiveWorkout(updatedWorkout);
@@ -337,6 +339,62 @@ class ExerciseForm extends StatelessWidget {
       required this.exerciseEntry,
       required this.onDeleteExerciseEntry});
 
+  List<TableRow> _buildSetRow(List<ExerciseSet> items) {
+    int counter = 1;
+    List<TableRow> rows = [
+      TableRow(children: [
+        Center(child: Text('Set')),
+        Center(child: Text('Previous')),
+        Center(child: Text('kg')),
+        Center(child: Text('Reps')),
+        Center(child: Icon(Icons.done, size: 20)),
+      ])
+    ];
+
+    for (var item in items) {
+      rows.add(TableRow(children: [
+        Center(child: Text('${counter++}')),
+        Center(child: Text('tbd')),
+        Center(
+          child: SizedBox(
+            width: 60,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                  border: OutlineInputBorder(),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: 60,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                  border: OutlineInputBorder(),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        Center(child: Icon(Icons.done, size: 20)),
+      ]));
+    }
+    return rows;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -358,28 +416,16 @@ class ExerciseForm extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            children: [
-              Column(
-                children: [const Text('Set')],
-              ),
-              Spacer(),
-              Column(
-                children: [const Text('Previous')],
-              ),
-              Spacer(),
-              Column(
-                children: [const Text('kg')],
-              ),
-              Spacer(),
-              Column(
-                children: [const Text('Reps')],
-              ),
-              Spacer(),
-              Column(
-                children: [Icon(Icons.done)],
-              ),
-            ],
+          Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: IntrinsicColumnWidth(), // Set column
+              1: FlexColumnWidth(1), // Previous column
+              2: FlexColumnWidth(1), // kg column
+              3: FlexColumnWidth(1), // Reps column
+              4: IntrinsicColumnWidth(), // Done icon column - will take minimum width needed
+            },
+            children: _buildSetRow(exerciseEntry.sets),
           )
         ],
       ),
