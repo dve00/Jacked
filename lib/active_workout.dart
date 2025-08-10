@@ -198,7 +198,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           onPressed: () {
                             workoutDisplayState.setHasActiveWorkout(false);
                             workoutDisplayState.setIsWorkoutFocused(false);
-                            // TODO save workout
+                            // TODO: save workout
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green.withAlpha(150)),
@@ -351,7 +351,7 @@ class ExerciseForm extends StatelessWidget {
       ])
     ];
 
-    for (var item in items) {
+    for (var _ in items) {
       rows.add(TableRow(children: [
         Center(child: Text('${counter++}')),
         Center(child: Text('tbd')),
