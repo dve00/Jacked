@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/active_workout.dart';
 import 'package:jacked/database/models.dart';
+import 'package:jacked/l10n/generated/app_localizations.dart';
 import 'package:jacked/minimized_active_workout.dart';
 import 'package:jacked/pages/diary_page.dart';
 import 'package:jacked/pages/exercises_page.dart';
@@ -9,13 +10,14 @@ import 'package:jacked/pages/workout_page.dart';
 import 'package:jacked/pages/you_page.dart';
 
 class ActiveWorkoutDisplayState extends InheritedWidget {
-  const ActiveWorkoutDisplayState(
-      {super.key,
-      required this.hasActiveWorkout,
-      required this.isWorkoutFocused,
-      required this.setHasActiveWorkout,
-      required this.setIsWorkoutFocused,
-      required super.child});
+  const ActiveWorkoutDisplayState({
+    super.key,
+    required this.hasActiveWorkout,
+    required this.isWorkoutFocused,
+    required this.setHasActiveWorkout,
+    required this.setIsWorkoutFocused,
+    required super.child,
+  });
 
   final bool hasActiveWorkout;
   final bool isWorkoutFocused;
@@ -39,11 +41,12 @@ class ActiveWorkoutDisplayState extends InheritedWidget {
 }
 
 class ActiveWorkoutData extends InheritedWidget {
-  const ActiveWorkoutData(
-      {required this.activeWorkout,
-      required this.updateActiveWorkout,
-      super.key,
-      required super.child});
+  const ActiveWorkoutData({
+    required this.activeWorkout,
+    required this.updateActiveWorkout,
+    super.key,
+    required super.child,
+  });
 
   final Workout activeWorkout;
   final void Function(Workout) updateActiveWorkout;
@@ -75,8 +78,10 @@ class _JackedHomePageState extends State<JackedHomePage> {
   bool isWorkoutActive = false;
   bool isWorkoutFocused = false;
 
-  Workout activeWorkout =
-      Workout(title: 'New Workout', startTime: DateTime.now());
+  Workout activeWorkout = Workout(
+    title: 'New Workout',
+    startTime: DateTime.now(),
+  );
 
   void setActiveWorkout(bool value) {
     setState(() {
@@ -106,71 +111,84 @@ class _JackedHomePageState extends State<JackedHomePage> {
       child: ActiveWorkoutData(
         activeWorkout: activeWorkout,
         updateActiveWorkout: updateActiveWorkout,
-        child: Stack(children: [
-          Scaffold(
-            bottomNavigationBar: NavigationBar(
-              onDestinationSelected: (index) => setState(() {
-                currentPageIndex = index;
-              }),
-              selectedIndex: currentPageIndex,
-              destinations: const <Widget>[
-                NavigationDestination(
+        child: Stack(
+          children: [
+            Scaffold(
+              bottomNavigationBar: NavigationBar(
+                onDestinationSelected: (index) => setState(() {
+                  currentPageIndex = index;
+                }),
+                selectedIndex: currentPageIndex,
+                destinations: <Widget>[
+                  NavigationDestination(
                     icon: Icon(Icons.person_2_outlined),
                     selectedIcon: Icon(Icons.person_2),
-                    label: 'You'),
-                NavigationDestination(
+                    label: AppLocalizations.of(context)!.homepage_navbar_you,
+                  ),
+                  NavigationDestination(
                     icon: Icon(Icons.auto_stories_outlined),
                     selectedIcon: Icon(Icons.auto_stories),
-                    label: 'Diary'),
-                NavigationDestination(
+                    label: AppLocalizations.of(context)!.homepage_navbar_diary,
+                  ),
+                  NavigationDestination(
                     icon: Icon(Icons.add_box_outlined),
                     selectedIcon: Icon(Icons.add_box),
-                    label: 'Workout'),
-                NavigationDestination(
+                    label: AppLocalizations.of(
+                      context,
+                    )!.homepage_navbar_workout,
+                  ),
+                  NavigationDestination(
                     icon: Icon(Icons.edit_calendar_outlined),
                     selectedIcon: Icon(Icons.edit_calendar),
-                    label: 'Program'),
-                NavigationDestination(
+                    label: AppLocalizations.of(
+                      context,
+                    )!.homepage_navbar_program,
+                  ),
+                  NavigationDestination(
                     icon: Icon(Icons.fitness_center_outlined),
                     selectedIcon: Icon(Icons.fitness_center),
-                    label: 'Exercises')
-              ],
-            ),
-            body: Stack(
-              children: [
-                <Widget>[
-                  YouPage(),
-                  DiaryPage(),
-                  WorkoutPage(),
-                  ProgramPage(),
-                  ExercisesPage(),
-                ][currentPageIndex],
-                if (isWorkoutActive && !isWorkoutFocused)
-                  Column(
-                    children: [
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () => setWorkoutFocused(true),
-                            child: MinimizedActiveWorkout(),
+                    label: AppLocalizations.of(
+                      context,
+                    )!.homepage_navbar_exercises,
+                  ),
+                ],
+              ),
+              body: Stack(
+                children: [
+                  <Widget>[
+                    YouPage(),
+                    DiaryPage(),
+                    WorkoutPage(),
+                    ProgramPage(),
+                    ExercisesPage(),
+                  ][currentPageIndex],
+                  if (isWorkoutActive && !isWorkoutFocused)
+                    Column(
+                      children: [
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () => setWorkoutFocused(true),
+                              child: MinimizedActiveWorkout(),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-              ],
-            ),
-          ),
-          if (isWorkoutActive && isWorkoutFocused)
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: ActiveWorkout(),
+                      ],
+                    ),
+                ],
               ),
             ),
-        ]),
+            if (isWorkoutActive && isWorkoutFocused)
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ActiveWorkout(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

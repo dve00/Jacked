@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jacked/database/repositories.dart';
 import 'package:jacked/database/database.dart';
 import 'package:jacked/jacked_home_page.dart';
+import 'l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,8 @@ void main() async {
 
   if (isFirstRun) {
     final tableExists = await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'");
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='exercises'",
+    );
 
     if (tableExists.isNotEmpty) {
       // Table exists, so drop it
@@ -34,11 +36,13 @@ void main() async {
     await DatabaseHelper.instance.database;
     List<dynamic> exerciseData = json.decode(jsonString);
     final exercises = exerciseData
-        .map((map) => Exercise(
-              exerciseId: map['exerciseId'],
-              name: map['name'],
-              description: map['description'],
-            ))
+        .map(
+          (map) => Exercise(
+            exerciseId: map['exerciseId'],
+            name: map['name'],
+            description: map['description'],
+          ),
+        )
         .toList();
     final exerciseRepo = ExerciseRepository();
     await Future.wait(exercises.map((ex) => exerciseRepo.insert(ex)));
@@ -57,11 +61,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Jacked',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         useMaterial3: true,
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const JackedHomePage(),
     );
   }
