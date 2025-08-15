@@ -8,40 +8,41 @@ class Workout {
   final String? description;
   final List<ExerciseEntry>? exerciseEntries;
 
-  Workout(
-      {this.workoutId,
-      required this.title,
-      required this.startTime,
-      this.stopTime,
-      this.description,
-      this.exerciseEntries});
+  Workout({
+    this.workoutId,
+    required this.title,
+    required this.startTime,
+    this.stopTime,
+    this.description,
+    this.exerciseEntries,
+  });
 
-  Workout copWith(
-      {String? title,
-      DateTime? stopTime,
-      String? description,
-      List<ExerciseEntry>? exerciseEntries}) {
+  Workout copWith({
+    String? title,
+    DateTime? stopTime,
+    String? description,
+    List<ExerciseEntry>? exerciseEntries,
+  }) {
     return Workout(
-        workoutId: workoutId,
-        title: title ?? this.title,
-        startTime: startTime,
-        stopTime: stopTime ?? this.stopTime,
-        description: description ?? this.description,
-        exerciseEntries: exerciseEntries ?? this.exerciseEntries);
+      workoutId: workoutId,
+      title: title ?? this.title,
+      startTime: startTime,
+      stopTime: stopTime ?? this.stopTime,
+      description: description ?? this.description,
+      exerciseEntries: exerciseEntries ?? this.exerciseEntries,
+    );
   }
 
   Workout addExerciseEntry(ExerciseEntry newEntry) {
     final currentEntries = exerciseEntries ?? <ExerciseEntry>[];
-    final updatedEntries = List<ExerciseEntry>.from(currentEntries)
-      ..add(newEntry);
+    final updatedEntries = List<ExerciseEntry>.from(currentEntries)..add(newEntry);
 
     return copWith(exerciseEntries: updatedEntries);
   }
 
   Workout deleteExerciseEntry(ExerciseEntry exerciseEntry) {
     final currentEntries = exerciseEntries ?? <ExerciseEntry>[];
-    final updatedEntries =
-        currentEntries.where((entry) => entry != exerciseEntry).toList();
+    final updatedEntries = currentEntries.where((entry) => entry != exerciseEntry).toList();
 
     return copWith(exerciseEntries: updatedEntries);
   }
@@ -59,8 +60,14 @@ class Workout {
   }
 
   @override
-  int get hashCode => Object.hash(workoutId, title, startTime, stopTime,
-      description, Object.hashAll(exerciseEntries ?? []));
+  int get hashCode => Object.hash(
+    workoutId,
+    title,
+    startTime,
+    stopTime,
+    description,
+    Object.hashAll(exerciseEntries ?? []),
+  );
 }
 
 class ExerciseEntry {
@@ -92,7 +99,7 @@ class ExerciseEntry {
   }
 
   @override
-  get hashCode => Object.hash(exerciseEntryId, Object.hashAll(sets), exercise);
+  int get hashCode => Object.hash(exerciseEntryId, Object.hashAll(sets), exercise);
 }
 
 class ExerciseSet {
@@ -101,14 +108,19 @@ class ExerciseSet {
   final double weight;
   final int? rpe;
 
-  const ExerciseSet(
-      {this.exerciseSetId, required this.reps, required this.weight, this.rpe});
+  const ExerciseSet({
+    this.exerciseSetId,
+    required this.reps,
+    required this.weight,
+    this.rpe,
+  });
 
   ExerciseSet copWith(int? reps, double? weight, int? rpe) {
     return ExerciseSet(
-        reps: reps ?? this.reps,
-        weight: weight ?? this.weight,
-        rpe: rpe ?? this.rpe);
+      reps: reps ?? this.reps,
+      weight: weight ?? this.weight,
+      rpe: rpe ?? this.rpe,
+    );
   }
 
   @override
@@ -130,15 +142,13 @@ class Exercise {
   final String name;
   final String? description;
 
-  const Exercise({
-    this.exerciseId,
-    required this.name,
-    this.description,
-  });
+  const Exercise({this.exerciseId, required this.name, this.description});
 
   Exercise copyWith(String? name, String? description) {
     return Exercise(
-        name: name ?? this.name, description: description ?? this.description);
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
   }
 
   @override
