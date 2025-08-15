@@ -12,3 +12,4 @@ linter:
     sort_child_properties_last: true
     prefer_interpolation_to_compose_strings: true
     avoid_types_on_closure_parameters: true
+    unnecessary_lambdas: true

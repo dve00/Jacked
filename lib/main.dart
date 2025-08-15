@@ -44,7 +44,7 @@ void main() async {
         )
         .toList();
     final exerciseRepo = ExerciseRepository();
-    await Future.wait(exercises.map((ex) => exerciseRepo.insert(ex)));
+    await Future.wait(exercises.map(exerciseRepo.insert));
     final exs = await exerciseRepo.getAll();
     assert(exs.isNotEmpty, 'No exercise were inserted');
     prefs.setBool(kDebugMode ? isFirstRunDevKey : isFirstRunKey, false);
