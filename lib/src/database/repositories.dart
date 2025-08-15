@@ -1,5 +1,5 @@
-import 'package:jacked/database/database.dart';
-import 'package:jacked/database/models.dart';
+import 'package:jacked/src/database/database.dart';
+import 'package:jacked/src/database/models.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class BaseRepository<T> {

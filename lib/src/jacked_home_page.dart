@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/active_workout.dart';
-import 'package:jacked/database/models.dart';
-import 'package:jacked/l10n/generated/app_localizations.dart';
-import 'package:jacked/minimized_active_workout.dart';
-import 'package:jacked/pages/diary_page.dart';
-import 'package:jacked/pages/exercises_page.dart';
-import 'package:jacked/pages/program_page.dart';
-import 'package:jacked/pages/workout_page.dart';
-import 'package:jacked/pages/you_page.dart';
+import 'package:jacked/src/active_workout.dart';
+import 'package:jacked/src/database/models.dart';
+import 'package:jacked/src/l10n/generated/app_localizations.dart';
+import 'package:jacked/src/minimized_active_workout.dart';
+import 'package:jacked/src/pages/diary_page.dart';
+import 'package:jacked/src/pages/exercises_page.dart';
+import 'package:jacked/src/pages/program_page.dart';
+import 'package:jacked/src/pages/workout_page.dart';
+import 'package:jacked/src/pages/you_page.dart';
 
 class ActiveWorkoutDisplayState extends InheritedWidget {
   const ActiveWorkoutDisplayState({

@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jacked/database/models.dart';
+import 'package:jacked/src/database/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:jacked/database/repositories.dart';
-import 'package:jacked/database/database.dart';
-import 'package:jacked/jacked_home_page.dart';
-import 'l10n/generated/app_localizations.dart';
+import 'package:jacked/src/database/repositories.dart';
+import 'package:jacked/src/database/database.dart';
+import 'package:jacked/src/jacked_home_page.dart';
+import 'src/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

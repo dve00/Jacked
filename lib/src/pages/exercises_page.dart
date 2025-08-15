@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/database/models.dart';
-import 'package:jacked/database/repositories.dart';
+import 'package:jacked/src/database/models.dart';
+import 'package:jacked/src/database/repositories.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({
