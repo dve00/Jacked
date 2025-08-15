@@ -31,7 +31,7 @@ class MinimizedActiveWorkout extends StatelessWidget {
                 '47:25',
                 style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
               ),
-            )
+            ),
           ],
         ),
       ),

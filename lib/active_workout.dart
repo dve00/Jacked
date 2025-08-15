@@ -40,8 +40,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
     final workoutDisplayState = ActiveWorkoutDisplayState.of(context);
     final activeWorkoutData = ActiveWorkoutData.of(context);
 
-    return Stack(children: [
-      Card(
+    return Stack(
+      children: [
+        Card(
           elevation: 10,
           color: theme.colorScheme.secondaryContainer,
           shadowColor: Theme.of(context).colorScheme.shadow,
@@ -54,69 +55,68 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                     slivers: [
                       SliverAppBar(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12.0),
-                                topRight: Radius.circular(12.0))),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12.0),
+                            topRight: Radius.circular(12.0),
+                          ),
+                        ),
                         title: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: isEditingWorkoutTitle
-                                    ? LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          return IntrinsicWidth(
-                                            child: TextField(
-                                              controller: _controller,
-                                              autofocus: true,
-                                              decoration: const InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  contentPadding:
-                                                      EdgeInsets.all(4.0)),
-                                              onChanged: (value) =>
-                                                  setState(() {
-                                                activeWorkoutData
-                                                    .updateActiveWorkout(
-                                                        activeWorkoutData
-                                                            .activeWorkout
-                                                            .copWith(
-                                                                title: value));
-                                              }),
-                                              style:
-                                                  theme.textTheme.displaySmall,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: isEditingWorkoutTitle
+                                  ? LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        return IntrinsicWidth(
+                                          child: TextField(
+                                            controller: _controller,
+                                            autofocus: true,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              contentPadding: EdgeInsets.all(4.0),
                                             ),
-                                          );
-                                        },
-                                      )
-                                    : GestureDetector(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(
-                                            activeWorkoutData
-                                                .activeWorkout.title,
+                                            onChanged: (value) => setState(() {
+                                              activeWorkoutData.updateActiveWorkout(
+                                                activeWorkoutData.activeWorkout.copWith(
+                                                  title: value,
+                                                ),
+                                              );
+                                            }),
                                             style: theme.textTheme.displaySmall,
                                           ),
+                                        );
+                                      },
+                                    )
+                                  : GestureDetector(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          activeWorkoutData.activeWorkout.title,
+                                          style: theme.textTheme.displaySmall,
                                         ),
-                                        onTap: () => setState(() {
-                                          _controller = TextEditingController(
-                                              text: activeWorkoutData
-                                                  .activeWorkout.title);
-                                          isEditingWorkoutTitle = true;
-                                        }),
                                       ),
-                              ),
-                              if (isEditingWorkoutTitle)
-                                IconButton(
-                                  onPressed: () => setState(() {
-                                    setState(() {
-                                      isEditingWorkoutTitle = false;
-                                    });
-                                  }),
-                                  icon: Icon(
-                                    Icons.done_outlined,
-                                  ),
+                                      onTap: () => setState(() {
+                                        _controller = TextEditingController(
+                                          text: activeWorkoutData.activeWorkout.title,
+                                        );
+                                        isEditingWorkoutTitle = true;
+                                      }),
+                                    ),
+                            ),
+                            if (isEditingWorkoutTitle)
+                              IconButton(
+                                onPressed: () => setState(() {
+                                  setState(() {
+                                    isEditingWorkoutTitle = false;
+                                  });
+                                }),
+                                icon: Icon(
+                                  Icons.done_outlined,
                                 ),
-                            ]),
+                              ),
+                          ],
+                        ),
                         pinned: true,
                         floating: true,
                         automaticallyImplyLeading: false,
@@ -126,31 +126,30 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           height: 8,
                         ),
                         shadowColor: Theme.of(context).colorScheme.shadow,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondaryContainer,
+                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                         actions: [
                           IconButton(
-                            onPressed: () =>
-                                workoutDisplayState.setIsWorkoutFocused(false),
+                            onPressed: () => workoutDisplayState.setIsWorkoutFocused(false),
                             icon: Icon(
                               Icons.close_outlined,
                             ),
-                          )
+                          ),
                         ],
                       ),
                       SliverList(
                         delegate: SliverChildListDelegate(
                           activeWorkoutData.activeWorkout.exerciseEntries
-                                  ?.map((exerciseEntry) => ExerciseForm(
-                                        exerciseEntry: exerciseEntry,
-                                        onDeleteExerciseEntry: (exerciseEntry) {
-                                          setState(() {
-                                            showDeleteExerciseEntryCard = true;
-                                          });
-                                          _exerciseEntryToDelete =
-                                              exerciseEntry;
-                                        },
-                                      ))
+                                  ?.map(
+                                    (exerciseEntry) => ExerciseForm(
+                                      exerciseEntry: exerciseEntry,
+                                      onDeleteExerciseEntry: (exerciseEntry) {
+                                        setState(() {
+                                          showDeleteExerciseEntryCard = true;
+                                        });
+                                        _exerciseEntryToDelete = exerciseEntry;
+                                      },
+                                    ),
+                                  )
                                   .toList() ??
                               [],
                         ),
@@ -165,11 +164,13 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary),
+                              backgroundColor: theme.colorScheme.primary,
+                            ),
                             child: Text(
                               'Add Exercise',
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSecondary),
+                                color: theme.colorScheme.onSecondary,
+                              ),
                             ),
                           ),
                         ),
@@ -182,71 +183,81 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   child: Row(
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            workoutDisplayState.setHasActiveWorkout(false);
-                            workoutDisplayState.setIsWorkoutFocused(false);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.withAlpha(150)),
-                          child: Text(
-                            'Cancel Workout',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSecondary),
-                          )),
+                        onPressed: () {
+                          workoutDisplayState.setHasActiveWorkout(false);
+                          workoutDisplayState.setIsWorkoutFocused(false);
+                        },
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red.withAlpha(150)),
+                        child: Text(
+                          'Cancel Workout',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSecondary,
+                          ),
+                        ),
+                      ),
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () {
-                            workoutDisplayState.setHasActiveWorkout(false);
-                            workoutDisplayState.setIsWorkoutFocused(false);
-                            // TODO: save workout
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green.withAlpha(150)),
-                          child: Text(
-                            'Finish',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSecondary),
-                          )),
+                        onPressed: () {
+                          workoutDisplayState.setHasActiveWorkout(false);
+                          workoutDisplayState.setIsWorkoutFocused(false);
+                          // TODO: save workout
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.withAlpha(150),
+                        ),
+                        child: Text(
+                          'Finish',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSecondary,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-          )),
-      if (showAddExerciseCard)
-        AddExerciseCard(
-          onClose: () => setState(() {
-            showAddExerciseCard = false;
-          }),
-          onSelectedExercise: (exercise) {
-            ExerciseEntry newExerciseEntry = ExerciseEntry(sets: <ExerciseSet>[
-              ExerciseSet(reps: 0, weight: 0.0),
-              ExerciseSet(reps: 0, weight: 0.0),
-              ExerciseSet(reps: 0, weight: 0.0),
-            ], exercise: Exercise(name: exercise!.name));
-            Workout updatedWorkout = activeWorkoutData.activeWorkout
-                .addExerciseEntry(newExerciseEntry);
-            activeWorkoutData.updateActiveWorkout(updatedWorkout);
-            setState(() {
-              showAddExerciseCard = false;
-            });
-          },
+          ),
         ),
-      if (showDeleteExerciseEntryCard)
-        DeleteExerciseEntryCard(
-          onKeep: () => setState(() {
-            showDeleteExerciseEntryCard = false;
-          }),
-          onDelete: () {
-            activeWorkoutData.updateActiveWorkout(activeWorkoutData
-                .activeWorkout
-                .deleteExerciseEntry(_exerciseEntryToDelete!));
-            setState(() {
+        if (showAddExerciseCard)
+          AddExerciseCard(
+            onClose: () => setState(() {
+              showAddExerciseCard = false;
+            }),
+            onSelectedExercise: (exercise) {
+              ExerciseEntry newExerciseEntry = ExerciseEntry(
+                sets: <ExerciseSet>[
+                  ExerciseSet(reps: 0, weight: 0.0),
+                  ExerciseSet(reps: 0, weight: 0.0),
+                  ExerciseSet(reps: 0, weight: 0.0),
+                ],
+                exercise: Exercise(name: exercise!.name),
+              );
+              Workout updatedWorkout = activeWorkoutData.activeWorkout.addExerciseEntry(
+                newExerciseEntry,
+              );
+              activeWorkoutData.updateActiveWorkout(updatedWorkout);
+              setState(() {
+                showAddExerciseCard = false;
+              });
+            },
+          ),
+        if (showDeleteExerciseEntryCard)
+          DeleteExerciseEntryCard(
+            onKeep: () => setState(() {
               showDeleteExerciseEntryCard = false;
-            });
-          },
-        )
-    ]);
+            }),
+            onDelete: () {
+              activeWorkoutData.updateActiveWorkout(
+                activeWorkoutData.activeWorkout.deleteExerciseEntry(_exerciseEntryToDelete!),
+              );
+              setState(() {
+                showDeleteExerciseEntryCard = false;
+              });
+            },
+          ),
+      ],
+    );
   }
 }
 
@@ -254,79 +265,72 @@ class DeleteExerciseEntryCard extends StatelessWidget {
   final VoidCallback onKeep;
   final VoidCallback onDelete;
 
-  const DeleteExerciseEntryCard(
-      {super.key, required this.onKeep, required this.onDelete});
+  const DeleteExerciseEntryCard({super.key, required this.onKeep, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Positioned.fill(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: 5.0, sigmaY: 5.0), // Adjust blur intensity
-          child: Container(
-            color: Colors.black
-                .withAlpha(100), // Optional: Add a semi-transparent overlay
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Adjust blur intensity
+            child: Container(
+              color: Colors.black.withAlpha(100), // Optional: Add a semi-transparent overlay
+            ),
           ),
         ),
-      ),
-      Center(
-        child: Padding(
-          padding: const EdgeInsets.all(64.0),
-          child: Card(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            child: IntrinsicHeight(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Are you sure?',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton(
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(64.0),
+            child: Card(
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Are you sure?',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
                             onPressed: onDelete,
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red.withAlpha(150)),
+                              backgroundColor: Colors.red.withAlpha(150),
+                            ),
                             child: Text(
                               'Yes, delete',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary),
-                            )),
-                        Spacer(),
-                        ElevatedButton(
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          ElevatedButton(
                             onPressed: onKeep,
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer),
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            ),
                             child: Text(
                               'Keep',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary),
-                            )),
-                      ],
-                    )
-                  ],
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
@@ -334,63 +338,64 @@ class ExerciseForm extends StatelessWidget {
   final ExerciseEntry exerciseEntry;
   final void Function(ExerciseEntry) onDeleteExerciseEntry;
 
-  const ExerciseForm(
-      {super.key,
-      required this.exerciseEntry,
-      required this.onDeleteExerciseEntry});
+  const ExerciseForm({super.key, required this.exerciseEntry, required this.onDeleteExerciseEntry});
 
   List<TableRow> _buildSetRow(List<ExerciseSet> items) {
     int counter = 1;
     List<TableRow> rows = [
-      TableRow(children: [
-        Center(child: Text('Set')),
-        Center(child: Text('Previous')),
-        Center(child: Text('kg')),
-        Center(child: Text('Reps')),
-        Center(child: Icon(Icons.done, size: 20)),
-      ])
+      TableRow(
+        children: [
+          Center(child: Text('Set')),
+          Center(child: Text('Previous')),
+          Center(child: Text('kg')),
+          Center(child: Text('Reps')),
+          Center(child: Icon(Icons.done, size: 20)),
+        ],
+      ),
     ];
 
     for (var _ in items) {
-      rows.add(TableRow(children: [
-        Center(child: Text('${counter++}')),
-        Center(child: Text('tbd')),
-        Center(
-          child: SizedBox(
-            width: 60,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                  border: OutlineInputBorder(),
+      rows.add(
+        TableRow(
+          children: [
+            Center(child: Text('${counter++}')),
+            Center(child: Text('tbd')),
+            Center(
+              child: SizedBox(
+                width: 60,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                      border: OutlineInputBorder(),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: 60,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                  border: OutlineInputBorder(),
+            Center(
+              child: SizedBox(
+                width: 60,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                      border: OutlineInputBorder(),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
-          ),
+            Center(child: Icon(Icons.done, size: 20)),
+          ],
         ),
-        Center(child: Icon(Icons.done, size: 20)),
-      ]));
+      );
     }
     return rows;
   }
@@ -411,8 +416,9 @@ class ExerciseForm extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 IconButton(
-                    onPressed: () => onDeleteExerciseEntry(exerciseEntry),
-                    icon: Icon(Icons.delete))
+                  onPressed: () => onDeleteExerciseEntry(exerciseEntry),
+                  icon: Icon(Icons.delete),
+                ),
               ],
             ),
           ),
@@ -426,7 +432,7 @@ class ExerciseForm extends StatelessWidget {
               4: IntrinsicColumnWidth(), // Done icon column - will take minimum width needed
             },
             children: _buildSetRow(exerciseEntry.sets),
-          )
+          ),
         ],
       ),
     );
@@ -437,8 +443,7 @@ class AddExerciseCard extends StatelessWidget {
   final VoidCallback onClose;
   final void Function(Exercise?) onSelectedExercise;
 
-  const AddExerciseCard(
-      {super.key, required this.onSelectedExercise, required this.onClose});
+  const AddExerciseCard({super.key, required this.onSelectedExercise, required this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -454,15 +459,13 @@ class AddExerciseCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Text('Select Exercise',
-                        style: Theme.of(context).textTheme.displaySmall),
+                    Text('Select Exercise', style: Theme.of(context).textTheme.displaySmall),
                     Spacer(),
-                    IconButton(onPressed: onClose, icon: Icon(Icons.close))
+                    IconButton(onPressed: onClose, icon: Icon(Icons.close)),
                   ],
                 ),
               ),
-              Expanded(
-                  child: ExerciseList(onSelectedExercise: onSelectedExercise)),
+              Expanded(child: ExerciseList(onSelectedExercise: onSelectedExercise)),
             ],
           ),
         ),

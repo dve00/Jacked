@@ -17,8 +17,7 @@ void main() async {
   const isFirstRunKey = 'first_run';
   const isFirstRunDevKey = 'first_run_dev';
 
-  final isFirstRun =
-      prefs.getBool(kDebugMode ? isFirstRunDevKey : isFirstRunKey) ?? true;
+  final isFirstRun = prefs.getBool(kDebugMode ? isFirstRunDevKey : isFirstRunKey) ?? true;
 
   if (isFirstRun) {
     final tableExists = await db.rawQuery(

@@ -16,54 +16,58 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Exercises'),
-          titleTextStyle: Theme.of(context).textTheme.displaySmall,
-          centerTitle: false,
-          shadowColor: Theme.of(context).colorScheme.shadow,
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.help_outline_outlined,
-              ),
-              onPressed: () => showDialog<String>(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Exercises'),
+            titleTextStyle: Theme.of(context).textTheme.displaySmall,
+            centerTitle: false,
+            shadowColor: Theme.of(context).colorScheme.shadow,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.help_outline_outlined,
+                ),
+                onPressed: () => showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Exercises Page'),
-                        content: const Text('Display help here!'),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'))
-                        ],
-                      )),
-            ),
-          ],
-        ),
-        body: ExerciseList(
-          onSelectedExercise: (exercise) {
-            setState(() {
-              selectedExercise = exercise;
-            });
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
-      ),
-      if (selectedExercise != null)
-        SafeArea(
-          child: ExerciseDetailCard(
-            exercise: selectedExercise!,
-            onClose: () => setState(() {
-              selectedExercise = null;
-            }),
+                    title: const Text('Exercises Page'),
+                    content: const Text('Display help here!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        )
-    ]);
+          body: ExerciseList(
+            onSelectedExercise: (exercise) {
+              setState(() {
+                selectedExercise = exercise;
+              });
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
+        ),
+        if (selectedExercise != null)
+          SafeArea(
+            child: ExerciseDetailCard(
+              exercise: selectedExercise!,
+              onClose: () => setState(() {
+                selectedExercise = null;
+              }),
+            ),
+          ),
+      ],
+    );
   }
 }
 
@@ -75,24 +79,25 @@ class ExerciseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: ExerciseRepository().getAll(),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<Exercise>> asyncSnapshot) {
-          if (!asyncSnapshot.hasData) return const SizedBox();
-          return ListView.separated(
-              itemBuilder: (context, index) {
-                final exercise = asyncSnapshot.data![index];
-                return ExerciseListItem(
-                  exercise: exercise,
-                  onSelectedExercise: onSelectedExercise,
-                );
-              },
-              separatorBuilder: (context, index) => Divider(
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-              itemCount: asyncSnapshot.data!.length);
-        });
+      future: ExerciseRepository().getAll(),
+      builder: (BuildContext context, AsyncSnapshot<List<Exercise>> asyncSnapshot) {
+        if (!asyncSnapshot.hasData) return const SizedBox();
+        return ListView.separated(
+          itemBuilder: (context, index) {
+            final exercise = asyncSnapshot.data![index];
+            return ExerciseListItem(
+              exercise: exercise,
+              onSelectedExercise: onSelectedExercise,
+            );
+          },
+          separatorBuilder: (context, index) => Divider(
+            indent: 10,
+            endIndent: 10,
+          ),
+          itemCount: asyncSnapshot.data!.length,
+        );
+      },
+    );
   }
 }
 
@@ -100,8 +105,7 @@ class ExerciseListItem extends StatelessWidget {
   final Exercise exercise;
   final void Function(Exercise?) onSelectedExercise;
 
-  const ExerciseListItem(
-      {super.key, required this.exercise, required this.onSelectedExercise});
+  const ExerciseListItem({super.key, required this.exercise, required this.onSelectedExercise});
 
   @override
   Widget build(BuildContext context) {
@@ -145,10 +149,10 @@ class ExerciseDetailCard extends StatelessWidget {
                     icon: Icon(
                       Icons.close_outlined,
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

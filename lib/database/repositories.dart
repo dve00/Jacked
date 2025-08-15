@@ -32,17 +32,14 @@ class ExerciseRepository implements BaseRepository<Exercise> {
   Future<bool> delete(int exerciseId) async {
     final db = await _db;
 
-    return await db
-            .delete(table, where: 'exerciseId = ?', whereArgs: [exerciseId]) >
-        0;
+    return await db.delete(table, where: 'exerciseId = ?', whereArgs: [exerciseId]) > 0;
   }
 
   @override
   Future<Exercise?> getById(int exerciseId) async {
     final db = await _db;
 
-    final maps =
-        await db.query(table, where: 'exerciseId = ?', whereArgs: [exerciseId]);
+    final maps = await db.query(table, where: 'exerciseId = ?', whereArgs: [exerciseId]);
     return Exercise(
       exerciseId: maps[0]['exerciseId'] as int,
       name: maps[0] as String,
@@ -53,14 +50,11 @@ class ExerciseRepository implements BaseRepository<Exercise> {
   Future<int> insert(Exercise item) async {
     final db = await _db;
 
-    return db.insert(
-        table,
-        {
-          'exerciseId': item.exerciseId,
-          'name': item.name,
-          'description': item.description,
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return db.insert(table, {
+      'exerciseId': item.exerciseId,
+      'name': item.name,
+      'description': item.description,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
@@ -68,14 +62,11 @@ class ExerciseRepository implements BaseRepository<Exercise> {
     final db = await _db;
 
     return await db.update(
-            table,
-            {
-              'exerciseId': item.exerciseId,
-              'name': item.name,
-              'description': item.description
-            },
-            where: 'exerciseId = ?',
-            whereArgs: [item.exerciseId]) >
+          table,
+          {'exerciseId': item.exerciseId, 'name': item.name, 'description': item.description},
+          where: 'exerciseId = ?',
+          whereArgs: [item.exerciseId],
+        ) >
         0;
   }
 }
