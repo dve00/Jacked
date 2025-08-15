@@ -31,7 +31,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 ),
                 onPressed: () => showDialog<String>(
                   context: context,
-                  builder: (BuildContext context) => AlertDialog(
+                  builder: (context) => AlertDialog(
                     title: const Text('Exercises Page'),
                     content: const Text('Display help here!'),
                     actions: [
@@ -80,7 +80,7 @@ class ExerciseList extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: ExerciseRepository().getAll(),
-      builder: (BuildContext context, AsyncSnapshot<List<Exercise>> asyncSnapshot) {
+      builder: (context, asyncSnapshot) {
         if (!asyncSnapshot.hasData) return const SizedBox();
         return ListView.separated(
           itemBuilder: (context, index) {

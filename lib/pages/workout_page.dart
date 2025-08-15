@@ -42,7 +42,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ),
                 onPressed: () => showDialog<String>(
                   context: context,
-                  builder: (BuildContext context) => AlertDialog(
+                  builder: (context) => AlertDialog(
                     title: const Text('Workout Page'),
                     content: const Text('Display help here!'),
                     actions: [
