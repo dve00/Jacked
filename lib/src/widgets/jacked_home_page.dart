@@ -121,28 +121,28 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 selectedIndex: currentPageIndex,
                 destinations: <Widget>[
                   NavigationDestination(
-                    icon: Icon(Icons.person_2_outlined),
-                    selectedIcon: Icon(Icons.person_2),
+                    icon: const Icon(Icons.person_2_outlined),
+                    selectedIcon: const Icon(Icons.person_2),
                     label: context.l10n.homepage_navbar_you,
                   ),
                   NavigationDestination(
-                    icon: Icon(Icons.auto_stories_outlined),
-                    selectedIcon: Icon(Icons.auto_stories),
+                    icon: const Icon(Icons.auto_stories_outlined),
+                    selectedIcon: const Icon(Icons.auto_stories),
                     label: context.l10n.homepage_navbar_diary,
                   ),
                   NavigationDestination(
-                    icon: Icon(Icons.add_box_outlined),
-                    selectedIcon: Icon(Icons.add_box),
+                    icon: const Icon(Icons.add_box_outlined),
+                    selectedIcon: const Icon(Icons.add_box),
                     label: context.l10n.homepage_navbar_workout,
                   ),
                   NavigationDestination(
-                    icon: Icon(Icons.edit_calendar_outlined),
-                    selectedIcon: Icon(Icons.edit_calendar),
+                    icon: const Icon(Icons.edit_calendar_outlined),
+                    selectedIcon: const Icon(Icons.edit_calendar),
                     label: context.l10n.homepage_navbar_program,
                   ),
                   NavigationDestination(
-                    icon: Icon(Icons.fitness_center_outlined),
-                    selectedIcon: Icon(Icons.fitness_center),
+                    icon: const Icon(Icons.fitness_center_outlined),
+                    selectedIcon: const Icon(Icons.fitness_center),
                     label: context.l10n.homepage_navbar_exercises,
                   ),
                 ],
@@ -150,22 +150,22 @@ class _JackedHomePageState extends State<JackedHomePage> {
               body: Stack(
                 children: [
                   <Widget>[
-                    YouPage(),
-                    DiaryPage(),
-                    WorkoutPage(),
-                    ProgramPage(),
-                    ExercisesPage(),
+                    const YouPage(),
+                    const DiaryPage(),
+                    const WorkoutPage(),
+                    const ProgramPage(),
+                    const ExercisesPage(),
                   ][currentPageIndex],
                   if (isWorkoutActive && !isWorkoutFocused)
                     Column(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
                             child: GestureDetector(
                               onTap: () => setWorkoutFocused(true),
-                              child: MinimizedActiveWorkout(),
+                              child: const MinimizedActiveWorkout(),
                             ),
                           ),
                         ),
@@ -175,9 +175,9 @@ class _JackedHomePageState extends State<JackedHomePage> {
               ),
             ),
             if (isWorkoutActive && isWorkoutFocused)
-              SafeArea(
+              const SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: EdgeInsets.all(4.0),
                   child: ActiveWorkout(),
                 ),
               ),

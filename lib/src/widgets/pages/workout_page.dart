@@ -37,7 +37,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             shadowColor: Theme.of(context).colorScheme.shadow,
             actions: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.help_outline_outlined,
                 ),
                 onPressed: () => showDialog<String>(
@@ -59,7 +59,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           body: Stack(
             children: [
               ListView(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               if (showStartWorkoutCard)
                 Column(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -110,16 +110,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                       'Start workout',
                                       style: theme.textTheme.headlineMedium,
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     IconButton(
                                       onPressed: () => setShowStartWorkout(false),
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.close_outlined,
                                       ),
                                     ),
                                   ],
                                 ),
-                                Text('Choose what kind of workout to start.'),
+                                const Text('Choose what kind of workout to start.'),
                                 Container(
                                   padding: const EdgeInsets.only(top: 16.0),
                                   child: Column(
@@ -129,7 +129,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         'Your Program',
                                         style: theme.textTheme.headlineSmall,
                                       ),
-                                      Text('Preview to next program workout lives here!'),
+                                      const Text('Preview to next program workout lives here!'),
                                     ],
                                   ),
                                 ),
@@ -142,12 +142,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         'Your Templates',
                                         style: theme.textTheme.headlineSmall,
                                       ),
-                                      Text('Preview for templates live here!'),
+                                      const Text('Preview for templates live here!'),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(top: 16.0),
+                                  padding: const EdgeInsets.only(top: 16.0),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -172,7 +172,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                               'Start empty workout',
                                               style: theme.textTheme.labelLarge,
                                             ),
-                                            icon: Icon(Icons.add),
+                                            icon: const Icon(Icons.add),
                                           ),
                                         ),
                                       ),

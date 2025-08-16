@@ -26,7 +26,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
             shadowColor: Theme.of(context).colorScheme.shadow,
             actions: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.help_outline_outlined,
                 ),
                 onPressed: () => showDialog<String>(
@@ -90,7 +90,7 @@ class ExerciseList extends StatelessWidget {
               onSelectedExercise: onSelectedExercise,
             );
           },
-          separatorBuilder: (context, index) => Divider(
+          separatorBuilder: (context, index) => const Divider(
             indent: 10,
             endIndent: 10,
           ),
@@ -142,11 +142,11 @@ class ExerciseDetailCard extends StatelessWidget {
                     exercise.name,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
-                  Spacer(),
-                  Spacer(),
+                  const Spacer(),
+                  const Spacer(),
                   IconButton(
                     onPressed: onClose,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close_outlined,
                     ),
                   ),

@@ -54,7 +54,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   child: CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12.0),
                             topRight: Radius.circular(12.0),
@@ -111,7 +111,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                                     isEditingWorkoutTitle = false;
                                   });
                                 }),
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.done_outlined,
                                 ),
                               ),
@@ -130,7 +130,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         actions: [
                           IconButton(
                             onPressed: () => workoutDisplayState.setIsWorkoutFocused(false),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.close_outlined,
                             ),
                           ),
@@ -195,7 +195,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           ),
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       ElevatedButton(
                         onPressed: () {
                           workoutDisplayState.setHasActiveWorkout(false);
@@ -227,9 +227,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             onSelectedExercise: (exercise) {
               ExerciseEntry newExerciseEntry = ExerciseEntry(
                 sets: <ExerciseSet>[
-                  ExerciseSet(reps: 0, weight: 0.0),
-                  ExerciseSet(reps: 0, weight: 0.0),
-                  ExerciseSet(reps: 0, weight: 0.0),
+                  const ExerciseSet(reps: 0, weight: 0.0),
+                  const ExerciseSet(reps: 0, weight: 0.0),
+                  const ExerciseSet(reps: 0, weight: 0.0),
                 ],
                 exercise: Exercise(name: exercise!.name),
               );
@@ -307,7 +307,7 @@ class DeleteExerciseEntryCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           ElevatedButton(
                             onPressed: onKeep,
                             style: ElevatedButton.styleFrom(
@@ -343,7 +343,7 @@ class ExerciseForm extends StatelessWidget {
   List<TableRow> _buildSetRow(List<ExerciseSet> items) {
     int counter = 1;
     List<TableRow> rows = [
-      TableRow(
+      const TableRow(
         children: [
           Center(child: Text('Set')),
           Center(child: Text('Previous')),
@@ -359,12 +359,12 @@ class ExerciseForm extends StatelessWidget {
         TableRow(
           children: [
             Center(child: Text('${counter++}')),
-            Center(child: Text('tbd')),
-            Center(
+            const Center(child: Text('tbd')),
+            const Center(
               child: SizedBox(
                 width: 60,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+                  padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
                   child: TextField(
                     decoration: InputDecoration(
                       isDense: true,
@@ -376,11 +376,11 @@ class ExerciseForm extends StatelessWidget {
                 ),
               ),
             ),
-            Center(
+            const Center(
               child: SizedBox(
                 width: 60,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+                  padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
                   child: TextField(
                     decoration: InputDecoration(
                       isDense: true,
@@ -392,7 +392,7 @@ class ExerciseForm extends StatelessWidget {
                 ),
               ),
             ),
-            Center(child: Icon(Icons.done, size: 20)),
+            const Center(child: Icon(Icons.done, size: 20)),
           ],
         ),
       );
@@ -417,7 +417,7 @@ class ExerciseForm extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () => onDeleteExerciseEntry(exerciseEntry),
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                 ),
               ],
             ),
@@ -460,8 +460,8 @@ class AddExerciseCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text('Select Exercise', style: Theme.of(context).textTheme.displaySmall),
-                    Spacer(),
-                    IconButton(onPressed: onClose, icon: Icon(Icons.close)),
+                    const Spacer(),
+                    IconButton(onPressed: onClose, icon: const Icon(Icons.close)),
                   ],
                 ),
               ),

@@ -15,16 +15,16 @@ class MinimizedActiveWorkout extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Workout Title'),
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('n/m exercises'),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
