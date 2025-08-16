@@ -16,3 +16,6 @@ linter:
     prefer_const_constructors: true
     prefer_const_literals_to_create_immutables: true
     prefer_const_declarations: true
+    empty_catches: true
+    prefer_foreach: true
+    unnecessary_await_in_return: true
