@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:jacked/src/database/models.dart';
-import 'package:jacked/src/jacked_home_page.dart';
-import 'package:jacked/src/pages/exercises_page.dart';
+import 'package:jacked/src/widgets/jacked_home_page.dart';
+import 'package:jacked/src/widgets/pages/exercises_page.dart';
 
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({

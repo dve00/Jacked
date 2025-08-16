@@ -6,7 +6,7 @@ import 'package:jacked/src/database/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jacked/src/database/repositories.dart';
 import 'package:jacked/src/database/database.dart';
-import 'package:jacked/src/jacked_home_page.dart';
+import 'package:jacked/src/widgets/jacked_home_page.dart';
 import 'src/l10n/generated/app_localizations.dart';
 
 void main() async {
