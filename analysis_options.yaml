@@ -19,3 +19,4 @@ linter:
     empty_catches: true
     prefer_foreach: true
     unnecessary_await_in_return: true
+    use_key_in_widget_constructors: true
