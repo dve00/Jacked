@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/widgets/active_workout.dart';
 import 'package:jacked/src/database/models.dart';
-import 'package:jacked/src/l10n/generated/app_localizations.dart';
 import 'package:jacked/src/widgets/minimized_active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 import 'package:jacked/src/widgets/pages/program_page.dart';
 import 'package:jacked/src/widgets/pages/workout_page.dart';
 import 'package:jacked/src/widgets/pages/you_page.dart';
+import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class ActiveWorkoutDisplayState extends InheritedWidget {
   const ActiveWorkoutDisplayState({
@@ -123,33 +123,27 @@ class _JackedHomePageState extends State<JackedHomePage> {
                   NavigationDestination(
                     icon: Icon(Icons.person_2_outlined),
                     selectedIcon: Icon(Icons.person_2),
-                    label: AppLocalizations.of(context)!.homepage_navbar_you,
+                    label: context.l10n.homepage_navbar_you,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.auto_stories_outlined),
                     selectedIcon: Icon(Icons.auto_stories),
-                    label: AppLocalizations.of(context)!.homepage_navbar_diary,
+                    label: context.l10n.homepage_navbar_diary,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.add_box_outlined),
                     selectedIcon: Icon(Icons.add_box),
-                    label: AppLocalizations.of(
-                      context,
-                    )!.homepage_navbar_workout,
+                    label: context.l10n.homepage_navbar_workout,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.edit_calendar_outlined),
                     selectedIcon: Icon(Icons.edit_calendar),
-                    label: AppLocalizations.of(
-                      context,
-                    )!.homepage_navbar_program,
+                    label: context.l10n.homepage_navbar_program,
                   ),
                   NavigationDestination(
                     icon: Icon(Icons.fitness_center_outlined),
                     selectedIcon: Icon(Icons.fitness_center),
-                    label: AppLocalizations.of(
-                      context,
-                    )!.homepage_navbar_exercises,
+                    label: context.l10n.homepage_navbar_exercises,
                   ),
                 ],
               ),
