@@ -33,6 +33,3 @@ flutter:
 
   # Enables generation of localized strings from arb files
   generate: true
-
-  assets:
-    - assets/exercises.json

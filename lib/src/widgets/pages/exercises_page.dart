@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/database/models.dart';
-import 'package:jacked/src/database/repositories.dart';
+import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({
@@ -79,7 +79,7 @@ class ExerciseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ExerciseRepository().getAll(),
+      future: ExerciseService().getAll(),
       builder: (context, asyncSnapshot) {
         if (!asyncSnapshot.hasData) return const SizedBox();
         return ListView.separated(

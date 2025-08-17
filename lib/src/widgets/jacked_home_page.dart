@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/widgets/active_workout.dart';
-import 'package:jacked/src/database/models.dart';
 import 'package:jacked/src/widgets/minimized_active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
