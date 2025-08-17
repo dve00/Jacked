@@ -1,4 +1,6 @@
-class Exercise {
+import 'package:equatable/equatable.dart';
+
+class Exercise extends Equatable {
   final int? id;
   final String name;
   final String? description;
@@ -13,14 +15,5 @@ class Exercise {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Exercise &&
-        id == other.id &&
-        name == other.name &&
-        description == other.description;
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, description);
+  List<Object?> get props => [id, name, description];
 }
