@@ -20,10 +20,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  sqflite_common_ffi: any
 
   flutter_lints: ^6.0.0
 
@@ -33,6 +35,3 @@ flutter:
 
   # Enables generation of localized strings from arb files
   generate: true
-
-  assets:
-    - assets/exercises.json

@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:jacked/src/database/models.dart';
+import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/exercise_entry.dart';
+import 'package:jacked/src/db/models/exercise_set.dart';
+import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/widgets/jacked_home_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 
