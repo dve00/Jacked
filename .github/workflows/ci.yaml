@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Jacked CI
 
 on:
   push:
