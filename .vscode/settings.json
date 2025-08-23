@@ -1,3 +1,8 @@
 {
-  "arb-editor.suppressedWarnings": ["missing_metadata_for_key"]
+  "arb-editor.suppressedWarnings": ["missing_metadata_for_key"],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.insertSemicolon": "always",
+    "source.fixAll": "always"
+  }
 }

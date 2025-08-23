@@ -4,27 +4,25 @@ import 'package:jacked/src/db/seeds.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import '../../test_config.dart';
+
 void main() {
-  Database? db;
-  late ExerciseService service;
+  late Database db;
+  late ExerciseService svc;
 
-  // Initialize FFI
-  sqfliteFfiInit();
-
-  // Override the global databaseFactory to the ffi one
-  databaseFactory = databaseFactoryFfi;
+  setupTestDatabase();
 
   setUp(() async {
     db = await openDatabase(inMemoryDatabasePath, version: 1, onCreate: onCreate);
-    service = ExerciseService(db: db!);
+    svc = ExerciseService(db: db);
   });
 
   tearDown(() async {
-    await db?.close();
+    await db.close();
   });
 
   test('db is seeded correctly', () async {
-    final exercises = await service.getAll();
-    expect(exercises, containsAll(seedExercises));
+    final exercises = await svc.getAll();
+    expect(exercises, equals(seedExercises));
   });
 }

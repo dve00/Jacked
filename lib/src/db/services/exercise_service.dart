@@ -17,21 +17,21 @@ class ExerciseService {
     }).toList();
   }
 
-  Future<bool> delete(int exerciseId) async {
-    return await db.delete(table, where: 'exerciseId = ?', whereArgs: [exerciseId]) > 0;
+  Future<bool> delete(int id) async {
+    return await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0;
   }
 
-  Future<Exercise?> getById(int exerciseId) async {
-    final maps = await db.query(table, where: 'exerciseId = ?', whereArgs: [exerciseId]);
+  Future<Exercise?> getById(int id) async {
+    final maps = await db.query(table, where: 'id = ?', whereArgs: [id]);
     return Exercise(
-      id: maps[0]['exerciseId'] as int,
+      id: maps[0]['id'] as int,
       name: maps[0] as String,
     );
   }
 
   Future<int> insert(Exercise item) async {
     return db.insert(table, {
-      'exerciseId': item.id,
+      'id': item.id,
       'name': item.name,
       'description': item.description,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -40,8 +40,8 @@ class ExerciseService {
   Future<bool> update(Exercise item) async {
     return await db.update(
           table,
-          {'exerciseId': item.id, 'name': item.name, 'description': item.description},
-          where: 'exerciseId = ?',
+          {'id': item.id, 'name': item.name, 'description': item.description},
+          where: 'id = ?',
           whereArgs: [item.id],
         ) >
         0;
