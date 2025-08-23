@@ -73,11 +73,12 @@ void main() {
       test('insert - success', () async {
         final want = List<Exercise>.from(seedExercises);
         want.add(const Exercise(id: 6, name: 'test exercise'));
-        await svc.insert(const Exercise(name: 'test exercise'));
+        final got = await svc.insert(const Exercise(name: 'test exercise'));
         expect(
           await svc.getAll(),
           equals(want),
         );
+        expect(got, equals(6));
       });
       test('insert - already exists', () async {
         final got = await svc.insert(const Exercise(name: 'Bench Press'));
