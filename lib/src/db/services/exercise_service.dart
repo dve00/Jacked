@@ -8,13 +8,7 @@ class ExerciseService {
   ExerciseService({required this.db});
 
   Future<List<Exercise>> getAll() async {
-    return (await db.query(table)).map((m) {
-      return Exercise(
-        id: m['id'] as int,
-        name: m['name'] as String,
-        description: m['description'] as String,
-      ); // this is not right
-    }).toList();
+    return (await db.query(table)).map(Exercise.fromMap).toList();
   }
 
   Future<bool> delete(int id) async {
@@ -23,18 +17,11 @@ class ExerciseService {
 
   Future<Exercise?> getById(int id) async {
     final maps = await db.query(table, where: 'id = ?', whereArgs: [id]);
-    return Exercise(
-      id: maps[0]['id'] as int,
-      name: maps[0] as String,
-    );
+    return maps.isNotEmpty ? Exercise.fromMap(maps.first) : null;
   }
 
   Future<int> insert(Exercise item) async {
-    return db.insert(table, {
-      'id': item.id,
-      'name': item.name,
-      'description': item.description,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    return db.insert(table, item.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   Future<bool> update(Exercise item) async {

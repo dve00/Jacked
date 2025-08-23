@@ -1,26 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../test_config.dart';
-
-Future<void> _onCreate(Database db, int version) async {
-  await db.execute('''
-    CREATE TABLE Exercises (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      description TEXT
-    );
-  ''');
-  for (final exercise in seedExercises) {
-    await db.execute(
-      'INSERT OR IGNORE INTO Exercises (id, name, description) VALUES (?, ?, ?)',
-      [exercise.id, exercise.name, exercise.description],
-    );
-  }
-}
 
 const seedExercises = <Exercise>[
   Exercise(id: 1, name: 'Bench Press', description: 'Chest'),
@@ -37,7 +22,13 @@ void main() {
   setupTestDatabase();
 
   setUp(() async {
-    db = await openDatabase(inMemoryDatabasePath, version: 1, onCreate: _onCreate);
+    db = await openDatabase(
+      inMemoryDatabasePath,
+      version: 1,
+      onCreate: (db, version) async {
+        await initExercisesTable(db);
+      },
+    );
     svc = ExerciseService(db: db);
   });
 
@@ -65,6 +56,47 @@ void main() {
           await svc.getAll(),
           equals(seedExercises),
         );
+        expect(got, equals(false));
+      });
+    });
+
+    group('getById', () {
+      test('getById - success', () async {
+        expect(await svc.getById(1), equals(seedExercises[0]));
+      });
+      test('getById - nothing found', () async {
+        expect(await svc.getById(999), equals(null));
+      });
+    });
+
+    group('insert', () {
+      test('insert - success', () async {
+        final want = List<Exercise>.from(seedExercises);
+        want.add(const Exercise(id: 6, name: 'test exercise'));
+        await svc.insert(const Exercise(name: 'test exercise'));
+        expect(
+          await svc.getAll(),
+          equals(want),
+        );
+      });
+      test('insert - already exists', () async {
+        final got = await svc.insert(const Exercise(name: 'Bench Press'));
+        expect(got, equals(0));
+        expect(await svc.getAll(), equals(seedExercises));
+      });
+    });
+
+    group('update', () {
+      test('update - success', () async {
+        const update = Exercise(id: 1, name: 'Bench Press 2', description: 'new description');
+        final got = await svc.update(update);
+        expect(await svc.getAll(), equals([update, ...seedExercises.slice(1)]));
+        expect(got, equals(true));
+      });
+      test('update - nothing updated', () async {
+        const update = Exercise(id: 999, name: 'Bench Press 2', description: 'new description');
+        final got = await svc.update(update);
+        expect(await svc.getAll(), equals(seedExercises));
         expect(got, equals(false));
       });
     });

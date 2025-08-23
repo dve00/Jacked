@@ -14,6 +14,22 @@ class Exercise extends Equatable {
     );
   }
 
+  factory Exercise.fromMap(Map<String, Object?> map) {
+    return Exercise(
+      id: map['id'] as int,
+      name: map['name'] as String,
+      description: map['description'] as String?,
+    );
+  }
+
+  Map<String, Object?> toMap({bool includeId = false}) {
+    return {
+      if (includeId && id != null) 'id': id,
+      'name': name,
+      'description': description,
+    };
+  }
+
   @override
   List<Object?> get props => [id, name, description];
 }

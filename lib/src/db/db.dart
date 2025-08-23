@@ -24,10 +24,14 @@ class AppDatabase {
 }
 
 Future<void> onCreate(Database db, int version) async {
+  await initExercisesTable(db);
+}
+
+Future<void> initExercisesTable(Database db) async {
   await db.execute('''
     CREATE TABLE Exercises (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
       description TEXT
     );
   ''');
