@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/db.dart';
+import 'package:jacked/src/db/service_provider.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/jacked_home_page.dart';
 import 'src/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AppDatabase.database;
-  runApp(const MyApp());
+  final db = await AppDatabase.database;
+  runApp(
+    ServiceProvider(
+      exerciseService: ExerciseService(db: db),
+      child: const Jacked(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Jacked extends StatelessWidget {
+  const Jacked({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class ExerciseService {
 
   ExerciseService({required this.db});
 
-  Future<List<Exercise>> getAll() async {
+  Future<List<Exercise>> list() async {
     return (await db.query(table)).map(Exercise.fromMap).toList();
   }
 
@@ -15,12 +15,12 @@ class ExerciseService {
     return await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0;
   }
 
-  Future<Exercise?> getById(int id) async {
+  Future<Exercise?> get(int id) async {
     final maps = await db.query(table, where: 'id = ?', whereArgs: [id]);
     return maps.isNotEmpty ? Exercise.fromMap(maps.first) : null;
   }
 
-  Future<int> insert(Exercise item) async {
+  Future<int> create(Exercise item) async {
     return db.insert(table, item.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 

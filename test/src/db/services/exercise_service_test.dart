@@ -38,14 +38,14 @@ void main() {
 
   group('exercise service', () {
     test('get all', () async {
-      expect(await svc.getAll(), equals(seedExercises));
+      expect(await svc.list(), equals(seedExercises));
     });
 
     group('delete', () {
       test('delete - success', () async {
         final got = await svc.delete(1);
         expect(
-          await svc.getAll(),
+          await svc.list(),
           equals(seedExercises.slice(1)),
         );
         expect(got, equals(true));
@@ -53,7 +53,7 @@ void main() {
       test('delete - nothing deleted', () async {
         final got = await svc.delete(999);
         expect(
-          await svc.getAll(),
+          await svc.list(),
           equals(seedExercises),
         );
         expect(got, equals(false));
@@ -62,10 +62,10 @@ void main() {
 
     group('getById', () {
       test('getById - success', () async {
-        expect(await svc.getById(1), equals(seedExercises[0]));
+        expect(await svc.get(1), equals(seedExercises[0]));
       });
       test('getById - nothing found', () async {
-        expect(await svc.getById(999), equals(null));
+        expect(await svc.get(999), equals(null));
       });
     });
 
@@ -73,17 +73,17 @@ void main() {
       test('insert - success', () async {
         final want = List<Exercise>.from(seedExercises);
         want.add(const Exercise(id: 6, key: 'test exercise'));
-        final got = await svc.insert(const Exercise(key: 'test exercise'));
+        final got = await svc.create(const Exercise(key: 'test exercise'));
         expect(
-          await svc.getAll(),
+          await svc.list(),
           equals(want),
         );
         expect(got, equals(6));
       });
       test('insert - already exists', () async {
-        final got = await svc.insert(const Exercise(key: 'bench_press'));
+        final got = await svc.create(const Exercise(key: 'bench_press'));
         expect(got, equals(0));
-        expect(await svc.getAll(), equals(seedExercises));
+        expect(await svc.list(), equals(seedExercises));
       });
     });
 
@@ -91,13 +91,13 @@ void main() {
       test('update - success', () async {
         const update = Exercise(id: 1, key: 'Bench Press 2');
         final got = await svc.update(update);
-        expect(await svc.getAll(), equals([update, ...seedExercises.slice(1)]));
+        expect(await svc.list(), equals([update, ...seedExercises.slice(1)]));
         expect(got, equals(true));
       });
       test('update - nothing updated', () async {
         const update = Exercise(id: 999, key: 'Bench Press 2');
         final got = await svc.update(update);
-        expect(await svc.getAll(), equals(seedExercises));
+        expect(await svc.list(), equals(seedExercises));
         expect(got, equals(false));
       });
     });

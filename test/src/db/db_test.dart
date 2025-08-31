@@ -22,7 +22,7 @@ void main() {
   });
 
   test('db is seeded correctly', () async {
-    final exercises = await svc.getAll();
+    final exercises = await svc.list();
     expect(exercises, equals(seedExercises));
   });
 }

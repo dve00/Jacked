@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class ExercisesPage extends StatelessWidget {
@@ -60,14 +58,10 @@ class ExerciseList extends StatelessWidget {
   final void Function(Exercise) onSelectedExercise;
   const ExerciseList({super.key, required this.onSelectedExercise});
 
-  Future<List<Exercise>> _loadExercises() async {
-    return ExerciseService(db: await AppDatabase.database).getAll();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadExercises(),
+      future: context.svc.exerciseService.list(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();
