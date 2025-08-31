@@ -8,11 +8,11 @@ import 'package:sqflite/sqflite.dart';
 import '../../../test_config.dart';
 
 const seedExercises = <Exercise>[
-  Exercise(id: 1, key: 'Bench Press'),
-  Exercise(id: 2, key: 'Lat Pulldown'),
-  Exercise(id: 3, key: 'Overhead Press'),
-  Exercise(id: 4, key: 'Seated Row'),
-  Exercise(id: 5, key: 'Back Squat'),
+  Exercise(id: 1, key: 'bench_press'),
+  Exercise(id: 2, key: 'lat_pulldown'),
+  Exercise(id: 3, key: 'overhead_press'),
+  Exercise(id: 4, key: 'seated_row'),
+  Exercise(id: 5, key: 'back_squat'),
 ];
 
 void main() {
@@ -81,7 +81,7 @@ void main() {
         expect(got, equals(6));
       });
       test('insert - already exists', () async {
-        final got = await svc.insert(const Exercise(key: 'Bench Press'));
+        final got = await svc.insert(const Exercise(key: 'bench_press'));
         expect(got, equals(0));
         expect(await svc.getAll(), equals(seedExercises));
       });
