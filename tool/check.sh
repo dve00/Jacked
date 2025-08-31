@@ -5,7 +5,7 @@ echo "🌐 Generating localization..."
 flutter gen-l10n
 
 echo "🔍 Running analyzer..."
-flutter analyze
+flutter analyze --no-pub
 
 echo "🧹 Checking formatting..."
 dart format --output=none --set-exit-if-changed .
