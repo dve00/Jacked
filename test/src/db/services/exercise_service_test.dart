@@ -8,11 +8,11 @@ import 'package:sqflite/sqflite.dart';
 import '../../../test_config.dart';
 
 const seedExercises = <Exercise>[
-  Exercise(id: 1, name: 'Bench Press', description: 'Chest'),
-  Exercise(id: 2, name: 'Lat Pulldown', description: 'Back'),
-  Exercise(id: 3, name: 'Overhead Press', description: 'Shoulders'),
-  Exercise(id: 4, name: 'Seated Row', description: 'Back'),
-  Exercise(id: 5, name: 'Back Squat', description: 'Legs'),
+  Exercise(id: 1, key: 'Bench Press'),
+  Exercise(id: 2, key: 'Lat Pulldown'),
+  Exercise(id: 3, key: 'Overhead Press'),
+  Exercise(id: 4, key: 'Seated Row'),
+  Exercise(id: 5, key: 'Back Squat'),
 ];
 
 void main() {
@@ -72,8 +72,8 @@ void main() {
     group('insert', () {
       test('insert - success', () async {
         final want = List<Exercise>.from(seedExercises);
-        want.add(const Exercise(id: 6, name: 'test exercise'));
-        final got = await svc.insert(const Exercise(name: 'test exercise'));
+        want.add(const Exercise(id: 6, key: 'test exercise'));
+        final got = await svc.insert(const Exercise(key: 'test exercise'));
         expect(
           await svc.getAll(),
           equals(want),
@@ -81,7 +81,7 @@ void main() {
         expect(got, equals(6));
       });
       test('insert - already exists', () async {
-        final got = await svc.insert(const Exercise(name: 'Bench Press'));
+        final got = await svc.insert(const Exercise(key: 'Bench Press'));
         expect(got, equals(0));
         expect(await svc.getAll(), equals(seedExercises));
       });
@@ -89,13 +89,13 @@ void main() {
 
     group('update', () {
       test('update - success', () async {
-        const update = Exercise(id: 1, name: 'Bench Press 2', description: 'new description');
+        const update = Exercise(id: 1, key: 'Bench Press 2');
         final got = await svc.update(update);
         expect(await svc.getAll(), equals([update, ...seedExercises.slice(1)]));
         expect(got, equals(true));
       });
       test('update - nothing updated', () async {
-        const update = Exercise(id: 999, name: 'Bench Press 2', description: 'new description');
+        const update = Exercise(id: 999, key: 'Bench Press 2');
         final got = await svc.update(update);
         expect(await svc.getAll(), equals(seedExercises));
         expect(got, equals(false));

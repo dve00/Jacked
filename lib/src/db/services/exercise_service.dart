@@ -27,7 +27,7 @@ class ExerciseService {
   Future<bool> update(Exercise item) async {
     return await db.update(
           table,
-          {'id': item.id, 'name': item.name, 'description': item.description},
+          item.toMap(),
           where: 'id = ?',
           whereArgs: [item.id],
         ) >

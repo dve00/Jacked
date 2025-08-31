@@ -234,7 +234,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   const ExerciseSet(reps: 0, weight: 0.0),
                   const ExerciseSet(reps: 0, weight: 0.0),
                 ],
-                exercise: Exercise(name: exercise!.name),
+                exercise: Exercise(key: exercise!.key),
               );
               Workout updatedWorkout = activeWorkoutData.activeWorkout.addExerciseEntry(
                 newExerciseEntry,
@@ -415,7 +415,7 @@ class ExerciseForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  exerciseEntry.exercise.name,
+                  exerciseEntry.exercise.key,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 IconButton(

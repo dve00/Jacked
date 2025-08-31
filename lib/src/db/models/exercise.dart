@@ -2,34 +2,36 @@ import 'package:equatable/equatable.dart';
 
 class Exercise extends Equatable {
   final int? id;
-  final String name;
-  final String? description;
+  final String key;
 
-  const Exercise({this.id, required this.name, this.description});
+  const Exercise({
+    this.id,
+    required this.key,
+  });
 
   Exercise copyWith(String? name, String? description) {
     return Exercise(
-      name: name ?? this.name,
-      description: description ?? this.description,
+      key: name ?? key,
     );
   }
 
   factory Exercise.fromMap(Map<String, Object?> map) {
     return Exercise(
       id: map['id'] as int,
-      name: map['name'] as String,
-      description: map['description'] as String?,
+      key: map['key'] as String,
     );
   }
 
   Map<String, Object?> toMap({bool includeId = false}) {
     return {
       if (includeId && id != null) 'id': id,
-      'name': name,
-      'description': description,
+      'key': key,
     };
   }
 
   @override
-  List<Object?> get props => [id, name, description];
+  List<Object?> get props => [
+    id,
+    key,
+  ];
 }

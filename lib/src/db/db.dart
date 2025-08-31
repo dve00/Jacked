@@ -13,11 +13,7 @@ class AppDatabase {
 
     await deleteDatabase(path);
 
-    _db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: onCreate,
-    );
+    _db = await openDatabase(path, version: 1, onCreate: onCreate);
 
     return _db!;
   }
@@ -31,14 +27,13 @@ Future<void> initExercisesTable(Database db) async {
   await db.execute('''
     CREATE TABLE Exercises (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL UNIQUE,
-      description TEXT
+      key TEXT NOT NULL UNIQUE
     );
   ''');
   for (final exercise in seedExercises) {
     await db.execute(
-      'INSERT OR IGNORE INTO Exercises (id, name, description) VALUES (?, ?, ?)',
-      [exercise.id, exercise.name, exercise.description],
+      'INSERT OR IGNORE INTO Exercises (id, key) VALUES (?, ?)',
+      [exercise.id, exercise.key],
     );
   }
 }

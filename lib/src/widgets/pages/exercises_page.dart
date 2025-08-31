@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/seeds.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({
@@ -21,7 +23,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Exercises'),
+            title: Text(context.l10n.pages_exercises_exercises),
             titleTextStyle: Theme.of(context).textTheme.displaySmall,
             centerTitle: false,
             shadowColor: Theme.of(context).colorScheme.shadow,
@@ -33,8 +35,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 onPressed: () => showDialog<String>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Exercises Page'),
-                    content: const Text('Display help here!'),
+                    title: Text(context.l10n.pages_exercises_help),
+                    content: Text(context.l10n.pages_exercises_helpBody),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, 'OK'),
@@ -114,7 +116,7 @@ class ExerciseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(exercise.name),
+      title: Text(context.l10n.exerciseTranslation(exercise.key).name),
       onTap: () => onSelectedExercise(exercise),
     );
   }
@@ -132,6 +134,10 @@ class ExerciseDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translation = context.l10n.exerciseTranslation(exercise.key);
+
+    // TODO: Handle custom exercises
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -143,7 +149,7 @@ class ExerciseDetailCard extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    exercise.name,
+                    translation.name,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const Spacer(),
@@ -156,6 +162,10 @@ class ExerciseDetailCard extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(translation.description),
             ),
           ],
         ),
