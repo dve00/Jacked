@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key, required this.onStartWorkout});
@@ -61,6 +62,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            widget.onStartWorkout();
+                          },
+                          child: Text(context.l10n.active_workout_startEmptyWorkout),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: Column(
@@ -87,112 +97,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   ),
                 ],
               ),
-              if (showStartWorkoutCard)
-                Column(
-                  children: [
-                    const Spacer(),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Start workout',
-                                      style: theme.textTheme.headlineMedium,
-                                    ),
-                                    const Spacer(),
-                                    IconButton(
-                                      onPressed: () => setShowStartWorkout(false),
-                                      icon: const Icon(
-                                        Icons.close_outlined,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Text('Choose what kind of workout to start.'),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Your Program',
-                                        style: theme.textTheme.headlineSmall,
-                                      ),
-                                      const Text('Preview to next program workout lives here!'),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Your Templates',
-                                        style: theme.textTheme.headlineSmall,
-                                      ),
-                                      const Text('Preview for templates live here!'),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Quick Workout',
-                                        style: theme.textTheme.headlineSmall,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          child: FloatingActionButton.extended(
-                                            elevation: 2,
-                                            onPressed: () {
-                                              setState(() {
-                                                showStartWorkoutCard = false;
-                                              });
-                                              widget.onStartWorkout();
-                                            },
-                                            label: Text(
-                                              'Start empty workout',
-                                              style: theme.textTheme.labelLarge,
-                                            ),
-                                            icon: const Icon(Icons.add),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
             ],
           ),
-          floatingActionButton: (!showStartWorkoutCard)
-              ? FloatingActionButton(
-                  onPressed: () {
-                    setShowStartWorkout(true);
-                  },
-                  child: const Icon(Icons.add),
-                )
-              : null,
         ),
       ],
     );

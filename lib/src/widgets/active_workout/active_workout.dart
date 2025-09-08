@@ -34,7 +34,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       controller: _controller,
-      initialChildSize: _minSize,
+      initialChildSize: _maxSize,
       minChildSize: _minSize,
       maxChildSize: _maxSize,
       snap: true,
