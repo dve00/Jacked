@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/widgets/jacked_home_page.dart';
-import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class WorkoutPage extends StatefulWidget {
-  const WorkoutPage({
-    super.key,
-  });
+  const WorkoutPage({super.key, required this.onStartWorkout});
+
+  final VoidCallback onStartWorkout;
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -162,11 +159,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                           child: FloatingActionButton.extended(
                                             elevation: 2,
                                             onPressed: () {
-                                              context.displayState.setHasActiveWorkout(true);
-                                              context.displayState.setIsWorkoutFocused(true);
                                               setState(() {
                                                 showStartWorkoutCard = false;
                                               });
+                                              widget.onStartWorkout();
                                             },
                                             label: Text(
                                               'Start empty workout',
@@ -189,13 +185,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ),
             ],
           ),
-          floatingActionButton: (!context.displayState.hasActiveWorkout && !showStartWorkoutCard)
+          floatingActionButton: (!showStartWorkoutCard)
               ? FloatingActionButton(
                   onPressed: () {
                     setShowStartWorkout(true);
-                    ActiveWorkoutData.of(
-                      context,
-                    ).updateActiveWorkout(Workout(title: 'New Workout', startTime: DateTime.now()));
                   },
                   child: const Icon(Icons.add),
                 )

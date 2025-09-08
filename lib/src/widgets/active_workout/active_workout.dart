@@ -4,7 +4,9 @@ import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
 class ActiveWorkout extends StatefulWidget {
-  const ActiveWorkout({super.key});
+  const ActiveWorkout({super.key, required this.onCancelWorkout});
+
+  final VoidCallback onCancelWorkout;
 
   @override
   State<StatefulWidget> createState() => _ActiveWorkoutState();
@@ -78,7 +80,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  widget.onCancelWorkout();
+                                },
                                 child: Text(context.l10n.active_workout_cancelWorkout),
                               ),
                             ),
