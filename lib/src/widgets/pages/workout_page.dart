@@ -29,7 +29,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Workout'),
+            title: Text(context.l10n.pages_workout_workout),
             titleTextStyle: displayStyle,
             centerTitle: false,
             shadowColor: Theme.of(context).colorScheme.shadow,
@@ -41,11 +41,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 onPressed: () => showDialog<String>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Workout Page'),
-                    content: const Text('Display help here!'),
+                    title: Text(context.l10n.pages_workout_workoutPage),
+                    content: Text(context.l10n.pages_workout_helpBody),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
+                        onPressed: () => Navigator.pop(context),
                         child: const Text('OK'),
                       ),
                     ],
@@ -68,7 +68,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           onPressed: () {
                             widget.onStartWorkout();
                           },
-                          child: Text(context.l10n.active_workout_startEmptyWorkout),
+                          child: Text(context.l10n.pages_workout_startEmptyWorkout),
                         ),
                       ),
                       Padding(
@@ -76,7 +76,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Program', style: headlineStyle),
+                            Text(context.l10n.pages_workout_program, style: headlineStyle),
                             const Text(
                               'Next workout and history of the running program live here!',
                             ),
@@ -88,7 +88,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Templates', style: headlineStyle),
+                            Text(context.l10n.pages_workout_templates, style: headlineStyle),
                             const Text('Previews for templates live here!'),
                           ],
                         ),
