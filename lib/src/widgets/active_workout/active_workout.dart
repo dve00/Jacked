@@ -13,7 +13,7 @@ class ActiveWorkout extends StatefulWidget {
 }
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
-  static const double _minSize = 0.11;
+  static const double _minSnap = 0.11;
   static const double _maxSize = 1.0;
 
   late DraggableScrollableController _controller;
@@ -22,6 +22,14 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   void initState() {
     super.initState();
     _controller = DraggableScrollableController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateTo(
+        _maxSize,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -34,11 +42,12 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       controller: _controller,
-      initialChildSize: _maxSize,
-      minChildSize: _minSize,
+      initialChildSize: _minSnap,
+      minChildSize: 0,
       maxChildSize: _maxSize,
+      snapAnimationDuration: const Duration(milliseconds: 200),
       snap: true,
-      snapSizes: const [_minSize, _maxSize],
+      snapSizes: const [_minSnap, _maxSize],
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
@@ -80,7 +89,12 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  await _controller.animateTo(
+                                    0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeOut,
+                                  );
                                   widget.onCancelWorkout();
                                 },
                                 child: Text(context.l10n.active_workout_cancelWorkout),
