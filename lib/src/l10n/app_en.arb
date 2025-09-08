@@ -17,5 +17,7 @@
   "homepage_navbar_exercises": "Exercises",
   "pages_exercises_exercises": "Exercises",
   "pages_exercises_help": "Help",
-  "pages_exercises_helpBody": "TODO: Put a helpful text here!"
+  "pages_exercises_helpBody": "TODO: Put a helpful text here!",
+  "active_workout_addExercise": "Add Exercise",
+  "active_workout_cancelWorkout": "Cancel Workout"
 }

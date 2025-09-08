@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/widgets/jacked_home_page.dart';
+import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({
@@ -25,7 +26,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
     final theme = Theme.of(context);
     final displayStyle = theme.textTheme.displaySmall;
     final headlineStyle = theme.textTheme.headlineMedium;
-    final workoutState = ActiveWorkoutDisplayState.of(context);
 
     return Stack(
       children: [
@@ -162,8 +162,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                           child: FloatingActionButton.extended(
                                             elevation: 2,
                                             onPressed: () {
-                                              workoutState.setHasActiveWorkout(true);
-                                              workoutState.setIsWorkoutFocused(true);
+                                              context.displayState.setHasActiveWorkout(true);
+                                              context.displayState.setIsWorkoutFocused(true);
                                               setState(() {
                                                 showStartWorkoutCard = false;
                                               });
@@ -189,7 +189,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ),
             ],
           ),
-          floatingActionButton: (!workoutState.hasActiveWorkout && !showStartWorkoutCard)
+          floatingActionButton: (!context.displayState.hasActiveWorkout && !showStartWorkoutCard)
               ? FloatingActionButton(
                   onPressed: () {
                     setShowStartWorkout(true);

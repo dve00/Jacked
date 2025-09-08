@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
 class ActiveWorkout extends StatefulWidget {
@@ -55,9 +56,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             controller: scrollController,
             child: Column(
               children: [
-                const DraggableHeader(
-                  // controller: scrollController,
-                ),
+                const DraggableHeader(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.72,
                   child: ListView.builder(
@@ -73,7 +72,14 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {},
-                                child: const Text('Add Exercise'),
+                                child: Text(context.l10n.active_workout_addExercise),
+                              ),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text(context.l10n.active_workout_cancelWorkout),
                               ),
                             ),
                           ],
@@ -95,8 +101,6 @@ class DraggableHeader extends StatelessWidget {
   const DraggableHeader({
     super.key,
   });
-
-  // final ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
