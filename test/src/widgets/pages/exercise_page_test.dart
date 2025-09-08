@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
+import 'package:jacked/src/widgets/shared/exercise_list.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../mocks.dart';

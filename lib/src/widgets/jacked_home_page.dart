@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/widgets/active_workout.dart';
-import 'package:jacked/src/widgets/minimized_active_workout.dart';
+import 'package:jacked/src/widgets/active_workout/active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 import 'package:jacked/src/widgets/pages/program_page.dart';
@@ -156,31 +155,13 @@ class _JackedHomePageState extends State<JackedHomePage> {
                     const ProgramPage(),
                     const ExercisesPage(),
                   ][currentPageIndex],
-                  if (isWorkoutActive && !isWorkoutFocused)
-                    Column(
-                      children: [
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () => setWorkoutFocused(true),
-                              child: const MinimizedActiveWorkout(),
-                            ),
-                          ),
-                        ),
-                      ],
+                  if (isWorkoutActive && isWorkoutFocused)
+                    const SafeArea(
+                      child: ActiveWorkout(),
                     ),
                 ],
               ),
             ),
-            if (isWorkoutActive && isWorkoutFocused)
-              const SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: ActiveWorkout(),
-                ),
-              ),
           ],
         ),
       ),
