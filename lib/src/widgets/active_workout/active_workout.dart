@@ -51,6 +51,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             ],
           ),
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             controller: scrollController,
             child: Column(
               children: [
