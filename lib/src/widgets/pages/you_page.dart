@@ -7,6 +7,6 @@ class YouPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('You')));
+    return const Center(child: Text('You'));
   }
 }

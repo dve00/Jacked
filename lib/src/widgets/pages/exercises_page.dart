@@ -9,48 +9,16 @@ class ExercisesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.pages_exercises_exercises),
-        titleTextStyle: Theme.of(context).textTheme.displaySmall,
-        centerTitle: false,
-        shadowColor: Theme.of(context).colorScheme.shadow,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.help_outline_outlined,
-            ),
-            onPressed: () => showDialog<String>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text(context.l10n.pages_exercises_help),
-                content: Text(context.l10n.pages_exercises_helpBody),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
+    return ExerciseList(
+      onSelectedExercise: (exercise) {
+        showDialog(
+          context: context,
+          builder: (context) => Dialog(
+            insetPadding: const EdgeInsets.all(16),
+            child: ExerciseDetailCard(exercise: exercise),
           ),
-        ],
-      ),
-      body: ExerciseList(
-        onSelectedExercise: (exercise) {
-          showDialog(
-            context: context,
-            builder: (context) => Dialog(
-              insetPadding: const EdgeInsets.all(16),
-              child: ExerciseDetailCard(exercise: exercise),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+        );
+      },
     );
   }
 }

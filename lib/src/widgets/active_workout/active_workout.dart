@@ -4,8 +4,17 @@ import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
 class ActiveWorkout extends StatefulWidget {
-  const ActiveWorkout({super.key, required this.onCancelWorkout});
+  const ActiveWorkout({
+    super.key,
+    required this.sheetMinSnap,
+    required this.sheetMaxSnap,
+    required this.controller,
+    required this.onCancelWorkout,
+  });
 
+  final double sheetMinSnap;
+  final double sheetMaxSnap;
+  final DraggableScrollableController controller;
   final VoidCallback onCancelWorkout;
 
   @override
@@ -13,19 +22,12 @@ class ActiveWorkout extends StatefulWidget {
 }
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
-  static const double _minSnap = 0.11;
-  static const double _maxSize = 1.0;
-
-  late DraggableScrollableController _controller;
-
   @override
   void initState() {
     super.initState();
-    _controller = DraggableScrollableController();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.animateTo(
-        _maxSize,
+      widget.controller.animateTo(
+        widget.sheetMaxSnap,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
       );
@@ -34,20 +36,18 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      controller: _controller,
-      initialChildSize: _minSnap,
-      minChildSize: 0,
-      maxChildSize: _maxSize,
+      controller: widget.controller,
+      initialChildSize: widget.sheetMinSnap,
+      minChildSize: widget.sheetMinSnap,
+      maxChildSize: widget.sheetMaxSnap,
       snapAnimationDuration: const Duration(milliseconds: 200),
       snap: true,
-      snapSizes: const [_minSnap, _maxSize],
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
@@ -69,7 +69,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               children: [
                 const DraggableHeader(),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.72,
+                  height: MediaQuery.of(context).size.height * 0.8,
                   child: ListView.builder(
                     itemCount: 1,
                     itemBuilder: (_, i) {
@@ -89,8 +89,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () async {
-                                  await _controller.animateTo(
+                                onPressed: () {
+                                  widget.controller.animateTo(
                                     0,
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeOut,

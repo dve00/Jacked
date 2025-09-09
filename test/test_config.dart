@@ -31,6 +31,8 @@ Widget makeTestApp(Widget child, {Locale locale = const Locale('en')}) {
     locale: locale,
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
-    home: child,
+    home: Material(
+      child: child,
+    ),
   );
 }

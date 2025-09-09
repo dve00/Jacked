@@ -7,8 +7,6 @@ class ProgramPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Program')),
-    );
+    return const Center(child: Text('Program'));
   }
 }

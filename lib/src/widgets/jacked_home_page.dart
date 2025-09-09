@@ -18,44 +18,76 @@ class _JackedHomePageState extends State<JackedHomePage> {
   int currentPageIndex = 0;
   bool isWorkoutActive = false;
 
+  double navBarSlide = 0.0;
+  static const sheetMinSnap = 0.23;
+  static const sheetMaxSnap = 1.0;
+
+  late final DraggableScrollableController _sheetController = DraggableScrollableController();
+
+  @override
+  void initState() {
+    super.initState();
+    _sheetController.addListener(_handleSheetPosition);
+  }
+
+  void _handleSheetPosition() {
+    final sheetSize = _sheetController.size;
+
+    final progress = ((sheetSize - sheetMinSnap) / (sheetMaxSnap - sheetMinSnap)).clamp(0.0, 1.0);
+
+    setState(() {
+      navBarSlide = progress;
+    });
+  }
+
+  @override
+  void dispose() {
+    _sheetController.removeListener(_handleSheetPosition);
+    _sheetController.dispose();
+    super.dispose();
+  }
+
+  PreferredSizeWidget constructAppBar(String title, String helpBody) {
+    return AppBar(
+      title: Text(title),
+      titleTextStyle: context.textTheme.displaySmall,
+      centerTitle: false,
+      shadowColor: Theme.of(context).colorScheme.shadow,
+      actions: [
+        IconButton(
+          icon: const Icon(
+            Icons.help_outline_outlined,
+          ),
+          onPressed: () => showDialog<String>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(context.l10n.pages_workout_workoutPage),
+              content: Text(helpBody),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
-          bottomNavigationBar: NavigationBar(
-            onDestinationSelected: (index) => setState(() {
-              currentPageIndex = index;
-            }),
-            selectedIndex: currentPageIndex,
-            destinations: <Widget>[
-              NavigationDestination(
-                icon: const Icon(Icons.person_2_outlined),
-                selectedIcon: const Icon(Icons.person_2),
-                label: context.l10n.homepage_navbar_you,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.auto_stories_outlined),
-                selectedIcon: const Icon(Icons.auto_stories),
-                label: context.l10n.homepage_navbar_diary,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.add_box_outlined),
-                selectedIcon: const Icon(Icons.add_box),
-                label: context.l10n.homepage_navbar_workout,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.edit_calendar_outlined),
-                selectedIcon: const Icon(Icons.edit_calendar),
-                label: context.l10n.homepage_navbar_program,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.fitness_center_outlined),
-                selectedIcon: const Icon(Icons.fitness_center),
-                label: context.l10n.homepage_navbar_exercises,
-              ),
-            ],
-          ),
+          appBar: [
+            constructAppBar(context.l10n.homepage_you, context.l10n.homepage_help_you),
+            constructAppBar(context.l10n.homepage_diary, context.l10n.homepage_help_diary),
+            constructAppBar(context.l10n.homepage_workout, context.l10n.homepage_help_workout),
+            constructAppBar(context.l10n.homepage_program, context.l10n.homepage_help_program),
+            constructAppBar(context.l10n.homepage_exercises, context.l10n.homepage_help_exercises),
+          ][currentPageIndex],
           body: Stack(
             children: [
               <Widget>[
@@ -71,17 +103,72 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 const ProgramPage(),
                 const ExercisesPage(),
               ][currentPageIndex],
-              if (isWorkoutActive)
-                SafeArea(
-                  child: ActiveWorkout(
-                    onCancelWorkout: () {
-                      setState(() {
-                        isWorkoutActive = false;
-                      });
-                    },
-                  ),
-                ),
             ],
+          ),
+        ),
+        if (isWorkoutActive)
+          Material(
+            type: MaterialType.transparency,
+            child: SafeArea(
+              top: true,
+              bottom: false,
+              child: ActiveWorkout(
+                sheetMinSnap: sheetMinSnap,
+                sheetMaxSnap: sheetMaxSnap,
+                controller: _sheetController,
+                onCancelWorkout: () async {
+                  await Future.delayed(const Duration(milliseconds: 200));
+                  setState(() {
+                    isWorkoutActive = false;
+                  });
+                },
+              ),
+            ),
+          ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: AnimatedSlide(
+            offset: Offset(0, navBarSlide),
+            duration: const Duration(milliseconds: 200),
+            child: SafeArea(
+              top: true,
+              bottom: false,
+              child: NavigationBar(
+                onDestinationSelected: (index) => setState(() {
+                  currentPageIndex = index;
+                }),
+                selectedIndex: currentPageIndex,
+                destinations: <Widget>[
+                  NavigationDestination(
+                    icon: const Icon(Icons.person_2_outlined),
+                    selectedIcon: const Icon(Icons.person_2),
+                    label: context.l10n.homepage_you,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.auto_stories_outlined),
+                    selectedIcon: const Icon(Icons.auto_stories),
+                    label: context.l10n.homepage_diary,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.add_box_outlined),
+                    selectedIcon: const Icon(Icons.add_box),
+                    label: context.l10n.homepage_workout,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.edit_calendar_outlined),
+                    selectedIcon: const Icon(Icons.edit_calendar),
+                    label: context.l10n.homepage_program,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.fitness_center_outlined),
+                    selectedIcon: const Icon(Icons.fitness_center),
+                    label: context.l10n.homepage_exercises,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
