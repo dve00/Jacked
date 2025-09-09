@@ -18,7 +18,6 @@ class _JackedHomePageState extends State<JackedHomePage> {
   int currentPageIndex = 0;
   bool isWorkoutActive = false;
 
-  double navBarSlide = 0.0;
   static const sheetMinSnap = 0.23;
   static const sheetMaxSnap = 1.0;
 
@@ -27,22 +26,15 @@ class _JackedHomePageState extends State<JackedHomePage> {
   @override
   void initState() {
     super.initState();
-    _sheetController.addListener(_handleSheetPosition);
   }
 
-  void _handleSheetPosition() {
-    final sheetSize = _sheetController.size;
-
-    final progress = ((sheetSize - sheetMinSnap) / (sheetMaxSnap - sheetMinSnap)).clamp(0.0, 1.0);
-
-    setState(() {
-      navBarSlide = progress;
-    });
+  double get navBarSlide {
+    if (!_sheetController.isAttached) return 0.0;
+    return ((_sheetController.size - sheetMinSnap) / (sheetMaxSnap - sheetMinSnap)).clamp(0.0, 1.0);
   }
 
   @override
   void dispose() {
-    _sheetController.removeListener(_handleSheetPosition);
     _sheetController.dispose();
     super.dispose();
   }
@@ -117,7 +109,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 sheetMaxSnap: sheetMaxSnap,
                 controller: _sheetController,
                 onCancelWorkout: () async {
-                  await Future.delayed(const Duration(milliseconds: 200));
+                  await Future.delayed(const Duration(milliseconds: 300));
                   setState(() {
                     isWorkoutActive = false;
                   });
@@ -129,46 +121,51 @@ class _JackedHomePageState extends State<JackedHomePage> {
           left: 0,
           right: 0,
           bottom: 0,
-          child: AnimatedSlide(
-            offset: Offset(0, navBarSlide),
-            duration: const Duration(milliseconds: 200),
-            child: SafeArea(
-              top: true,
-              bottom: false,
-              child: NavigationBar(
-                onDestinationSelected: (index) => setState(() {
-                  currentPageIndex = index;
-                }),
-                selectedIndex: currentPageIndex,
-                destinations: <Widget>[
-                  NavigationDestination(
-                    icon: const Icon(Icons.person_2_outlined),
-                    selectedIcon: const Icon(Icons.person_2),
-                    label: context.l10n.homepage_you,
+          child: AnimatedBuilder(
+            animation: _sheetController,
+            builder: (context, child) {
+              return AnimatedSlide(
+                offset: Offset(0, navBarSlide),
+                duration: const Duration(milliseconds: 0),
+                child: SafeArea(
+                  top: true,
+                  bottom: false,
+                  child: NavigationBar(
+                    onDestinationSelected: (index) => setState(() {
+                      currentPageIndex = index;
+                    }),
+                    selectedIndex: currentPageIndex,
+                    destinations: <Widget>[
+                      NavigationDestination(
+                        icon: const Icon(Icons.person_2_outlined),
+                        selectedIcon: const Icon(Icons.person_2),
+                        label: context.l10n.homepage_you,
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.auto_stories_outlined),
+                        selectedIcon: const Icon(Icons.auto_stories),
+                        label: context.l10n.homepage_diary,
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.add_box_outlined),
+                        selectedIcon: const Icon(Icons.add_box),
+                        label: context.l10n.homepage_workout,
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.edit_calendar_outlined),
+                        selectedIcon: const Icon(Icons.edit_calendar),
+                        label: context.l10n.homepage_program,
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.fitness_center_outlined),
+                        selectedIcon: const Icon(Icons.fitness_center),
+                        label: context.l10n.homepage_exercises,
+                      ),
+                    ],
                   ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.auto_stories_outlined),
-                    selectedIcon: const Icon(Icons.auto_stories),
-                    label: context.l10n.homepage_diary,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.add_box_outlined),
-                    selectedIcon: const Icon(Icons.add_box),
-                    label: context.l10n.homepage_workout,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.edit_calendar_outlined),
-                    selectedIcon: const Icon(Icons.edit_calendar),
-                    label: context.l10n.homepage_program,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.fitness_center_outlined),
-                    selectedIcon: const Icon(Icons.fitness_center),
-                    label: context.l10n.homepage_exercises,
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ],

@@ -22,9 +22,12 @@ class ActiveWorkout extends StatefulWidget {
 }
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
+  double _minChildSize = 0;
+
   @override
   void initState() {
     super.initState();
+    _minChildSize = widget.sheetMinSnap;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.controller.animateTo(
         widget.sheetMaxSnap,
@@ -35,16 +38,11 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       controller: widget.controller,
       initialChildSize: widget.sheetMinSnap,
-      minChildSize: widget.sheetMinSnap,
+      minChildSize: _minChildSize,
       maxChildSize: widget.sheetMaxSnap,
       snapAnimationDuration: const Duration(milliseconds: 200),
       snap: true,
@@ -89,10 +87,15 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  setState(() {
+                                    _minChildSize = 0;
+                                  });
+                                  // allow the widget to rebuild before animating to 0
+                                  await Future.delayed(const Duration(milliseconds: 5));
                                   widget.controller.animateTo(
                                     0,
-                                    duration: const Duration(milliseconds: 200),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeOut,
                                   );
                                   widget.onCancelWorkout();
