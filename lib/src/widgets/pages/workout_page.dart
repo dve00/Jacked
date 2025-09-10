@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
+import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 
 class WorkoutPage extends StatelessWidget {
   const WorkoutPage({super.key, required this.onStartWorkout});
@@ -17,12 +18,9 @@ class WorkoutPage extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onStartWorkout,
-                child: Text(context.l10n.pages_workout_startEmptyWorkout),
-              ),
+            JackedButton(
+              label: context.l10n.pages_workout_startEmptyWorkout,
+              onPressed: onStartWorkout,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16),

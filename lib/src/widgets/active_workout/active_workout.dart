@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
+import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
 class ActiveWorkout extends StatefulWidget {
@@ -77,31 +78,25 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text('Title'),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: Text(context.l10n.active_workout_addExercise),
-                              ),
+                            JackedButton(
+                              label: context.l10n.active_workout_addExercise,
+                              onPressed: () => {},
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    _minChildSize = 0;
-                                  });
-                                  // allow the widget to rebuild before animating to 0
-                                  await Future.delayed(const Duration(milliseconds: 5));
-                                  widget.controller.animateTo(
-                                    0,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeOut,
-                                  );
-                                  widget.onCancelWorkout();
-                                },
-                                child: Text(context.l10n.active_workout_cancelWorkout),
-                              ),
+                            JackedButton(
+                              label: context.l10n.active_workout_cancelWorkout,
+                              onPressed: () async {
+                                setState(() {
+                                  _minChildSize = 0;
+                                });
+                                // allow the widget to rebuild before animating to 0
+                                await Future.delayed(const Duration(milliseconds: 5));
+                                widget.controller.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeOut,
+                                );
+                                widget.onCancelWorkout();
+                              },
                             ),
                           ],
                         ),
