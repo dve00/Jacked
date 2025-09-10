@@ -30,8 +30,5 @@ class Exercise extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    id,
-    key,
-  ];
+  List<Object?> get props => [id, key];
 }

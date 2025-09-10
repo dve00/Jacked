@@ -1,16 +1,16 @@
-import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 
-class Workout {
-  final int? workoutId;
+class Workout extends Equatable {
+  final int? id;
   final String title;
   final DateTime startTime;
   final DateTime? stopTime;
   final String? description;
   final List<ExerciseEntry>? exerciseEntries;
 
-  Workout({
-    this.workoutId,
+  const Workout({
+    this.id,
     required this.title,
     required this.startTime,
     this.stopTime,
@@ -18,14 +18,14 @@ class Workout {
     this.exerciseEntries,
   });
 
-  Workout copWith({
+  Workout copyWith({
     String? title,
     DateTime? stopTime,
     String? description,
     List<ExerciseEntry>? exerciseEntries,
   }) {
     return Workout(
-      workoutId: workoutId,
+      id: id,
       title: title ?? this.title,
       startTime: startTime,
       stopTime: stopTime ?? this.stopTime,
@@ -38,35 +38,16 @@ class Workout {
     final currentEntries = exerciseEntries ?? <ExerciseEntry>[];
     final updatedEntries = List<ExerciseEntry>.from(currentEntries)..add(newEntry);
 
-    return copWith(exerciseEntries: updatedEntries);
+    return copyWith(exerciseEntries: updatedEntries);
   }
 
   Workout deleteExerciseEntry(ExerciseEntry exerciseEntry) {
     final currentEntries = exerciseEntries ?? <ExerciseEntry>[];
     final updatedEntries = currentEntries.where((entry) => entry != exerciseEntry).toList();
 
-    return copWith(exerciseEntries: updatedEntries);
+    return copyWith(exerciseEntries: updatedEntries);
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Workout &&
-        workoutId == other.workoutId &&
-        title == other.title &&
-        startTime == other.startTime &&
-        stopTime == other.stopTime &&
-        description == other.description &&
-        listEquals(exerciseEntries, other.exerciseEntries);
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    workoutId,
-    title,
-    startTime,
-    stopTime,
-    description,
-    Object.hashAll(exerciseEntries ?? []),
-  );
+  List<Object?> get props => [id, title, startTime, stopTime, description, exerciseEntries];
 }

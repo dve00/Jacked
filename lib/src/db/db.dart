@@ -21,6 +21,7 @@ class AppDatabase {
 
 Future<void> onCreate(Database db, int version) async {
   await initExercisesTable(db);
+  await initWorkoutTable(db);
 }
 
 Future<void> initExercisesTable(Database db) async {
@@ -37,3 +38,5 @@ Future<void> initExercisesTable(Database db) async {
     );
   }
 }
+
+Future<void> initWorkoutTable(Database db) async {}
