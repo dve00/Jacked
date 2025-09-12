@@ -1,23 +1,23 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/db.dart';
-import 'package:jacked/src/db/models/exercise.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/models/workout.dart';
+import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../test_config.dart';
 
-const seedExercises = <Exercise>[
-  Exercise(id: 1, key: 'bench_press'),
-  Exercise(id: 2, key: 'lat_pulldown'),
-  Exercise(id: 3, key: 'overhead_press'),
-  Exercise(id: 4, key: 'seated_row'),
-  Exercise(id: 5, key: 'back_squat'),
+final seedWorkouts = <Workout>[
+  Workout(id: 1, title: 'Test Workout 1', startTime: DateTime(2025, 9, 8)),
+  Workout(id: 2, title: 'Test Workout 2', startTime: DateTime(2025, 9, 9)),
+  Workout(id: 3, title: 'Test Workout 3', startTime: DateTime(2025, 9, 10)),
+  Workout(id: 4, title: 'Test Workout 4', startTime: DateTime(2025, 9, 11)),
+  Workout(id: 5, title: 'Test Workout 5', startTime: DateTime(2025, 9, 12)),
 ];
 
 void main() {
   late Database db;
-  late ExerciseService svc;
+  late WorkoutService svc;
 
   setupTestDatabase();
 
@@ -26,19 +26,19 @@ void main() {
       inMemoryDatabasePath,
       version: 1,
       onCreate: (db, version) async {
-        await initExercisesTable(db, seedExercises);
+        await initWorkoutTable(db, seedWorkouts);
       },
     );
-    svc = ExerciseService(db: db);
+    svc = WorkoutService(db: db);
   });
 
   tearDown(() async {
     await db.close();
   });
 
-  group('exercise service', () {
+  group('workout service', () {
     test('get all', () async {
-      expect(await svc.list(), equals(seedExercises));
+      expect(await svc.list(), equals(seedWorkouts));
     });
 
     group('delete', () {
@@ -46,7 +46,7 @@ void main() {
         final got = await svc.delete(1);
         expect(
           await svc.list(),
-          equals(seedExercises.slice(1)),
+          equals(seedWorkouts.slice(1)),
         );
         expect(got, equals(true));
       });
@@ -54,7 +54,7 @@ void main() {
         final got = await svc.delete(999);
         expect(
           await svc.list(),
-          equals(seedExercises),
+          equals(seedWorkouts),
         );
         expect(got, equals(false));
       });
@@ -62,7 +62,7 @@ void main() {
 
     group('getById', () {
       test('getById - success', () async {
-        expect(await svc.get(1), equals(seedExercises[0]));
+        expect(await svc.get(1), equals(seedWorkouts[0]));
       });
       test('getById - nothing found', () async {
         expect(await svc.get(999), equals(null));
@@ -71,33 +71,29 @@ void main() {
 
     group('insert', () {
       test('insert - success', () async {
-        final want = List<Exercise>.from(seedExercises);
-        want.add(const Exercise(id: 6, key: 'test exercise'));
-        final got = await svc.create(const Exercise(key: 'test exercise'));
+        final want = List<Workout>.from(seedWorkouts);
+        want.add(Workout(id: 6, title: 'Test123', startTime: DateTime(2025, 9, 8)));
+        final got = await svc.create(Workout(title: 'Test123', startTime: DateTime(2025, 9, 8)));
         expect(
           await svc.list(),
           equals(want),
         );
         expect(got, equals(6));
       });
-      test('insert - already exists', () async {
-        final got = await svc.create(const Exercise(key: 'bench_press'));
-        expect(got, equals(0));
-        expect(await svc.list(), equals(seedExercises));
-      });
     });
 
     group('update', () {
       test('update - success', () async {
-        const update = Exercise(id: 1, key: 'Bench Press 2');
+        final today = DateTime.now();
+        final update = Workout(id: 1, title: 'newTitle', startTime: today, endTime: today);
         final got = await svc.update(update);
-        expect(await svc.list(), equals([update, ...seedExercises.slice(1)]));
+        expect(await svc.list(), equals([update, ...seedWorkouts.slice(1)]));
         expect(got, equals(true));
       });
       test('update - nothing updated', () async {
-        const update = Exercise(id: 999, key: 'Bench Press 2');
+        final update = Workout(id: 999, title: 'foo', startTime: DateTime.now());
         final got = await svc.update(update);
-        expect(await svc.list(), equals(seedExercises));
+        expect(await svc.list(), equals(seedWorkouts));
         expect(got, equals(false));
       });
     });

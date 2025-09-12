@@ -1,3 +1,5 @@
+import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -20,11 +22,11 @@ class AppDatabase {
 }
 
 Future<void> onCreate(Database db, int version) async {
-  await initExercisesTable(db);
-  await initWorkoutTable(db);
+  await initExercisesTable(db, seedExercises);
+  await initWorkoutTable(db, seedWorkouts);
 }
 
-Future<void> initExercisesTable(Database db) async {
+Future<void> initExercisesTable(Database db, List<Exercise> seedExercises) async {
   await db.execute('''
     CREATE TABLE Exercises (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,4 +41,20 @@ Future<void> initExercisesTable(Database db) async {
   }
 }
 
-Future<void> initWorkoutTable(Database db) async {}
+Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
+  await db.execute('''
+    CREATE TABLE Workout (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      startTime INTEGER NOT NULL,  
+      endTime INTEGER,            
+      description TEXT  
+    );
+  ''');
+  for (final workout in seedWorkouts) {
+    await db.execute(
+      'INSERT OR IGNORE INTO Workout (title, startTime) VALUES (?, ?)',
+      [workout.title, workout.startTime.microsecondsSinceEpoch],
+    );
+  }
+}

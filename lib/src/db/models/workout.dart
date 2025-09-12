@@ -5,7 +5,7 @@ class Workout extends Equatable {
   final int? id;
   final String title;
   final DateTime startTime;
-  final DateTime? stopTime;
+  final DateTime? endTime;
   final String? description;
   final List<ExerciseEntry>? exerciseEntries;
 
@@ -13,7 +13,7 @@ class Workout extends Equatable {
     this.id,
     required this.title,
     required this.startTime,
-    this.stopTime,
+    this.endTime,
     this.description,
     this.exerciseEntries,
   });
@@ -28,7 +28,7 @@ class Workout extends Equatable {
       id: id,
       title: title ?? this.title,
       startTime: startTime,
-      stopTime: stopTime ?? this.stopTime,
+      endTime: stopTime ?? endTime,
       description: description ?? this.description,
       exerciseEntries: exerciseEntries ?? this.exerciseEntries,
     );
@@ -48,6 +48,28 @@ class Workout extends Equatable {
     return copyWith(exerciseEntries: updatedEntries);
   }
 
+  factory Workout.fromMap(Map<String, Object?> map) {
+    return Workout(
+      id: map['id'] as int,
+      title: map['title'] as String,
+      startTime: DateTime.fromMicrosecondsSinceEpoch(map['startTime'] as int),
+      endTime: map['endTime'] != null
+          ? DateTime.fromMicrosecondsSinceEpoch(map['endTime'] as int)
+          : null,
+      description: map['description'] != null ? map['description'] as String : null,
+    );
+  }
+
+  Map<String, Object?> toMap({bool includeId = false}) {
+    return {
+      if (includeId && id != null) 'id': id,
+      'title': title,
+      'startTime': startTime.microsecondsSinceEpoch,
+      'endTime': endTime?.microsecondsSinceEpoch,
+      'description': description,
+    };
+  }
+
   @override
-  List<Object?> get props => [id, title, startTime, stopTime, description, exerciseEntries];
+  List<Object?> get props => [id, title, startTime, endTime, description, exerciseEntries];
 }

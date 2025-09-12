@@ -1,4 +1,5 @@
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/l10n/generated/app_localizations.dart';
 
 const seedExercises = <Exercise>[
@@ -7,6 +8,14 @@ const seedExercises = <Exercise>[
   Exercise(id: 3, key: 'overhead_press'),
   Exercise(id: 4, key: 'seated_row'),
   Exercise(id: 5, key: 'back_squat'),
+];
+
+final seedWorkouts = <Workout>[
+  Workout(title: 'Test Workout 1', startTime: DateTime(2025, 9, 8)),
+  Workout(title: 'Test Workout 2', startTime: DateTime(2025, 9, 9)),
+  Workout(title: 'Test Workout 3', startTime: DateTime(2025, 9, 10)),
+  Workout(title: 'Test Workout 4', startTime: DateTime(2025, 9, 11)),
+  Workout(title: 'Test Workout 5', startTime: DateTime(2025, 9, 12)),
 ];
 
 class UnknownExerciseKeyException implements Exception {
