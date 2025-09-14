@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class DiaryPage extends StatelessWidget {
@@ -21,13 +23,39 @@ class DiaryPage extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (context, index) {
             final workout = workouts[index];
-            return Card.outlined(
-              child: Text(workout.title),
-            );
+            return WorkoutCard(workout: workout);
           },
           itemCount: workouts.length,
         );
       },
+    );
+  }
+}
+
+class WorkoutCard extends StatelessWidget {
+  const WorkoutCard({
+    super.key,
+    required this.workout,
+  });
+
+  final Workout workout;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.outlined(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              workout.title,
+              style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
+          ],
+        ),
+      ),
     );
   }
 }
