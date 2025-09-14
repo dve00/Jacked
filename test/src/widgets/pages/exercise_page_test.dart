@@ -9,18 +9,21 @@ import '../../../mocks.dart';
 import '../../../test_config.dart';
 
 void main() {
-  late MockExerciseService svc;
+  late MockExerciseService exerciseSvc;
+  late MockWorkoutService workoutSvc;
 
   setUp(() {
-    svc = MockExerciseService();
+    exerciseSvc = MockExerciseService();
+    workoutSvc = MockWorkoutService();
   });
 
   group('ExercisePage', () {
     testWidgets('has exercise list', (tester) async {
-      when(() => svc.list()).thenAnswer((_) async => [const Exercise(key: 'bench_press')]);
+      when(() => exerciseSvc.list()).thenAnswer((_) async => [const Exercise(key: 'bench_press')]);
       await tester.pumpWidget(
         ServiceProvider(
-          exerciseService: svc,
+          exerciseService: exerciseSvc,
+          workoutService: workoutSvc,
           child: makeTestApp(const ExercisesPage()),
         ),
       );
