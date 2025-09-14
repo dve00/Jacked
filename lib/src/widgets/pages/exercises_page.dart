@@ -32,8 +32,6 @@ class ExerciseDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final translation = context.l10n.exerciseTranslation(exercise.key);
 
-    // TODO: Handle custom exercises
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
