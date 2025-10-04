@@ -53,8 +53,21 @@ Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   ''');
   for (final workout in seedWorkouts) {
     await db.execute(
-      'INSERT OR IGNORE INTO Workout (title, startTime) VALUES (?, ?)',
-      [workout.title, workout.startTime.microsecondsSinceEpoch],
+      '''
+      INSERT OR IGNORE INTO Workout (
+        title, 
+        startTime, 
+        endTime, 
+        description
+      ) 
+      VALUES (?, ?, ?, ?)
+      ''',
+      [
+        workout.title,
+        workout.startTime.microsecondsSinceEpoch,
+        workout.endTime?.microsecondsSinceEpoch,
+        workout.description,
+      ],
     );
   }
 }

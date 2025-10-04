@@ -23,7 +23,7 @@ class DiaryPage extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (context, index) {
             final workout = workouts[index];
-            return WorkoutCard(workout: workout);
+            return DiaryEntry(workout: workout);
           },
           itemCount: workouts.length,
         );
@@ -32,8 +32,8 @@ class DiaryPage extends StatelessWidget {
   }
 }
 
-class WorkoutCard extends StatelessWidget {
-  const WorkoutCard({
+class DiaryEntry extends StatelessWidget {
+  const DiaryEntry({
     super.key,
     required this.workout,
   });
@@ -42,6 +42,8 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final duration = workout.endTime?.difference(workout.startTime);
+
     return Card.outlined(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -53,6 +55,7 @@ class WorkoutCard extends StatelessWidget {
               style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
+            if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
           ],
         ),
       ),

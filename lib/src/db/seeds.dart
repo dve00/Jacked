@@ -11,11 +11,31 @@ const seedExercises = <Exercise>[
 ];
 
 final seedWorkouts = <Workout>[
-  Workout(title: 'Test Workout 1', startTime: DateTime(2025, 9, 8)),
-  Workout(title: 'Test Workout 2', startTime: DateTime(2025, 9, 9)),
-  Workout(title: 'Test Workout 3', startTime: DateTime(2025, 9, 10)),
-  Workout(title: 'Test Workout 4', startTime: DateTime(2025, 9, 11)),
-  Workout(title: 'Test Workout 5', startTime: DateTime(2025, 9, 12)),
+  Workout(
+    title: 'Test Workout 1',
+    startTime: DateTime(2025, 9, 8, 18, 0),
+    endTime: DateTime(2025, 9, 8, 19, 0),
+  ),
+  Workout(
+    title: 'Test Workout 2',
+    startTime: DateTime(2025, 9, 9, 7, 30),
+    endTime: DateTime(2025, 9, 9, 8, 15),
+  ),
+  Workout(
+    title: 'Test Workout 3',
+    startTime: DateTime(2025, 9, 10, 12, 0),
+    endTime: DateTime(2025, 9, 10, 12, 45),
+  ),
+  Workout(
+    title: 'Test Workout 4',
+    startTime: DateTime(2025, 9, 11, 17, 15),
+    endTime: DateTime(2025, 9, 11, 18, 0),
+  ),
+  Workout(
+    title: 'Test Workout 5',
+    startTime: DateTime(2025, 9, 12, 6, 0),
+    endTime: DateTime(2025, 9, 12, 6, 50),
+  ),
 ];
 
 class UnknownExerciseKeyException implements Exception {
