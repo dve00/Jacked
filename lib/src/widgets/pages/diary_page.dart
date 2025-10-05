@@ -54,6 +54,11 @@ class DiaryEntry extends StatelessWidget {
               workout.title,
               style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
+            if (workout.description != null)
+              Text(
+                workout.description!,
+                style: context.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+              ),
             Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
             if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
           ],
