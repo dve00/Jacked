@@ -37,6 +37,12 @@ void main() {
   });
 
   group('exercise entry service', () {
+    test('list', () async {
+      expect(await svc.list(), equals(seedExerciseEntries));
+    });
+    test('listByWorkoutId', () async {
+      expect(await svc.listByWorkoutId(1), equals(seedExerciseEntries.slice(0, 1)));
+    });
     group('delete', () {
       test('delete - success', () async {
         final got = await svc.delete(1);

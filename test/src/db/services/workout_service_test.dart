@@ -67,7 +67,7 @@ void main() {
   });
 
   group('workout service', () {
-    test('get all', () async {
+    test('list', () async {
       expect(await svc.list(), equals(seedWorkouts));
     });
 

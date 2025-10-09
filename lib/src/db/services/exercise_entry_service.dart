@@ -10,6 +10,12 @@ class ExerciseEntryService {
   Future<List<ExerciseEntry>> list() async =>
       (await db.query(table)).map(ExerciseEntry.fromMap).toList();
 
+  Future<List<ExerciseEntry>> listByWorkoutId(int workoutId) async => (await db.query(
+    table,
+    where: 'workoutId = ?',
+    whereArgs: [workoutId],
+  )).map(ExerciseEntry.fromMap).toList();
+
   Future<bool> delete(int id) async => await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0;
 
   Future<ExerciseEntry?> get(int id) async {
