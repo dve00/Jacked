@@ -1,4 +1,5 @@
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,15 +16,18 @@ class AppDatabase {
 
     await deleteDatabase(path);
 
-    _db = await openDatabase(path, version: 1, onCreate: onCreate);
+    _db = await openDatabase(path, version: 1, onConfigure: onConfigure, onCreate: onCreate);
 
     return _db!;
   }
 }
 
+Future<void> onConfigure(Database db) async => db.execute('PRAGMA foreign_keys = ON');
+
 Future<void> onCreate(Database db, int version) async {
   await initExercisesTable(db, seedExercises);
   await initWorkoutTable(db, seedWorkouts);
+  await initExerciseEntriesTable(db, seedExerciseEntries);
 }
 
 Future<void> initExercisesTable(Database db, List<Exercise> seedExercises) async {
@@ -43,7 +47,7 @@ Future<void> initExercisesTable(Database db, List<Exercise> seedExercises) async
 
 Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   await db.execute('''
-    CREATE TABLE Workout (
+    CREATE TABLE Workouts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       startTime INTEGER NOT NULL,  
@@ -54,7 +58,7 @@ Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   for (final workout in seedWorkouts) {
     await db.execute(
       '''
-      INSERT OR IGNORE INTO Workout (
+      INSERT OR IGNORE INTO Workouts (
         title, 
         startTime, 
         endTime, 
@@ -67,6 +71,33 @@ Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
         workout.startTime.microsecondsSinceEpoch,
         workout.endTime?.microsecondsSinceEpoch,
         workout.description,
+      ],
+    );
+  }
+}
+
+Future<void> initExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerciseEntries) async {
+  await db.execute('''
+  CREATE TABLE ExerciseEntries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    workoutId INTEGER NOT NULL,
+    exerciseId INTEGER NOT NULL,
+    FOREIGN KEY (workoutId) REFERENCES Workouts(id) ON DELETE CASCADE,
+    FOREIGN KEY (exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE
+  )
+  ''');
+  for (final exerciseEntry in seedExerciseEntries) {
+    await db.execute(
+      '''
+      INSERT OR IGNORE INTO ExerciseEntries (
+        workoutId,
+        exerciseId
+      )
+      VALUES (?, ?)
+      ''',
+      [
+        exerciseEntry.workoutId,
+        exerciseEntry.exerciseId,
       ],
     );
   }

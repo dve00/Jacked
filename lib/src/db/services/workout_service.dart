@@ -2,7 +2,7 @@ import 'package:jacked/src/db/models/workout.dart';
 import 'package:sqflite/sqflite.dart';
 
 class WorkoutService {
-  final table = 'Workout';
+  final table = 'Workouts';
   Database db;
 
   WorkoutService({required this.db});

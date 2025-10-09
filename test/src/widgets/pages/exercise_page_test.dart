@@ -11,10 +11,12 @@ import '../../../test_config.dart';
 void main() {
   late MockExerciseService exerciseSvc;
   late MockWorkoutService workoutSvc;
+  late MockExerciseEntryService exerciseEntrySvc;
 
   setUp(() {
     exerciseSvc = MockExerciseService();
     workoutSvc = MockWorkoutService();
+    exerciseEntrySvc = MockExerciseEntryService();
   });
 
   group('ExercisePage', () {
@@ -24,6 +26,7 @@ void main() {
         ServiceProvider(
           exerciseService: exerciseSvc,
           workoutService: workoutSvc,
+          exerciseEntryService: exerciseEntrySvc,
           child: makeTestApp(const ExercisesPage()),
         ),
       );

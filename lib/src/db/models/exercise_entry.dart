@@ -1,35 +1,38 @@
-import 'package:flutter/foundation.dart';
-import 'package:jacked/src/db/models/exercise.dart';
+import 'package:equatable/equatable.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 
-class ExerciseEntry {
-  final int? exerciseEntryId;
-  final Exercise exercise;
-  final List<ExerciseSet> sets;
+class ExerciseEntry extends Equatable {
+  final int? id;
+  final int workoutId;
+  final int exerciseId;
+  final List<ExerciseSet>? sets;
 
   const ExerciseEntry({
-    this.exerciseEntryId,
-    required this.exercise,
-    required this.sets,
+    this.id,
+    required this.workoutId,
+    required this.exerciseId,
+    this.sets,
   });
 
-  ExerciseEntry copyWith(List<ExerciseSet>? sets) {
-    return ExerciseEntry(
-      exerciseEntryId: exerciseEntryId,
-      exercise: exercise,
-      sets: sets ?? this.sets,
-    );
-  }
+  ExerciseEntry copyWith(List<ExerciseSet>? sets) => ExerciseEntry(
+    id: id,
+    workoutId: workoutId,
+    exerciseId: exerciseId,
+    sets: sets ?? this.sets,
+  );
+
+  factory ExerciseEntry.fromMap(Map<String, Object?> map) => ExerciseEntry(
+    id: map['id'] as int,
+    workoutId: map['workoutId'] as int,
+    exerciseId: map['exerciseId'] as int,
+  );
+
+  Map<String, Object?> toMap() => {
+    if (id != null) 'id': id,
+    'workoutId': workoutId,
+    'exerciseId': exerciseId,
+  };
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ExerciseEntry &&
-        exerciseEntryId == other.exerciseEntryId &&
-        listEquals(sets, other.sets) &&
-        exercise == other.exercise;
-  }
-
-  @override
-  int get hashCode => Object.hash(exerciseEntryId, Object.hashAll(sets), exercise);
+  List<Object?> get props => [id, workoutId, exerciseId, sets];
 }

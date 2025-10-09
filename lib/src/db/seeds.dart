@@ -1,4 +1,5 @@
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/l10n/generated/app_localizations.dart';
 
@@ -41,6 +42,14 @@ final seedWorkouts = <Workout>[
     endTime: DateTime(2025, 9, 12, 6, 50),
     description: 'Desc5 is super duper mega long so that the line will break',
   ),
+];
+
+const seedExerciseEntries = <ExerciseEntry>[
+  ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1),
+  ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2),
+  ExerciseEntry(id: 3, workoutId: 3, exerciseId: 3),
+  ExerciseEntry(id: 4, workoutId: 4, exerciseId: 4),
+  ExerciseEntry(id: 5, workoutId: 5, exerciseId: 5),
 ];
 
 class UnknownExerciseKeyException implements Exception {
