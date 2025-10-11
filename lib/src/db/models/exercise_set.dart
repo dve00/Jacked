@@ -1,34 +1,59 @@
-class ExerciseSet {
-  final int? exerciseSetId;
-  final int reps;
-  final double weight;
+import 'package:equatable/equatable.dart';
+
+class ExerciseSet extends Equatable {
+  final int? id;
+  final int exerciseEntryId;
+  final int? reps;
+
+  /// weight in kg
+  final double? weight;
+
+  /// duration in seconds
+  final Duration? duration;
   final int? rpe;
 
   const ExerciseSet({
-    this.exerciseSetId,
-    required this.reps,
-    required this.weight,
+    this.id,
+    required this.exerciseEntryId,
+    this.reps,
+    this.weight,
+    this.duration,
     this.rpe,
   });
 
-  ExerciseSet copWith(int? reps, double? weight, int? rpe) {
+  ExerciseSet copyWith({
+    int? reps,
+    double? weight,
+    Duration? duration,
+    int? rpe,
+    bool? hasNegativeWeight,
+  }) {
     return ExerciseSet(
+      exerciseEntryId: exerciseEntryId,
       reps: reps ?? this.reps,
       weight: weight ?? this.weight,
+      duration: duration ?? this.duration,
       rpe: rpe ?? this.rpe,
     );
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ExerciseSet &&
-        exerciseSetId == other.exerciseSetId &&
-        reps == other.reps &&
-        weight == other.weight &&
-        rpe == other.rpe;
-  }
+  factory ExerciseSet.fromMap(Map<String, Object?> map) => ExerciseSet(
+    id: map['id'] as int,
+    exerciseEntryId: map['exerciseEntryId'] as int,
+    reps: map['reps'] != null ? map['reps'] as int : null,
+    weight: map['weight'] != null ? map['weight'] as double : null,
+    duration: map['duration'] != null ? Duration(seconds: map['duration'] as int) : null,
+    rpe: map['rpe'] != null ? map['rpe'] as int : null,
+  );
+
+  Map<String, Object?> toMap() => {
+    'exerciseEntryId': exerciseEntryId,
+    'reps': reps,
+    'weight': weight,
+    'duration': duration?.inSeconds,
+    'rpe': rpe,
+  };
 
   @override
-  int get hashCode => Object.hash(exerciseSetId, reps, weight, rpe);
+  List<Object?> get props => [id, exerciseEntryId, reps, weight, duration, rpe];
 }

@@ -1,5 +1,6 @@
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
+import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
 import 'package:sqflite/sqflite.dart';
@@ -98,6 +99,41 @@ Future<void> initExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerc
       [
         exerciseEntry.workoutId,
         exerciseEntry.exerciseId,
+      ],
+    );
+  }
+}
+
+Future<void> initExerciseSetsTable(Database db, List<ExerciseSet> seedExerciseSets) async {
+  await db.execute('''
+  CREATE TABLE ExerciseSets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    exerciseEntryId INTEGER NOT NULL,
+    reps INTEGER,
+    weight REAL,
+    duration INTEGER,
+    rpe INTEGER,
+    FOREIGN KEY (exerciseEntryId) REFERENCES ExerciseEntries(id) ON DELETE CASCADE
+  )
+  ''');
+  for (final exerciseSet in seedExerciseSets) {
+    await db.execute(
+      '''
+    INSERT OR IGNORE INTO ExerciseSets (
+      exerciseEntryId,
+      reps,
+      weight,
+      duration,
+      rpe
+    )
+    VALUES (?, ?, ?, ?, ?)
+    ''',
+      [
+        exerciseSet.exerciseEntryId,
+        exerciseSet.reps,
+        exerciseSet.weight,
+        exerciseSet.duration?.inSeconds,
+        exerciseSet.rpe,
       ],
     );
   }
