@@ -1,23 +1,27 @@
 import 'package:equatable/equatable.dart';
+import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 
 class ExerciseEntry extends Equatable {
   final int? id;
   final int workoutId;
   final int exerciseId;
+  final Exercise? exercise;
   final List<ExerciseSet>? sets;
 
   const ExerciseEntry({
     this.id,
     required this.workoutId,
     required this.exerciseId,
+    this.exercise,
     this.sets,
   });
 
-  ExerciseEntry copyWith(List<ExerciseSet>? sets) => ExerciseEntry(
+  ExerciseEntry copyWith({Exercise? exercise, List<ExerciseSet>? sets}) => ExerciseEntry(
     id: id,
     workoutId: workoutId,
     exerciseId: exerciseId,
+    exercise: exercise ?? this.exercise,
     sets: sets ?? this.sets,
   );
 

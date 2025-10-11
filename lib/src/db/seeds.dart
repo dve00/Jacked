@@ -46,10 +46,12 @@ final seedWorkouts = <Workout>[
 
 const seedExerciseEntries = <ExerciseEntry>[
   ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1),
-  ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2),
-  ExerciseEntry(id: 3, workoutId: 3, exerciseId: 3),
-  ExerciseEntry(id: 4, workoutId: 4, exerciseId: 4),
-  ExerciseEntry(id: 5, workoutId: 5, exerciseId: 5),
+  ExerciseEntry(id: 2, workoutId: 1, exerciseId: 2),
+  ExerciseEntry(id: 3, workoutId: 1, exerciseId: 3),
+  ExerciseEntry(id: 4, workoutId: 2, exerciseId: 2),
+  ExerciseEntry(id: 5, workoutId: 3, exerciseId: 3),
+  ExerciseEntry(id: 6, workoutId: 4, exerciseId: 4),
+  ExerciseEntry(id: 7, workoutId: 5, exerciseId: 5),
 ];
 
 class UnknownExerciseKeyException implements Exception {

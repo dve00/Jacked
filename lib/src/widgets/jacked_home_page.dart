@@ -80,22 +80,22 @@ class _JackedHomePageState extends State<JackedHomePage> {
             constructAppBar(context.l10n.homepage_program, context.l10n.homepage_help_program),
             constructAppBar(context.l10n.homepage_exercises, context.l10n.homepage_help_exercises),
           ][currentPageIndex],
-          body: Stack(
-            children: [
-              <Widget>[
-                const YouPage(),
-                const DiaryPage(),
-                WorkoutPage(
-                  onStartWorkout: () {
-                    setState(() {
-                      isWorkoutActive = true;
-                    });
-                  },
-                ),
-                const ProgramPage(),
-                const ExercisesPage(),
-              ][currentPageIndex],
-            ],
+          body: Padding(
+            // padding matches height of navbar
+            padding: const EdgeInsets.only(bottom: 80.0),
+            child: <Widget>[
+              const YouPage(),
+              const DiaryPage(),
+              WorkoutPage(
+                onStartWorkout: () {
+                  setState(() {
+                    isWorkoutActive = true;
+                  });
+                },
+              ),
+              const ProgramPage(),
+              const ExercisesPage(),
+            ][currentPageIndex],
           ),
         ),
         if (isWorkoutActive)
