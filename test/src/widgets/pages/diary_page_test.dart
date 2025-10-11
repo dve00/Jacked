@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
+import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
@@ -13,11 +14,13 @@ void main() {
   late MockExerciseService exerciseSvc;
   late MockWorkoutService workoutSvc;
   late MockExerciseEntryService exerciseEntrySvc;
+  late MockExerciseSetService exerciseSetSvc;
 
   setUp(() {
     exerciseSvc = MockExerciseService();
     workoutSvc = MockWorkoutService();
     exerciseEntrySvc = MockExerciseEntryService();
+    exerciseSetSvc = MockExerciseSetService();
   });
 
   group('Diary Page', () {
@@ -51,6 +54,7 @@ void main() {
           exerciseService: exerciseSvc,
           workoutService: workoutSvc,
           exerciseEntryService: exerciseEntrySvc,
+          exerciseSetService: exerciseSetSvc,
           child: makeTestApp(const DiaryPage()),
         ),
       );
@@ -66,11 +70,15 @@ void main() {
       when(
         () => exerciseEntrySvc.listByWorkoutId(1),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
+      when(
+        () => exerciseSetSvc.listByExerciseEntryId(1),
+      ).thenAnswer((_) async => [const ExerciseSet(exerciseEntryId: 1, reps: 1, weight: 1.0)]);
       await tester.pumpWidget(
         ServiceProvider(
           exerciseService: exerciseSvc,
           workoutService: workoutSvc,
           exerciseEntryService: exerciseEntrySvc,
+          exerciseSetService: exerciseSetSvc,
           child: makeTestApp(
             DiaryEntry(
               workout: Workout(id: 1, title: 'W1', startTime: DateTime.now()),

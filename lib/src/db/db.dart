@@ -29,6 +29,7 @@ Future<void> onCreate(Database db, int version) async {
   await initExercisesTable(db, seedExercises);
   await initWorkoutTable(db, seedWorkouts);
   await initExerciseEntriesTable(db, seedExerciseEntries);
+  await initExerciseSetsTable(db, seedExerciseSets);
 }
 
 Future<void> initExercisesTable(Database db, List<Exercise> seedExercises) async {

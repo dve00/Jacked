@@ -43,12 +43,21 @@ class DiaryEntry extends StatelessWidget {
   final Workout workout;
 
   Future<List<ExerciseEntry>> loadExerciseEntries(BuildContext context) async {
-    if (workout.id == null) return [];
-    final exerciseEntries = await context.svc.exerciseEntryService.listByWorkoutId(workout.id!);
+    final workoutId = workout.id;
+    if (workoutId == null) return [];
+    final exerciseEntries = await context.svc.exerciseEntryService.listByWorkoutId(workoutId);
     for (int i = 0; i < exerciseEntries.length; i++) {
       if (!context.mounted) return [];
       final exercise = await context.svc.exerciseService.get(exerciseEntries[i].exerciseId);
       exerciseEntries[i] = exerciseEntries[i].copyWith(exercise: exercise);
+      final exerciseEntryId = exerciseEntries[i].id;
+      if (exerciseEntryId != null) {
+        if (!context.mounted) return [];
+        final sets = await context.svc.exerciseSetService.listByExerciseEntryId(
+          exerciseEntryId,
+        );
+        exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
+      }
     }
     return exerciseEntries;
   }
@@ -87,8 +96,14 @@ class DiaryEntry extends StatelessWidget {
                 ...exerciseEntries.where((entry) => entry.exercise != null).map(
                   (entry) {
                     final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
+                    final sets = entry.sets;
                     return Row(
-                      children: [Text(translation.name)],
+                      children: [
+                        Text(translation.name),
+                        // TODO: Display the best set
+                        if (sets != null && sets.isNotEmpty)
+                          Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
+                      ],
                     );
                   },
                 ),

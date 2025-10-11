@@ -12,11 +12,13 @@ void main() {
   late MockExerciseService exerciseSvc;
   late MockWorkoutService workoutSvc;
   late MockExerciseEntryService exerciseEntrySvc;
+  late MockExerciseSetService exerciseSetSvc;
 
   setUp(() {
     exerciseSvc = MockExerciseService();
     workoutSvc = MockWorkoutService();
     exerciseEntrySvc = MockExerciseEntryService();
+    exerciseSetSvc = MockExerciseSetService();
   });
 
   group('ExercisePage', () {
@@ -27,6 +29,7 @@ void main() {
           exerciseService: exerciseSvc,
           workoutService: workoutSvc,
           exerciseEntryService: exerciseEntrySvc,
+          exerciseSetService: exerciseSetSvc,
           child: makeTestApp(const ExercisesPage()),
         ),
       );

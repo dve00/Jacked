@@ -3,6 +3,7 @@ import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/jacked_home_page.dart';
 import 'src/l10n/generated/app_localizations.dart';
@@ -15,6 +16,7 @@ void main() async {
       exerciseService: ExerciseService(db: db),
       workoutService: WorkoutService(db: db),
       exerciseEntryService: ExerciseEntryService(db: db),
+      exerciseSetService: ExerciseSetService(db: db),
       child: const Jacked(),
     ),
   );
