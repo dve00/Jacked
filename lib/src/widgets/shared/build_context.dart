@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/l10n/generated/app_localizations.dart';
 
 extension ExtendedContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this)!;
-  ServiceProvider get svc => ServiceProvider.of(this);
   TextTheme get textTheme => Theme.of(this).textTheme;
 }

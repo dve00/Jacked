@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/db.dart';
-import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
@@ -10,20 +9,30 @@ import 'src/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final db = await AppDatabase.database;
+  await JackedDatabase.init();
   runApp(
-    ServiceProvider(
-      exerciseService: ExerciseService(db: db),
-      workoutService: WorkoutService(db: db),
-      exerciseEntryService: ExerciseEntryService(db: db),
-      exerciseSetService: ExerciseSetService(db: db),
-      child: const Jacked(),
+    Jacked(
+      exerciseSvc: await ExerciseService.instance,
+      exerciseEntryService: await ExerciseEntryService.instance,
+      exerciseSetService: await ExerciseSetService.instance,
+      workoutSvc: await WorkoutService.instance,
     ),
   );
 }
 
 class Jacked extends StatelessWidget {
-  const Jacked({super.key});
+  final ExerciseService exerciseSvc;
+  final ExerciseEntryService exerciseEntryService;
+  final ExerciseSetService exerciseSetService;
+  final WorkoutService workoutSvc;
+
+  const Jacked({
+    super.key,
+    required this.exerciseSvc,
+    required this.exerciseEntryService,
+    required this.exerciseSetService,
+    required this.workoutSvc,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,12 @@ class Jacked extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const JackedHomePage(),
+      home: JackedHomePage(
+        exerciseSvc: exerciseSvc,
+        exerciseEntryService: exerciseEntryService,
+        exerciseSetSvc: exerciseSetService,
+        workoutSvc: workoutSvc,
+      ),
     );
   }
 }

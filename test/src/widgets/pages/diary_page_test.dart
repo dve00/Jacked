@@ -3,7 +3,6 @@ import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/db/service_provider.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -50,12 +49,13 @@ void main() {
         () => exerciseEntrySvc.listByWorkoutId(2),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2)]);
       await tester.pumpWidget(
-        ServiceProvider(
-          exerciseService: exerciseSvc,
-          workoutService: workoutSvc,
-          exerciseEntryService: exerciseEntrySvc,
-          exerciseSetService: exerciseSetSvc,
-          child: makeTestApp(const DiaryPage()),
+        makeTestApp(
+          DiaryPage(
+            exerciseEntrySvc: exerciseEntrySvc,
+            exerciseSetSvc: exerciseSetSvc,
+            exerciseSvc: exerciseSvc,
+            workoutSvc: workoutSvc,
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -74,15 +74,12 @@ void main() {
         () => exerciseSetSvc.listByExerciseEntryId(1),
       ).thenAnswer((_) async => [const ExerciseSet(exerciseEntryId: 1, reps: 1, weight: 1.0)]);
       await tester.pumpWidget(
-        ServiceProvider(
-          exerciseService: exerciseSvc,
-          workoutService: workoutSvc,
-          exerciseEntryService: exerciseEntrySvc,
-          exerciseSetService: exerciseSetSvc,
-          child: makeTestApp(
-            DiaryEntry(
-              workout: Workout(id: 1, title: 'W1', startTime: DateTime.now()),
-            ),
+        makeTestApp(
+          DiaryEntry(
+            exerciseEntrySvc: exerciseEntrySvc,
+            exerciseSetSvc: exerciseSetSvc,
+            exerciseSvc: exerciseSvc,
+            workout: Workout(id: 1, title: 'W1', startTime: DateTime.now()),
           ),
         ),
       );

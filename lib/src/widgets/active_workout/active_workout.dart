@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
 class ActiveWorkout extends StatefulWidget {
+  final ExerciseService exerciseSvc;
+  final double sheetMinSnap;
+  final double sheetMaxSnap;
+  final DraggableScrollableController controller;
+  final VoidCallback onCancelWorkout;
+
   const ActiveWorkout({
     super.key,
+    required this.exerciseSvc,
     required this.sheetMinSnap,
     required this.sheetMaxSnap,
     required this.controller,
     required this.onCancelWorkout,
   });
-
-  final double sheetMinSnap;
-  final double sheetMaxSnap;
-  final DraggableScrollableController controller;
-  final VoidCallback onCancelWorkout;
 
   @override
   State<StatefulWidget> createState() => _ActiveWorkoutState();
@@ -163,10 +166,16 @@ class MinimizedWorkoutHeader extends StatelessWidget {
 }
 
 class AddExerciseCard extends StatelessWidget {
+  final ExerciseService exerciseSvc;
   final VoidCallback onClose;
   final void Function(Exercise?) onSelectedExercise;
 
-  const AddExerciseCard({super.key, required this.onSelectedExercise, required this.onClose});
+  const AddExerciseCard({
+    super.key,
+    required this.exerciseSvc,
+    required this.onSelectedExercise,
+    required this.onClose,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +194,9 @@ class AddExerciseCard extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: ExerciseList(onSelectedExercise: onSelectedExercise)),
+          Expanded(
+            child: ExerciseList(exercisesSvc: exerciseSvc, onSelectedExercise: onSelectedExercise),
+          ),
         ],
       ),
     );

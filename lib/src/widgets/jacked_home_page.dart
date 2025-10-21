@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/db/services/exercise_entry_service.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/services/exercise_set_service.dart';
+import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
@@ -8,7 +12,18 @@ import 'package:jacked/src/widgets/pages/you_page.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class JackedHomePage extends StatefulWidget {
-  const JackedHomePage({super.key});
+  final ExerciseService exerciseSvc;
+  final ExerciseSetService exerciseSetSvc;
+  final ExerciseEntryService exerciseEntryService;
+  final WorkoutService workoutSvc;
+
+  const JackedHomePage({
+    super.key,
+    required this.exerciseSvc,
+    required this.exerciseSetSvc,
+    required this.exerciseEntryService,
+    required this.workoutSvc,
+  });
 
   @override
   State<JackedHomePage> createState() => _JackedHomePageState();
@@ -85,7 +100,12 @@ class _JackedHomePageState extends State<JackedHomePage> {
             padding: const EdgeInsets.only(bottom: 80.0),
             child: <Widget>[
               const YouPage(),
-              const DiaryPage(),
+              DiaryPage(
+                workoutSvc: widget.workoutSvc,
+                exerciseEntrySvc: widget.exerciseEntryService,
+                exerciseSetSvc: widget.exerciseSetSvc,
+                exerciseSvc: widget.exerciseSvc,
+              ),
               WorkoutPage(
                 onStartWorkout: () {
                   setState(() {
@@ -94,7 +114,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 },
               ),
               const ProgramPage(),
-              const ExercisesPage(),
+              ExercisesPage(exerciseSvc: widget.exerciseSvc),
             ][currentPageIndex],
           ),
         ),
@@ -105,6 +125,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
               top: true,
               bottom: false,
               child: ActiveWorkout(
+                exerciseSvc: widget.exerciseSvc,
                 sheetMinSnap: sheetMinSnap,
                 sheetMaxSnap: sheetMaxSnap,
                 controller: _sheetController,

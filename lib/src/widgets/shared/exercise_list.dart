@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/seeds.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class ExerciseList extends StatelessWidget {
+  final ExerciseService exercisesSvc;
   final void Function(Exercise) onSelectedExercise;
-  const ExerciseList({super.key, required this.onSelectedExercise});
+
+  const ExerciseList({
+    super.key,
+    required this.exercisesSvc,
+    required this.onSelectedExercise,
+  });
+
+  Future<List<Exercise>> listExercisesFuture() async {
+    return exercisesSvc.list();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.svc.exerciseService.list(),
+      future: listExercisesFuture(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();

@@ -3,17 +3,34 @@ import 'package:intl/intl.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
+import 'package:jacked/src/db/services/exercise_entry_service.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/services/exercise_set_service.dart';
+import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class DiaryPage extends StatelessWidget {
+  final WorkoutService workoutSvc;
+  final ExerciseService exerciseSvc;
+  final ExerciseEntryService exerciseEntrySvc;
+  final ExerciseSetService exerciseSetSvc;
+
   const DiaryPage({
     super.key,
+    required this.exerciseSvc,
+    required this.exerciseEntrySvc,
+    required this.exerciseSetSvc,
+    required this.workoutSvc,
   });
+
+  Future<List<Workout>> listWorkoutsFuture() async {
+    return workoutSvc.list();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.svc.workoutService.list(),
+      future: listWorkoutsFuture(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();
@@ -25,7 +42,12 @@ class DiaryPage extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (context, index) {
             final workout = workouts[index];
-            return DiaryEntry(workout: workout);
+            return DiaryEntry(
+              workout: workout,
+              exerciseEntrySvc: exerciseEntrySvc,
+              exerciseSetSvc: exerciseSetSvc,
+              exerciseSvc: exerciseSvc,
+            );
           },
           itemCount: workouts.length,
         );
@@ -34,32 +56,49 @@ class DiaryPage extends StatelessWidget {
   }
 }
 
+Future<List<ExerciseEntry>> loadExerciseEntries(
+  int? workoutId,
+  ExerciseEntryService exerciseEntrySvc,
+  ExerciseService exerciseSvc,
+  ExerciseSetService exerciseSetSvc,
+) async {
+  if (workoutId == null) return [];
+  final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(workoutId);
+  for (int i = 0; i < exerciseEntries.length; i++) {
+    final exercise = await exerciseSvc.get(exerciseEntries[i].exerciseId);
+    exerciseEntries[i] = exerciseEntries[i].copyWith(exercise: exercise);
+    final exerciseEntryId = exerciseEntries[i].id;
+    if (exerciseEntryId != null) {
+      final sets = await exerciseSetSvc.listByExerciseEntryId(
+        exerciseEntryId,
+      );
+      exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
+    }
+  }
+  return exerciseEntries;
+}
+
 class DiaryEntry extends StatelessWidget {
+  final ExerciseService exerciseSvc;
+  final ExerciseEntryService exerciseEntrySvc;
+  final ExerciseSetService exerciseSetSvc;
+  final Workout workout;
+
   const DiaryEntry({
     super.key,
+    required this.exerciseSvc,
+    required this.exerciseEntrySvc,
+    required this.exerciseSetSvc,
     required this.workout,
   });
 
-  final Workout workout;
-
-  Future<List<ExerciseEntry>> loadExerciseEntries(BuildContext context) async {
-    final workoutId = workout.id;
-    if (workoutId == null) return [];
-    final exerciseEntries = await context.svc.exerciseEntryService.listByWorkoutId(workoutId);
-    for (int i = 0; i < exerciseEntries.length; i++) {
-      if (!context.mounted) return [];
-      final exercise = await context.svc.exerciseService.get(exerciseEntries[i].exerciseId);
-      exerciseEntries[i] = exerciseEntries[i].copyWith(exercise: exercise);
-      final exerciseEntryId = exerciseEntries[i].id;
-      if (exerciseEntryId != null) {
-        if (!context.mounted) return [];
-        final sets = await context.svc.exerciseSetService.listByExerciseEntryId(
-          exerciseEntryId,
-        );
-        exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
-      }
-    }
-    return exerciseEntries;
+  Future<List<ExerciseEntry>> loadExerciseEntriesFuture() async {
+    return loadExerciseEntries(
+      workout.id,
+      exerciseEntrySvc,
+      exerciseSvc,
+      exerciseSetSvc,
+    );
   }
 
   @override
@@ -67,7 +106,7 @@ class DiaryEntry extends StatelessWidget {
     final duration = workout.endTime?.difference(workout.startTime);
 
     return FutureBuilder(
-      future: loadExerciseEntries(context),
+      future: loadExerciseEntriesFuture(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();

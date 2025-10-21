@@ -6,20 +6,25 @@ import 'package:jacked/src/db/seeds.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class AppDatabase {
+class JackedDatabase {
   static Database? _db;
+
+  static const int _version = 1;
+  static const String _databaseName = 'jacked.db';
 
   static Future<Database> get database async {
     if (_db != null) return _db!;
 
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'jacked.db');
+    final path = join(await getDatabasesPath(), _databaseName);
 
-    await deleteDatabase(path);
-
-    _db = await openDatabase(path, version: 1, onConfigure: onConfigure, onCreate: onCreate);
+    _db = await openDatabase(path, version: _version, onConfigure: onConfigure, onCreate: onCreate);
 
     return _db!;
+  }
+
+  static Future<void> init() async {
+    final path = join(await getDatabasesPath(), _databaseName);
+    _db = await openDatabase(path, version: 1, onConfigure: onConfigure, onCreate: onCreate);
   }
 }
 

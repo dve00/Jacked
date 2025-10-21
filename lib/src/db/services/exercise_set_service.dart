@@ -1,11 +1,21 @@
+import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ExerciseSetService {
-  final table = 'ExerciseSets';
-  Database db;
-
   ExerciseSetService({required this.db});
+
+  static ExerciseSetService? _instance;
+
+  final table = 'ExerciseSets';
+  final Database db;
+
+  static Future<ExerciseSetService> get instance async {
+    if (_instance != null) return _instance!;
+    final db = await JackedDatabase.database;
+    _instance = ExerciseSetService(db: db);
+    return _instance!;
+  }
 
   Future<List<ExerciseSet>> list() async =>
       (await db.query(table)).map(ExerciseSet.fromMap).toList();
