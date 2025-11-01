@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/widgets/shared/build_context.dart';
-import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
+import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
-class ActiveWorkout extends StatefulWidget {
+class ActiveWorkoutSheet extends StatefulWidget {
   final ExerciseService exerciseSvc;
   final double sheetMinSnap;
   final double sheetMaxSnap;
   final DraggableScrollableController controller;
   final VoidCallback onCancelWorkout;
 
-  const ActiveWorkout({
+  const ActiveWorkoutSheet({
     super.key,
     required this.exerciseSvc,
     required this.sheetMinSnap,
@@ -22,10 +21,10 @@ class ActiveWorkout extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _ActiveWorkoutState();
+  State<StatefulWidget> createState() => _ActiveWorkoutSheetState();
 }
 
-class _ActiveWorkoutState extends State<ActiveWorkout> {
+class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
   double _minChildSize = 0;
 
   @override
@@ -70,42 +69,20 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             child: Column(
               children: [
                 const DraggableHeader(),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (_, i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Title'),
-                            JackedButton(
-                              label: context.l10n.active_workout_addExercise,
-                              onPressed: () => {},
-                            ),
-                            JackedButton(
-                              label: context.l10n.active_workout_cancelWorkout,
-                              onPressed: () async {
-                                setState(() {
-                                  _minChildSize = 0;
-                                });
-                                // allow the widget to rebuild before animating to 0
-                                await Future.delayed(const Duration(milliseconds: 5));
-                                widget.controller.animateTo(
-                                  0,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeOut,
-                                );
-                                widget.onCancelWorkout();
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                ActiveWorkoutBody(
+                  onCancelWorkout: () async {
+                    setState(() {
+                      _minChildSize = 0;
+                    });
+                    // allow the widget to rebuild before animating to 0
+                    await Future.delayed(const Duration(milliseconds: 5));
+                    widget.controller.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                    widget.onCancelWorkout();
+                  },
                 ),
               ],
             ),

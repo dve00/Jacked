@@ -3,7 +3,7 @@ import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
-import 'package:jacked/src/widgets/active_workout/active_workout.dart';
+import 'package:jacked/src/widgets/active_workout/active_workout_sheet.dart';
 import 'package:jacked/src/widgets/pages/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 import 'package:jacked/src/widgets/pages/program_page.dart';
@@ -124,7 +124,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
             child: SafeArea(
               top: true,
               bottom: false,
-              child: ActiveWorkout(
+              child: ActiveWorkoutSheet(
                 exerciseSvc: widget.exerciseSvc,
                 sheetMinSnap: sheetMinSnap,
                 sheetMaxSnap: sheetMaxSnap,
