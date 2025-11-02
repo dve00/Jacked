@@ -70,6 +70,7 @@ class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
               children: [
                 const DraggableHeader(),
                 ActiveWorkoutBody(
+                  exerciseSvc: widget.exerciseSvc,
                   onCancelWorkout: () async {
                     setState(() {
                       _minChildSize = 0;

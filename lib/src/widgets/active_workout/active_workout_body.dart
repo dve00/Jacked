@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
+import 'package:jacked/src/widgets/shared/exercise_list.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 
 class ActiveWorkoutBody extends StatelessWidget {
   const ActiveWorkoutBody({
     super.key,
+    required this.exerciseSvc,
     required this.onCancelWorkout,
   });
 
+  final ExerciseService exerciseSvc;
   final VoidCallback onCancelWorkout;
 
   @override
@@ -23,14 +27,33 @@ class ActiveWorkoutBody extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Title'),
-                  JackedButton(
-                    label: context.l10n.active_workout_addExercise,
-                    onPressed: () => {},
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8.0),
+                    child: Text('Title'),
                   ),
-                  JackedButton(
-                    label: context.l10n.active_workout_cancelWorkout,
-                    onPressed: onCancelWorkout,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: JackedButton(
+                      label: context.l10n.active_workout_addExercise,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          child: ExerciseList(
+                            exercisesSvc: exerciseSvc,
+                            onSelectedExercise: (exercise) {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: JackedButton(
+                      label: context.l10n.active_workout_cancelWorkout,
+                      onPressed: onCancelWorkout,
+                    ),
                   ),
                 ],
               );
