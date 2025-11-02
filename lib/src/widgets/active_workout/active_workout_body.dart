@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/db/models/exercise_entry.dart';
+import 'package:jacked/src/db/models/workout.dart';
+import 'package:jacked/src/db/seeds.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/exercise_list.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 
-class ActiveWorkoutBody extends StatelessWidget {
+class ActiveWorkoutBody extends StatefulWidget {
   const ActiveWorkoutBody({
     super.key,
     required this.exerciseSvc,
@@ -15,13 +18,22 @@ class ActiveWorkoutBody extends StatelessWidget {
   final VoidCallback onCancelWorkout;
 
   @override
+  State<ActiveWorkoutBody> createState() => _ActiveWorkoutBodyState();
+}
+
+class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
+  Workout workout = Workout(title: '', startTime: DateTime.now());
+
+  @override
   Widget build(BuildContext context) {
+    List<ExerciseEntry>? exerciseEntries = workout.exerciseEntries;
+
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.8,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
-          itemCount: 1,
+          itemCount: exerciseEntries == null ? 1 : exerciseEntries.length + 1,
           itemBuilder: (_, i) {
             if (i == 0) {
               return Column(
@@ -29,7 +41,7 @@ class ActiveWorkoutBody extends StatelessWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(bottom: 8.0),
-                    child: Text('Title'),
+                    child: Text('New Workout'),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -39,8 +51,22 @@ class ActiveWorkoutBody extends StatelessWidget {
                         context: context,
                         builder: (context) => Dialog(
                           child: ExerciseList(
-                            exercisesSvc: exerciseSvc,
+                            exercisesSvc: widget.exerciseSvc,
                             onSelectedExercise: (exercise) {
+                              int? exerciseId = exercise.id;
+                              if (exerciseId == null) return;
+                              List<ExerciseEntry> entries = <ExerciseEntry>[];
+                              if (exerciseEntries != null) entries = exerciseEntries;
+                              entries.add(
+                                ExerciseEntry(
+                                  workoutId: -1,
+                                  exerciseId: exerciseId,
+                                  exercise: exercise,
+                                ),
+                              );
+                              setState(() {
+                                workout = workout.copyWith(exerciseEntries: entries);
+                              });
                               Navigator.pop(context);
                             },
                           ),
@@ -52,15 +78,51 @@ class ActiveWorkoutBody extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: JackedButton(
                       label: context.l10n.active_workout_cancelWorkout,
-                      onPressed: onCancelWorkout,
+                      onPressed: widget.onCancelWorkout,
                     ),
                   ),
                 ],
               );
             }
-            return null;
+            if (exerciseEntries == null) return null;
+            return ExerciseForm(exerciseEntry: exerciseEntries[i - 1]);
           },
         ),
+      ),
+    );
+  }
+}
+
+class ExerciseForm extends StatefulWidget {
+  const ExerciseForm({
+    super.key,
+    required this.exerciseEntry,
+  });
+
+  final ExerciseEntry exerciseEntry;
+
+  @override
+  State<ExerciseForm> createState() => _ExerciseFormState();
+}
+
+class _ExerciseFormState extends State<ExerciseForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    var exercise = widget.exerciseEntry.exercise;
+    if (exercise == null) return const SizedBox.shrink();
+    var translation = context.l10n.exerciseTranslation(exercise.key);
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Text(translation.name),
+          TextFormField(
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+          ),
+        ],
       ),
     );
   }
