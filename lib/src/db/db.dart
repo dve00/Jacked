@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
@@ -24,6 +25,7 @@ class JackedDatabase {
 
   static Future<void> init() async {
     final path = join(await getDatabasesPath(), _databaseName);
+    if (kDebugMode) deleteDatabase(path);
     _db = await openDatabase(path, version: 1, onConfigure: onConfigure, onCreate: onCreate);
   }
 }
