@@ -135,6 +135,12 @@ class _JackedHomePageState extends State<JackedHomePage> {
                     isWorkoutActive = false;
                   });
                 },
+                onSaveWorkout: () async {
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  setState(() {
+                    isWorkoutActive = false;
+                  });
+                },
               ),
             ),
           ),

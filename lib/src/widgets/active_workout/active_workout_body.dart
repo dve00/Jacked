@@ -12,10 +12,12 @@ class ActiveWorkoutBody extends StatefulWidget {
     super.key,
     required this.exerciseSvc,
     required this.onCancelWorkout,
+    required this.onSaveWorkout,
   });
 
   final ExerciseService exerciseSvc;
   final VoidCallback onCancelWorkout;
+  final VoidCallback onSaveWorkout;
 
   @override
   State<ActiveWorkoutBody> createState() => _ActiveWorkoutBodyState();
@@ -79,6 +81,15 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
                     child: JackedButton(
                       label: context.l10n.active_workout_cancelWorkout,
                       onPressed: widget.onCancelWorkout,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: JackedButton(
+                      label: context.l10n.active_workout_saveWorkout,
+                      onPressed: () {
+                        widget.onSaveWorkout();
+                      },
                     ),
                   ),
                 ],

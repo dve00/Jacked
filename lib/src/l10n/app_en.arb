@@ -2,6 +2,7 @@
   "@@locale": "en",
   "active_workout_addExercise": "Add Exercise",
   "active_workout_cancelWorkout": "Cancel Workout",
+  "active_workout_saveWorkout": "Save Workout",
   "db_seeds_benchPress": "Bench Press",
   "db_seeds_benchPressDesc": "Chest Exercise",
   "db_seeds_LatPulldown": "Lat Pulldown",

@@ -10,6 +10,7 @@ class ActiveWorkoutSheet extends StatefulWidget {
   final double sheetMaxSnap;
   final DraggableScrollableController controller;
   final VoidCallback onCancelWorkout;
+  final VoidCallback onSaveWorkout;
 
   const ActiveWorkoutSheet({
     super.key,
@@ -18,6 +19,7 @@ class ActiveWorkoutSheet extends StatefulWidget {
     required this.sheetMaxSnap,
     required this.controller,
     required this.onCancelWorkout,
+    required this.onSaveWorkout,
   });
 
   @override
@@ -26,6 +28,19 @@ class ActiveWorkoutSheet extends StatefulWidget {
 
 class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
   double _minChildSize = 0;
+
+  Future<void> closeSheet() async {
+    setState(() {
+      _minChildSize = 0;
+    });
+    // allow the widget to rebuild before animating to 0
+    await Future.delayed(const Duration(milliseconds: 5));
+    widget.controller.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   void initState() {
@@ -72,17 +87,12 @@ class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
                 ActiveWorkoutBody(
                   exerciseSvc: widget.exerciseSvc,
                   onCancelWorkout: () async {
-                    setState(() {
-                      _minChildSize = 0;
-                    });
-                    // allow the widget to rebuild before animating to 0
-                    await Future.delayed(const Duration(milliseconds: 5));
-                    widget.controller.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
+                    await closeSheet();
                     widget.onCancelWorkout();
+                  },
+                  onSaveWorkout: () async {
+                    await closeSheet();
+                    widget.onSaveWorkout();
                   },
                 ),
               ],

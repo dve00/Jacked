@@ -27,6 +27,7 @@ void main() {
           ActiveWorkoutBody(
             exerciseSvc: exerciseSvc,
             onCancelWorkout: () {},
+            onSaveWorkout: () {},
           ),
         ),
       );
