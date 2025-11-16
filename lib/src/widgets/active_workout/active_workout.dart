@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
@@ -6,6 +7,7 @@ import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
 class ActiveWorkout extends StatefulWidget {
   final ExerciseService exerciseSvc;
   final WorkoutService workoutSvc;
+  final ExerciseEntryService exerciseEntryService;
   final double sheetMinSnap;
   final double sheetMaxSnap;
   final DraggableScrollableController controller;
@@ -16,6 +18,7 @@ class ActiveWorkout extends StatefulWidget {
     super.key,
     required this.exerciseSvc,
     required this.workoutSvc,
+    required this.exerciseEntryService,
     required this.sheetMinSnap,
     required this.sheetMaxSnap,
     required this.controller,
@@ -88,6 +91,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 ActiveWorkoutBody(
                   exerciseSvc: widget.exerciseSvc,
                   workoutSvc: widget.workoutSvc,
+                  exerciseEntrySvc: widget.exerciseEntryService,
                   onCancelWorkout: () async {
                     await closeSheet();
                     widget.onCancelWorkout();

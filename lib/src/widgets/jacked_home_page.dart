@@ -127,6 +127,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
               child: ActiveWorkout(
                 exerciseSvc: widget.exerciseSvc,
                 workoutSvc: widget.workoutSvc,
+                exerciseEntryService: widget.exerciseEntryService,
                 sheetMinSnap: sheetMinSnap,
                 sheetMaxSnap: sheetMaxSnap,
                 controller: _sheetController,

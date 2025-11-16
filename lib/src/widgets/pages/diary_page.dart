@@ -40,6 +40,7 @@ class DiaryPage extends StatelessWidget {
         }
         final workouts = snapshot.requireData;
         return ListView.builder(
+          cacheExtent: 100 * MediaQuery.of(context).size.height,
           itemBuilder: (context, index) {
             final workout = workouts[index];
             return DiaryEntry(
@@ -139,7 +140,6 @@ class DiaryEntry extends StatelessWidget {
                     return Row(
                       children: [
                         Text(translation.name),
-                        // TODO: Display the best set
                         if (sets != null && sets.isNotEmpty)
                           Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
                       ],

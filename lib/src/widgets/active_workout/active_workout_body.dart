@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
+import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
@@ -13,12 +15,14 @@ class ActiveWorkoutBody extends StatefulWidget {
     super.key,
     required this.exerciseSvc,
     required this.workoutSvc,
+    required this.exerciseEntrySvc,
     required this.onCancelWorkout,
     required this.onSaveWorkout,
   });
 
   final ExerciseService exerciseSvc;
   final WorkoutService workoutSvc;
+  final ExerciseEntryService exerciseEntrySvc;
   final VoidCallback onCancelWorkout;
   final VoidCallback onSaveWorkout;
 
@@ -26,17 +30,32 @@ class ActiveWorkoutBody extends StatefulWidget {
   State<ActiveWorkoutBody> createState() => _ActiveWorkoutBodyState();
 }
 
+Future<bool> saveWorkout(
+  WorkoutService workoutSvc,
+  ExerciseEntryService exerciseEntrySvc,
+  List<ExerciseFormData> formData,
+) async {
+  final workout = Workout(
+    title: 'Saved Workout',
+    startTime: DateTime.now(),
+    endTime: DateTime.now(),
+  );
+  final workoutId = await workoutSvc.create(workout);
+  for (var data in formData) {
+    final exerciseId = data.exercise.id;
+    if (exerciseId == null) return false;
+    await exerciseEntrySvc.create(
+      ExerciseEntry(
+        workoutId: workoutId,
+        exerciseId: exerciseId,
+      ),
+    );
+  }
+  return true;
+}
+
 class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
   final List<ExerciseFormData> formData = [];
-
-  Future<int> _saveWorkout() async {
-    final workout = Workout(
-      title: 'Saved Workout',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-    );
-    return widget.workoutSvc.create(workout);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +107,32 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: JackedButton(
                       label: context.l10n.active_workout_saveWorkout,
-                      onPressed: () {
-                        _saveWorkout();
+                      onPressed: () async {
+                        if (!await saveWorkout(
+                          widget.workoutSvc,
+                          widget.exerciseEntrySvc,
+                          formData,
+                        )) {
+                          if (context.mounted) {
+                            return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(context.l10n.active_workout_savingWorkoutFailed),
+                                  content: Text(
+                                    context.l10n.active_workout_savingWorkoutFailedContent,
+                                  ),
+                                  actions: [
+                                    JackedButton(
+                                      label: context.l10n.labels_ok,
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        }
                         widget.onSaveWorkout();
                       },
                     ),
