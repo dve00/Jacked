@@ -7,18 +7,19 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../../test_config.dart';
 
 void main() {
-  late Database db;
+  late Database testDb;
   late ExerciseService svc;
 
   setupTestDatabase();
 
   setUp(() async {
-    db = await openDatabase(inMemoryDatabasePath, version: 1, onCreate: onCreate);
-    svc = ExerciseService(db: db);
+    testDb = await openDatabase(inMemoryDatabasePath, version: 1, onCreate: onCreate);
+    JackedDatabase.overrideDatabaseForTests(testDb);
+    svc = await ExerciseService.instance;
   });
 
   tearDown(() async {
-    await db.close();
+    await testDb.close();
   });
 
   test('db is seeded correctly', () async {

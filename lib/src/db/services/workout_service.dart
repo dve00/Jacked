@@ -3,7 +3,7 @@ import 'package:jacked/src/db/models/workout.dart';
 import 'package:sqflite/sqflite.dart';
 
 class WorkoutService {
-  WorkoutService({required this.db});
+  WorkoutService._({required this.db});
 
   static WorkoutService? _instance;
 
@@ -13,8 +13,13 @@ class WorkoutService {
   static Future<WorkoutService> get instance async {
     if (_instance != null) return _instance!;
     final db = await JackedDatabase.database;
-    _instance = WorkoutService(db: db);
+    _instance = WorkoutService._(db: db);
     return _instance!;
+  }
+
+  // Reset the singleton. Use only in tests.
+  static void resetForTests() {
+    _instance = null;
   }
 
   Future<List<Workout>> list() async => (await db.query(table)).map(Workout.fromMap).toList();

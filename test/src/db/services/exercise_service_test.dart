@@ -16,24 +16,26 @@ const seedExercises = <Exercise>[
 ];
 
 void main() {
-  late Database db;
+  late Database testDb;
   late ExerciseService svc;
 
   setupTestDatabase();
 
   setUp(() async {
-    db = await openDatabase(
+    testDb = await openDatabase(
       inMemoryDatabasePath,
       version: 1,
       onCreate: (db, version) async {
         await initExercisesTable(db, seedExercises);
       },
     );
-    svc = ExerciseService(db: db);
+    JackedDatabase.overrideDatabaseForTests(testDb);
+    svc = await ExerciseService.instance;
   });
 
   tearDown(() async {
-    await db.close();
+    await testDb.close();
+    ExerciseService.resetForTests();
   });
 
   group('exercise service', () {

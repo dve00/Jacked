@@ -15,18 +15,15 @@ class JackedDatabase {
 
   static Future<Database> get database async {
     if (_db != null) return _db!;
-
     final path = join(await getDatabasesPath(), _databaseName);
-
+    if (kDebugMode) deleteDatabase(path);
     _db = await openDatabase(path, version: _version, onConfigure: onConfigure, onCreate: onCreate);
-
     return _db!;
   }
 
-  static Future<void> init() async {
-    final path = join(await getDatabasesPath(), _databaseName);
-    if (kDebugMode) deleteDatabase(path);
-    _db = await openDatabase(path, version: 1, onConfigure: onConfigure, onCreate: onCreate);
+  /// Overrides the database used by the singleton. Use only in tests.
+  static void overrideDatabaseForTests(Database? testDb) {
+    _db = testDb;
   }
 }
 

@@ -46,24 +46,26 @@ final seedWorkouts = <Workout>[
 ];
 
 void main() {
-  late Database db;
+  late Database testDb;
   late WorkoutService svc;
 
   setupTestDatabase();
 
   setUp(() async {
-    db = await openDatabase(
+    testDb = await openDatabase(
       inMemoryDatabasePath,
       version: 1,
       onCreate: (db, version) async {
         await initWorkoutTable(db, seedWorkouts);
       },
     );
-    svc = WorkoutService(db: db);
+    JackedDatabase.overrideDatabaseForTests(testDb);
+    svc = await WorkoutService.instance;
   });
 
   tearDown(() async {
-    await db.close();
+    await testDb.close();
+    WorkoutService.resetForTests();
   });
 
   group('workout service', () {
