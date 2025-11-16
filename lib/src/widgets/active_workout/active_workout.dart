@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
-import 'package:jacked/src/widgets/shared/exercise_list.dart';
 
-class ActiveWorkoutSheet extends StatefulWidget {
+class ActiveWorkout extends StatefulWidget {
   final ExerciseService exerciseSvc;
+  final WorkoutService workoutSvc;
   final double sheetMinSnap;
   final double sheetMaxSnap;
   final DraggableScrollableController controller;
   final VoidCallback onCancelWorkout;
   final VoidCallback onSaveWorkout;
 
-  const ActiveWorkoutSheet({
+  const ActiveWorkout({
     super.key,
     required this.exerciseSvc,
+    required this.workoutSvc,
     required this.sheetMinSnap,
     required this.sheetMaxSnap,
     required this.controller,
@@ -23,10 +24,10 @@ class ActiveWorkoutSheet extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _ActiveWorkoutSheetState();
+  State<StatefulWidget> createState() => _ActiveWorkoutState();
 }
 
-class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
+class _ActiveWorkoutState extends State<ActiveWorkout> {
   double _minChildSize = 0;
 
   Future<void> closeSheet() async {
@@ -86,6 +87,7 @@ class _ActiveWorkoutSheetState extends State<ActiveWorkoutSheet> {
                 const DraggableHeader(),
                 ActiveWorkoutBody(
                   exerciseSvc: widget.exerciseSvc,
+                  workoutSvc: widget.workoutSvc,
                   onCancelWorkout: () async {
                     await closeSheet();
                     widget.onCancelWorkout();
@@ -149,44 +151,6 @@ class MinimizedWorkoutHeader extends StatelessWidget {
         SizedBox(height: 2),
         Text('05:34'),
       ],
-    );
-  }
-}
-
-class AddExerciseCard extends StatelessWidget {
-  final ExerciseService exerciseSvc;
-  final VoidCallback onClose;
-  final void Function(Exercise?) onSelectedExercise;
-
-  const AddExerciseCard({
-    super.key,
-    required this.exerciseSvc,
-    required this.onSelectedExercise,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).colorScheme.secondaryContainer,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text('Select Exercise', style: Theme.of(context).textTheme.displaySmall),
-                const Spacer(),
-                IconButton(onPressed: onClose, icon: const Icon(Icons.close)),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ExerciseList(exercisesSvc: exerciseSvc, onSelectedExercise: onSelectedExercise),
-          ),
-        ],
-      ),
     );
   }
 }

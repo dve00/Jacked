@@ -9,9 +9,11 @@ import '../../../test_config.dart';
 
 void main() {
   late MockExerciseService exerciseSvc;
+  late MockWorkoutService workoutSvc;
 
   setUp(() {
     exerciseSvc = MockExerciseService();
+    workoutSvc = MockWorkoutService();
   });
 
   group('Active Workout Body', () {
@@ -26,6 +28,7 @@ void main() {
         makeTestApp(
           ActiveWorkoutBody(
             exerciseSvc: exerciseSvc,
+            workoutSvc: workoutSvc,
             onCancelWorkout: () {},
             onSaveWorkout: () {},
           ),
