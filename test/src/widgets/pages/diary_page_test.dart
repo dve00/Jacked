@@ -24,6 +24,7 @@ void main() {
 
   group('Diary Page', () {
     testWidgets('has workout list', (tester) async {
+      // given - two exercises
       when(
         () => exerciseSvc.get(1),
       ).thenAnswer(
@@ -34,6 +35,8 @@ void main() {
       ).thenAnswer(
         (_) async => const Exercise(id: 2, key: 'lat_pulldown'),
       );
+
+      // and - two workouts
       when(
         () => workoutSvc.list(),
       ).thenAnswer(
@@ -42,12 +45,16 @@ void main() {
           Workout(id: 2, title: 'W2', startTime: DateTime.now()),
         ],
       );
+
+      // and - two exercise entries
       when(
         () => exerciseEntrySvc.listByWorkoutId(1),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
       when(
         () => exerciseEntrySvc.listByWorkoutId(2),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2)]);
+
+      // when - the widget is pumped
       await tester.pumpWidget(
         makeTestApp(
           DiaryPage(
@@ -59,6 +66,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+
+      // then - there are two diary entries
       expect(find.byType(DiaryEntry), findsExactly(2));
     });
     testWidgets('DiaryEntry', (tester) async {
@@ -85,6 +94,12 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Bench Press'), findsOneWidget);
+      // when - the diary entry is tapped
+      await tester.tap(find.byType(DiaryEntry));
+      await tester.pumpAndSettle();
+
+      // then - a modal bottom sheet was opened
+      expect(find.byType(DiaryEntryDetails), findsExactly(1));
     });
   });
 }

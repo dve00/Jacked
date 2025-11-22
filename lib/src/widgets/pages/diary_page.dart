@@ -116,41 +116,77 @@ class DiaryEntry extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         final exerciseEntries = snapshot.requireData;
-        return Card.outlined(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  workout.title,
-                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                if (workout.description != null)
+        return GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
+              ),
+              builder: (context) {
+                return DiaryEntryDetails(
+                  workout: workout,
+                );
+              },
+            );
+          },
+          child: Card.outlined(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    workout.description!,
-                    style: context.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+                    workout.title,
+                    style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
-                if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
-                ...exerciseEntries.where((entry) => entry.exercise != null).map(
-                  (entry) {
-                    final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
-                    final sets = entry.sets;
-                    return Row(
-                      children: [
-                        Text(translation.name),
-                        if (sets != null && sets.isNotEmpty)
-                          Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                  if (workout.description != null)
+                    Text(
+                      workout.description!,
+                      style: context.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+                    ),
+                  Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
+                  if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
+                  ...exerciseEntries.where((entry) => entry.exercise != null).map(
+                    (entry) {
+                      final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
+                      final sets = entry.sets;
+                      return Row(
+                        children: [
+                          Text(translation.name),
+                          if (sets != null && sets.isNotEmpty)
+                            Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class DiaryEntryDetails extends StatelessWidget {
+  final Workout workout;
+  const DiaryEntryDetails({
+    super.key,
+    required this.workout,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        constraints: const BoxConstraints(minWidth: double.infinity),
+        child: Column(
+          children: [Text(workout.title)],
+        ),
+      ),
     );
   }
 }
