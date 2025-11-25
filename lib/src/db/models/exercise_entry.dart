@@ -17,10 +17,16 @@ class ExerciseEntry extends Equatable {
     this.sets,
   });
 
-  ExerciseEntry copyWith({Exercise? exercise, List<ExerciseSet>? sets}) => ExerciseEntry(
-    id: id,
-    workoutId: workoutId,
-    exerciseId: exerciseId,
+  ExerciseEntry copyWith({
+    int? id,
+    int? workoutId,
+    int? exerciseId,
+    Exercise? exercise,
+    List<ExerciseSet>? sets,
+  }) => ExerciseEntry(
+    id: id ?? this.id,
+    workoutId: workoutId ?? this.workoutId,
+    exerciseId: exerciseId ?? this.exerciseId,
     exercise: exercise ?? this.exercise,
     sets: sets ?? this.sets,
   );
