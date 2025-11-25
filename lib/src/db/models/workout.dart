@@ -19,16 +19,18 @@ class Workout extends Equatable {
   });
 
   Workout copyWith({
+    int? id,
     String? title,
-    DateTime? stopTime,
+    DateTime? startTime,
+    DateTime? endTime,
     String? description,
     List<ExerciseEntry>? exerciseEntries,
   }) {
     return Workout(
-      id: id,
+      id: id ?? this.id,
       title: title ?? this.title,
-      startTime: startTime,
-      endTime: stopTime ?? endTime,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
       description: description ?? this.description,
       exerciseEntries: exerciseEntries ?? this.exerciseEntries,
     );

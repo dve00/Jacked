@@ -11,24 +11,24 @@ environment:
   flutter: ">=3.38.3 <4.0.0"
 
 dependencies:
+  collection: ^1.19.1
+  cupertino_icons: ^1.0.8
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  sqflite: ^2.4.2
-  path: ^1.9.1
-  shared_preferences: ^2.5.3
-  collection: ^1.19.1
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
-  equatable: ^2.0.7
-  mocktail: ^1.0.4
+  path: ^1.9.1
+  shared_preferences: ^2.5.3
+  sqflite: ^2.4.2
 
 dev_dependencies:
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
+  mocktail: ^1.0.4
   sqflite_common_ffi: ^2.4.0
-  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

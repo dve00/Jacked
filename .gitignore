@@ -48,3 +48,7 @@ app.*.map.json
 # generated files
 /lib/src/l10n/generated/
 /coverage
+
+# editors
+.vscode/
+.zed/

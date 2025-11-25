@@ -57,13 +57,16 @@ class DiaryPage extends StatelessWidget {
   }
 }
 
-Future<List<ExerciseEntry>> loadExerciseEntries(
-  int? workoutId,
+Future<Workout?> loadWorkoutData(
+  Workout workout,
   ExerciseEntryService exerciseEntrySvc,
   ExerciseService exerciseSvc,
   ExerciseSetService exerciseSetSvc,
 ) async {
-  if (workoutId == null) return [];
+  assert(workout.id != null, 'The workout id should never be null');
+
+  final workoutId = workout.id;
+  if (workoutId == null) return null;
   final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(workoutId);
   for (int i = 0; i < exerciseEntries.length; i++) {
     final exercise = await exerciseSvc.get(exerciseEntries[i].exerciseId);
@@ -76,7 +79,7 @@ Future<List<ExerciseEntry>> loadExerciseEntries(
       exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
     }
   }
-  return exerciseEntries;
+  return workout.copyWith(exerciseEntries: exerciseEntries);
 }
 
 class DiaryEntry extends StatelessWidget {
@@ -93,21 +96,17 @@ class DiaryEntry extends StatelessWidget {
     required this.workout,
   });
 
-  Future<List<ExerciseEntry>> loadExerciseEntriesFuture() async {
-    return loadExerciseEntries(
-      workout.id,
-      exerciseEntrySvc,
-      exerciseSvc,
-      exerciseSetSvc,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final duration = workout.endTime?.difference(workout.startTime);
 
     return FutureBuilder(
-      future: loadExerciseEntriesFuture(),
+      future: loadWorkoutData(
+        workout,
+        exerciseEntrySvc,
+        exerciseSvc,
+        exerciseSetSvc,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();
@@ -115,7 +114,9 @@ class DiaryEntry extends StatelessWidget {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        final exerciseEntries = snapshot.requireData;
+        final populatedWorkout = snapshot.requireData;
+        if (populatedWorkout == null) return const SizedBox.shrink();
+        final exerciseEntries = populatedWorkout.exerciseEntries;
         return GestureDetector(
           onTap: () {
             showModalBottomSheet(
@@ -126,7 +127,7 @@ class DiaryEntry extends StatelessWidget {
               ),
               builder: (context) {
                 return DiaryEntryDetails(
-                  workout: workout,
+                  workout: populatedWorkout,
                 );
               },
             );
@@ -148,19 +149,20 @@ class DiaryEntry extends StatelessWidget {
                     ),
                   Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
                   if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
-                  ...exerciseEntries.where((entry) => entry.exercise != null).map(
-                    (entry) {
-                      final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
-                      final sets = entry.sets;
-                      return Row(
-                        children: [
-                          Text(translation.name),
-                          if (sets != null && sets.isNotEmpty)
-                            Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
-                        ],
-                      );
-                    },
-                  ),
+                  if (exerciseEntries != null)
+                    ...exerciseEntries.where((entry) => entry.exercise != null).map(
+                      (entry) {
+                        final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
+                        final sets = entry.sets;
+                        return Row(
+                          children: [
+                            Text(translation.name),
+                            if (sets != null && sets.isNotEmpty)
+                              Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
+                          ],
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
@@ -171,8 +173,33 @@ class DiaryEntry extends StatelessWidget {
   }
 }
 
+List<TableRow> getSetRows(ExerciseEntry? entry) {
+  final res = <TableRow>[];
+  if (entry == null) return res;
+  final sets = entry.sets ?? <ExerciseEntry>[];
+  for (var i = 0; i < sets.length; i++) {
+    res.add(
+      TableRow(
+        children: [
+          Text('${i + 1}'),
+          TextFormField(
+            enabled: false,
+            readOnly: true,
+          ),
+          TextFormField(
+            enabled: false,
+            readOnly: true,
+          ),
+        ],
+      ),
+    );
+  }
+  return res;
+}
+
 class DiaryEntryDetails extends StatelessWidget {
   final Workout workout;
+
   const DiaryEntryDetails({
     super.key,
     required this.workout,
@@ -180,11 +207,38 @@ class DiaryEntryDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final exerciseEntries = workout.exerciseEntries;
     return SafeArea(
       child: Container(
         constraints: const BoxConstraints(minWidth: double.infinity),
         child: Column(
-          children: [Text(workout.title)],
+          children: [
+            Text(workout.title),
+            if (exerciseEntries != null)
+              ...exerciseEntries.map((entry) {
+                if (entry.exercise == null) return const SizedBox.shrink();
+                final translations = context.l10n.exerciseTranslation(entry.exercise!.key);
+                return Form(
+                  child: Column(
+                    children: [
+                      Text(translations.name),
+                      Table(
+                        children: [
+                          TableRow(
+                            children: [
+                              Text(context.l10n.pages_diary_set),
+                              Text(context.l10n.pages_diary_weight),
+                              Text(context.l10n.pages_diary_reps),
+                            ],
+                          ),
+                          ...getSetRows(entry),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+          ],
         ),
       ),
     );
