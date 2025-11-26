@@ -1,6 +1,6 @@
 # Jacked
 
-A free workout tracking app.
+A free workout tracking app (get strong fast).
 
 ## Development Setup
 
