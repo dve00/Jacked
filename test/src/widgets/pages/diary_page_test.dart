@@ -71,36 +71,49 @@ void main() {
       // then - there are two diary entries
       expect(find.byType(DiaryEntry), findsExactly(2));
     });
-    testWidgets('DiaryEntry', (tester) async {
-      when(
-        () => exerciseSvc.get(1),
-      ).thenAnswer(
-        (_) async => const Exercise(id: 1, key: 'bench_press'),
-      );
-      when(
-        () => exerciseEntrySvc.listByWorkoutId(1),
-      ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
-      when(
-        () => exerciseSetSvc.listByExerciseEntryId(1),
-      ).thenAnswer((_) async => [const ExerciseSet(exerciseEntryId: 1, reps: 1, weight: 1.0)]);
-      await tester.pumpWidget(
-        makeTestApp(
-          DiaryEntry(
-            exerciseEntrySvc: exerciseEntrySvc,
-            exerciseSetSvc: exerciseSetSvc,
-            exerciseSvc: exerciseSvc,
-            workout: Workout(id: 1, title: 'W1', startTime: DateTime.now()),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Bench Press'), findsOneWidget);
-      // when - the diary entry is tapped
-      await tester.tap(find.byType(DiaryEntry));
-      await tester.pumpAndSettle();
 
-      // then - a modal bottom sheet was opened
-      expect(find.byType(DiaryEntryDetails), findsExactly(1));
+    group('DiaryEntry', () {
+      testWidgets('DiaryEntry', (tester) async {
+        // given - an exercise
+        when(
+          () => exerciseSvc.get(1),
+        ).thenAnswer(
+          (_) async => const Exercise(id: 1, key: 'bench_press'),
+        );
+
+        // and - an exercise entry
+        when(
+          () => exerciseEntrySvc.listByWorkoutId(1),
+        ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
+
+        // and - an exercise set
+        when(
+          () => exerciseSetSvc.listByExerciseEntryId(1),
+        ).thenAnswer((_) async => [const ExerciseSet(exerciseEntryId: 1, reps: 1, weight: 1.0)]);
+
+        // when - the widget is pumped
+        await tester.pumpWidget(
+          makeTestApp(
+            DiaryEntry(
+              exerciseEntrySvc: exerciseEntrySvc,
+              exerciseSetSvc: exerciseSetSvc,
+              exerciseSvc: exerciseSvc,
+              workout: Workout(id: 1, title: 'W1', startTime: DateTime.now()),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // then - a row for the bench press exercise is found with correct preview
+        expect(find.text('Bench Press 1.0kg x 1'), findsOneWidget);
+
+        // when - the diary entry is tapped
+        await tester.tap(find.byType(DiaryEntry));
+        await tester.pumpAndSettle();
+
+        // then - a modal bottom sheet is opened
+        expect(find.byType(DiaryEntryDetails), findsExactly(1));
+      });
     });
   });
 
@@ -225,6 +238,60 @@ void main() {
         in inputs) {
       test(name, () {
         expect(getSetRows(entry).length, equals(want));
+      });
+    }
+  });
+
+  group('getExercisePreviewRow()', () {
+    final input = [
+      {
+        'name': 'null',
+        'entries': null,
+        'want': <ExercisePreview>[],
+      },
+      {
+        'name': 'empty entries',
+        'entries': <ExerciseEntry>[],
+        'want': <ExercisePreview>[],
+      },
+      {
+        'name': 'one entry',
+        'entries': <ExerciseEntry>[
+          fixtureExerciseEntry(),
+        ],
+        'want': <ExercisePreview>[
+          const ExercisePreview(
+            key: 'bench_press',
+            displaySet: '20.0kg x 8',
+          ),
+        ],
+      },
+      {
+        'name': 'two entries',
+        'entries': <ExerciseEntry>[
+          fixtureExerciseEntry(),
+          fixtureExerciseEntry(),
+        ],
+        'want': <ExercisePreview>[
+          const ExercisePreview(
+            key: 'bench_press',
+            displaySet: '20.0kg x 8',
+          ),
+          const ExercisePreview(
+            key: 'bench_press',
+            displaySet: '20.0kg x 8',
+          ),
+        ],
+      },
+    ];
+    for (var {
+          'name': name as String,
+          'entries': entries as List<ExerciseEntry>?,
+          'want': want as List<ExercisePreview>,
+        }
+        in input) {
+      test(name, () {
+        expect(getExercisePreviews(entries), want);
       });
     }
   });

@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
+import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
 import 'package:jacked/src/db/services/exercise_entry_service.dart';
@@ -82,6 +84,43 @@ Future<Workout?> loadWorkoutData(
   return workout.copyWith(exerciseEntries: exerciseEntries);
 }
 
+String getPreviewSet(List<ExerciseSet>? sets) {
+  if (sets == null || sets.isEmpty) return '';
+  return '${sets[0].weight ?? -1}kg x ${sets[0].reps ?? -1}';
+}
+
+class ExercisePreview extends Equatable {
+  final String key;
+  final String displaySet;
+
+  const ExercisePreview({
+    required this.key,
+    required this.displaySet,
+  });
+
+  @override
+  List<Object?> get props => [key, displaySet];
+}
+
+List<ExercisePreview> getExercisePreviews(
+  List<ExerciseEntry>? entries,
+) {
+  final res = <ExercisePreview>[];
+  if (entries == null) return res;
+  for (final entry in entries) {
+    assert(entry.exercise != null, 'exercise should always be populated here');
+
+    final displaySet = getPreviewSet(entry.sets);
+    res.add(
+      ExercisePreview(
+        key: entry.exercise?.key ?? '',
+        displaySet: displaySet,
+      ),
+    );
+  }
+  return res;
+}
+
 class DiaryEntry extends StatelessWidget {
   final ExerciseService exerciseSvc;
   final ExerciseEntryService exerciseEntrySvc;
@@ -116,7 +155,6 @@ class DiaryEntry extends StatelessWidget {
         }
         final populatedWorkout = snapshot.requireData;
         if (populatedWorkout == null) return const SizedBox.shrink();
-        final exerciseEntries = populatedWorkout.exerciseEntries;
         return GestureDetector(
           onTap: () {
             showModalBottomSheet(
@@ -149,20 +187,19 @@ class DiaryEntry extends StatelessWidget {
                     ),
                   Text(DateFormat('EEEE, d. MMMM').format(workout.startTime)),
                   if (duration != null) Text('${duration.inHours}h ${duration.inMinutes}m'),
-                  if (exerciseEntries != null)
-                    ...exerciseEntries.where((entry) => entry.exercise != null).map(
-                      (entry) {
-                        final translation = context.l10n.exerciseTranslation(entry.exercise!.key);
-                        final sets = entry.sets;
-                        return Row(
-                          children: [
-                            Text(translation.name),
-                            if (sets != null && sets.isNotEmpty)
-                              Text(' ${sets[0].weight}kg x ${sets[0].reps}'),
-                          ],
-                        );
-                      },
-                    ),
+                  ...getExercisePreviews(
+                    populatedWorkout.exerciseEntries,
+                  ).map((ep) {
+                    final translation = context.l10n.getExerciseTranslation(ep.key);
+                    final displaySet = ep.displaySet.isNotEmpty
+                        ? ep.displaySet
+                        : context.l10n.pages_diary_noSets;
+                    return Row(
+                      children: [
+                        Text('${translation.name} $displaySet'),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),
@@ -217,7 +254,10 @@ class DiaryEntryDetails extends StatelessWidget {
             if (exerciseEntries != null)
               ...exerciseEntries.map((entry) {
                 if (entry.exercise == null) return const SizedBox.shrink();
-                final translations = context.l10n.exerciseTranslation(entry.exercise!.key);
+                final translations = context.l10n.exerciseTranslationsByKey[entry.exercise!.key];
+                if (translations == null) {
+                  throw UnknownExerciseKeyException(entry.exercise!.key);
+                }
                 return Form(
                   child: Column(
                     children: [

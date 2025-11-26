@@ -33,8 +33,12 @@ class ExerciseList extends StatelessWidget {
         return ListView.separated(
           itemBuilder: (context, index) {
             final exercise = exercises[index];
+            final translations = context.l10n.exerciseTranslationsByKey[exercise.key];
+            if (translations == null) {
+              throw UnknownExerciseKeyException(exercise.key);
+            }
             return ListTile(
-              title: Text(context.l10n.exerciseTranslation(exercise.key).name),
+              title: Text(translations.name),
               onTap: () => onSelectedExercise(exercise),
             );
           },

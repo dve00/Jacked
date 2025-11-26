@@ -174,8 +174,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
   @override
   Widget build(BuildContext context) {
     final formData = widget.formData;
-    var translation = context.l10n.exerciseTranslation(formData.exercise.key);
-
+    var translation = context.l10n.exerciseTranslationsByKey[formData.exercise.key];
+    if (translation == null) {
+      throw UnknownExerciseKeyException(formData.exercise.key);
+    }
     return Form(
       key: formData.key,
       child: Column(

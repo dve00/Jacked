@@ -34,7 +34,10 @@ class ExerciseDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final translation = context.l10n.exerciseTranslation(exercise.key);
+    final translations = context.l10n.exerciseTranslationsByKey[exercise.key];
+    if (translations == null) {
+      throw UnknownExerciseKeyException(exercise.key);
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -46,7 +49,7 @@ class ExerciseDetailCard extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  translation.name,
+                  translations.name,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const Spacer(),
@@ -64,7 +67,7 @@ class ExerciseDetailCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(translation.description),
+            child: Text(translations.description),
           ),
         ],
       ),

@@ -70,21 +70,42 @@ class UnknownExerciseKeyException implements Exception {
   String toString() => 'UnknownExerciseKeyException: "$key" not found';
 }
 
+class ExerciseTranslation {
+  final String name;
+  final String description;
+
+  const ExerciseTranslation({
+    required this.name,
+    required this.description,
+  });
+}
+
 extension ExerciseL10n on AppLocalizations {
-  ({String name, String description}) exerciseTranslation(String key) {
-    switch (key) {
-      case 'bench_press':
-        return (name: db_seeds_benchPress, description: db_seeds_benchPressDesc);
-      case 'lat_pulldown':
-        return (name: db_seeds_LatPulldown, description: db_seeds_LatPulldownDesc);
-      case 'overhead_press':
-        return (name: db_seeds_overheadPress, description: db_seeds_overheadPressDesc);
-      case 'seated_row':
-        return (name: db_seeds_seatedRow, description: db_seeds_seatedRowDesc);
-      case 'back_squat':
-        return (name: db_seeds_backSquat, description: db_seeds_backSquatDesc);
-      default:
-        throw UnknownExerciseKeyException(key);
-    }
+  Map<String, ExerciseTranslation> get exerciseTranslationsByKey => {
+    'bench_press': ExerciseTranslation(
+      name: db_seeds_benchPress,
+      description: db_seeds_benchPressDesc,
+    ),
+    'lat_pulldown': ExerciseTranslation(
+      name: db_seeds_LatPulldown,
+      description: db_seeds_LatPulldownDesc,
+    ),
+    'overhead_press': ExerciseTranslation(
+      name: db_seeds_overheadPress,
+      description: db_seeds_overheadPressDesc,
+    ),
+    'seated_row': ExerciseTranslation(
+      name: db_seeds_seatedRow,
+      description: db_seeds_seatedRowDesc,
+    ),
+    'back_squat': ExerciseTranslation(
+      name: db_seeds_backSquat,
+      description: db_seeds_backSquatDesc,
+    ),
+  };
+
+  ExerciseTranslation getExerciseTranslation(String key) {
+    return exerciseTranslationsByKey[key] ??
+        ExerciseTranslation(name: db_seeds_unknownExercise, description: '');
   }
 }
