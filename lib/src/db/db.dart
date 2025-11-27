@@ -13,11 +13,6 @@ class JackedDb {
   static const int _version = 1;
   static const String _databaseName = 'jacked.db';
 
-  static Future<void> onCreate(Database db, int version) async {
-    await createTables(db);
-    await seedTables(db: db, debug: kDebugMode);
-  }
-
   static Future<Database> get database async {
     if (_db != null) return _db!;
     final path = join(await getDatabasesPath(), _databaseName);
@@ -30,6 +25,11 @@ class JackedDb {
   static void overrideDatabaseForTests(Database? testDb) {
     _db = testDb;
   }
+}
+
+Future<void> onCreate(Database db, int version) async {
+  await createTables(db);
+  await seedTables(db: db, debug: kDebugMode);
 }
 
 Future<void> onConfigure(Database db) async => db.execute('PRAGMA foreign_keys = ON');

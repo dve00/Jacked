@@ -39,11 +39,11 @@ void main() {
 
       // and - two workouts
       when(
-        () => workoutSvc.list(),
+        () => workoutSvc.list(orderBy: 'startTime desc'),
       ).thenAnswer(
         (_) async => [
-          Workout(id: 1, title: 'W1', startTime: DateTime.now()),
-          Workout(id: 2, title: 'W2', startTime: DateTime.now()),
+          Workout(id: 1, title: 'W1', startTime: DateTime(2025, 11, 27)),
+          Workout(id: 2, title: 'W2', startTime: DateTime(2025, 11, 28)),
         ],
       );
 

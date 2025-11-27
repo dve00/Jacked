@@ -75,6 +75,10 @@ void main() {
       expect(await svc.list(), equals(seedWorkouts));
     });
 
+    test('list with order by', () async {
+      expect(await svc.list(orderBy: 'startTime desc'), equals(seedWorkouts.reversed));
+    });
+
     group('delete', () {
       test('delete - success', () async {
         final got = await svc.delete(1);

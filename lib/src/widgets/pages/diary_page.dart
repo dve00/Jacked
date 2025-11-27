@@ -25,14 +25,14 @@ class DiaryPage extends StatelessWidget {
     required this.workoutSvc,
   });
 
-  Future<List<Workout>> listWorkoutsFuture() async {
-    return workoutSvc.list();
+  Future<List<Workout>> listWorkouts() async {
+    return workoutSvc.list(orderBy: 'startTime desc');
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: listWorkoutsFuture(),
+      future: listWorkouts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();

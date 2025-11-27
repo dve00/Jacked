@@ -22,7 +22,12 @@ class WorkoutService {
     _instance = null;
   }
 
-  Future<List<Workout>> list() async => (await db.query(table)).map(Workout.fromMap).toList();
+  Future<List<Workout>> list({String? orderBy}) async {
+    if (orderBy == null) {
+      return (await db.query(table)).map(Workout.fromMap).toList();
+    }
+    return (await db.query(table, orderBy: orderBy)).map(Workout.fromMap).toList();
+  }
 
   Future<bool> delete(int id) async => await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0;
 
