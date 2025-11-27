@@ -12,7 +12,7 @@ class ExerciseSetService {
 
   static Future<ExerciseSetService> get instance async {
     if (_instance != null) return _instance!;
-    final db = await JackedDatabase.database;
+    final db = await JackedDb.database;
     _instance = ExerciseSetService._(db: db);
     return _instance!;
   }

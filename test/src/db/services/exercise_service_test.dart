@@ -26,15 +26,17 @@ void main() {
       inMemoryDatabasePath,
       version: 1,
       onCreate: (db, version) async {
-        await initExercisesTable(db, seedExercises);
+        await createTables(db);
+        await seedExercisesTable(db, seedExercises);
       },
     );
-    JackedDatabase.overrideDatabaseForTests(testDb);
+    JackedDb.overrideDatabaseForTests(testDb);
     svc = await ExerciseService.instance;
   });
 
   tearDown(() async {
     await testDb.close();
+    await deleteDatabase(inMemoryDatabasePath);
     ExerciseService.resetForTests();
   });
 

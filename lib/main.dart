@@ -9,7 +9,7 @@ import 'src/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await JackedDatabase.database;
+  await JackedDb.database;
   runApp(
     Jacked(
       exerciseSvc: await ExerciseService.instance,

@@ -22,6 +22,7 @@ class ExerciseSet extends Equatable {
   });
 
   ExerciseSet copyWith({
+    int? id,
     int? reps,
     double? weight,
     Duration? duration,
@@ -29,6 +30,7 @@ class ExerciseSet extends Equatable {
     bool? hasNegativeWeight,
   }) {
     return ExerciseSet(
+      id: id ?? this.id,
       exerciseEntryId: exerciseEntryId,
       reps: reps ?? this.reps,
       weight: weight ?? this.weight,

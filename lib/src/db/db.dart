@@ -7,11 +7,16 @@ import 'package:jacked/src/db/seeds.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class JackedDatabase {
+class JackedDb {
   static Database? _db;
 
   static const int _version = 1;
   static const String _databaseName = 'jacked.db';
+
+  static Future<void> onCreate(Database db, int version) async {
+    await createTables(db);
+    await seedTables(db: db, debug: kDebugMode);
+  }
 
   static Future<Database> get database async {
     if (_db != null) return _db!;
@@ -29,47 +34,79 @@ class JackedDatabase {
 
 Future<void> onConfigure(Database db) async => db.execute('PRAGMA foreign_keys = ON');
 
-Future<void> onCreate(Database db, int version) async {
-  await initExercisesTable(db, seedExercises);
-  await initWorkoutTable(db, seedWorkouts);
-  await initExerciseEntriesTable(db, seedExerciseEntries);
-  await initExerciseSetsTable(db, seedExerciseSets);
+Future<void> seedTables({required Database db, required bool debug}) async {
+  await seedExercisesTable(db, seedExercises);
+
+  if (debug) {
+    await seedWorkoutTable(db, seedWorkouts);
+    await seedExerciseEntriesTable(db, seedExerciseEntries);
+    await seedExerciseSetsTable(db, seedExerciseSets);
+  }
 }
 
-Future<void> initExercisesTable(Database db, List<Exercise> seedExercises) async {
+Future<void> createTables(Database db) async {
   await db.execute('''
     CREATE TABLE Exercises (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       key TEXT NOT NULL UNIQUE
     );
   ''');
-  for (final exercise in seedExercises) {
-    await db.execute(
-      'INSERT OR IGNORE INTO Exercises (id, key) VALUES (?, ?)',
-      [exercise.id, exercise.key],
-    );
-  }
-}
 
-Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   await db.execute('''
     CREATE TABLE Workouts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      startTime INTEGER NOT NULL,  
-      endTime INTEGER,            
-      description TEXT  
+      startTime INTEGER NOT NULL,
+      endTime INTEGER,
+      description TEXT
     );
   ''');
+
+  await db.execute('''
+    CREATE TABLE ExerciseEntries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workoutId INTEGER NOT NULL,
+      exerciseId INTEGER NOT NULL,
+      FOREIGN KEY (workoutId) REFERENCES Workouts(id) ON DELETE CASCADE,
+      FOREIGN KEY (exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE
+    );
+  ''');
+
+  await db.execute('''
+    CREATE TABLE ExerciseSets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      exerciseEntryId INTEGER NOT NULL,
+      reps INTEGER,
+      weight REAL,
+      duration INTEGER,
+      rpe INTEGER,
+      FOREIGN KEY (exerciseEntryId) REFERENCES ExerciseEntries(id) ON DELETE CASCADE
+    );
+  ''');
+}
+
+Future<void> seedExercisesTable(Database db, List<Exercise> seedExercises) async {
+  for (final exercise in seedExercises) {
+    await db.execute(
+      'INSERT OR IGNORE INTO Exercises (id, key) VALUES (?, ?)',
+      [
+        exercise.id,
+        exercise.key,
+      ],
+    );
+  }
+}
+
+Future<void> seedWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   for (final workout in seedWorkouts) {
     await db.execute(
       '''
       INSERT OR IGNORE INTO Workouts (
-        title, 
-        startTime, 
-        endTime, 
+        title,
+        startTime,
+        endTime,
         description
-      ) 
+      )
       VALUES (?, ?, ?, ?)
       ''',
       [
@@ -82,16 +119,7 @@ Future<void> initWorkoutTable(Database db, List<Workout> seedWorkouts) async {
   }
 }
 
-Future<void> initExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerciseEntries) async {
-  await db.execute('''
-  CREATE TABLE ExerciseEntries (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    workoutId INTEGER NOT NULL,
-    exerciseId INTEGER NOT NULL,
-    FOREIGN KEY (workoutId) REFERENCES Workouts(id) ON DELETE CASCADE,
-    FOREIGN KEY (exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE
-  )
-  ''');
+Future<void> seedExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerciseEntries) async {
   for (final exerciseEntry in seedExerciseEntries) {
     await db.execute(
       '''
@@ -109,18 +137,7 @@ Future<void> initExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerc
   }
 }
 
-Future<void> initExerciseSetsTable(Database db, List<ExerciseSet> seedExerciseSets) async {
-  await db.execute('''
-  CREATE TABLE ExerciseSets (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    exerciseEntryId INTEGER NOT NULL,
-    reps INTEGER,
-    weight REAL,
-    duration INTEGER,
-    rpe INTEGER,
-    FOREIGN KEY (exerciseEntryId) REFERENCES ExerciseEntries(id) ON DELETE CASCADE
-  )
-  ''');
+Future<void> seedExerciseSetsTable(Database db, List<ExerciseSet> seedExerciseSets) async {
   for (final exerciseSet in seedExerciseSets) {
     await db.execute(
       '''

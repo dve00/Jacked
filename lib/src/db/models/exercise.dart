@@ -9,9 +9,10 @@ class Exercise extends Equatable {
     required this.key,
   });
 
-  Exercise copyWith(String? name, String? description) {
+  Exercise copyWith({int? id, String? key}) {
     return Exercise(
-      key: name ?? key,
+      id: id ?? this.id,
+      key: key ?? this.key,
     );
   }
 
