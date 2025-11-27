@@ -207,32 +207,30 @@ void main() {
         'want': 0,
       },
       {
+        'name': 'empty',
+        'entry': <ExerciseSet>[],
+        'want': 0,
+      },
+      {
         'name': 'one set',
-        'entry': fixtureExerciseEntry((entry) {
-          return entry.copyWith(
-            sets: <ExerciseSet>[
-              fixtureExerciseSet(),
-            ],
-          );
-        }),
+        'entry': <ExerciseSet>[
+          fixtureExerciseSet(),
+        ],
+
         'want': 1,
       },
       {
         'name': 'two sets',
-        'entry': fixtureExerciseEntry((entry) {
-          return entry.copyWith(
-            sets: <ExerciseSet>[
-              fixtureExerciseSet(),
-              fixtureExerciseSet(),
-            ],
-          );
-        }),
-        'want': 2,
+        'entry': <ExerciseSet>[
+          fixtureExerciseSet(),
+          fixtureExerciseSet(),
+        ],
+        'want': 3,
       },
     ];
     for (var {
           'name': name as String,
-          'entry': entry as ExerciseEntry?,
+          'entry': entry as List<ExerciseSet>?,
           'want': want as int,
         }
         in inputs) {

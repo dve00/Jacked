@@ -163,6 +163,7 @@ class DiaryEntry extends StatelessWidget {
               constraints: const BoxConstraints(
                 maxWidth: double.infinity,
               ),
+              useSafeArea: true,
               builder: (context) {
                 return DiaryEntryDetails(
                   workout: populatedWorkout,
@@ -194,11 +195,7 @@ class DiaryEntry extends StatelessWidget {
                     final displaySet = ep.displaySet.isNotEmpty
                         ? ep.displaySet
                         : context.l10n.pages_diary_noSets;
-                    return Row(
-                      children: [
-                        Text('${translation.name} $displaySet'),
-                      ],
-                    );
+                    return Text('${translation.name} $displaySet');
                   }),
                 ],
               ),
@@ -210,27 +207,59 @@ class DiaryEntry extends StatelessWidget {
   }
 }
 
-List<TableRow> getSetRows(ExerciseEntry? entry) {
+List<TableRow> getSetRows(List<ExerciseSet>? sets) {
   final res = <TableRow>[];
-  if (entry == null) return res;
-  final sets = entry.sets ?? <ExerciseEntry>[];
+  if (sets == null) return res;
+  const spacerRow = TableRow(
+    children: [
+      SizedBox(height: 10),
+      SizedBox(height: 10),
+      SizedBox(height: 10),
+    ],
+  );
   for (var i = 0; i < sets.length; i++) {
     res.add(
       TableRow(
         children: [
-          Text('${i + 1}'),
-          TextFormField(
-            enabled: false,
-            readOnly: true,
+          Card.filled(
+            child: Center(child: Text('${i + 1}')),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              enabled: false,
+              readOnly: true,
+            ),
           ),
           TextFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            ),
             enabled: false,
             readOnly: true,
           ),
         ],
       ),
     );
+    if (i + 1 < sets.length) res.add(spacerRow);
   }
+  return res;
+}
+
+List<ExerciseEntryForm> getExerciseForms(List<ExerciseEntry>? entries) {
+  assert(entries != null, 'entries should not be null');
+
+  final res = <ExerciseEntryForm>[];
+  if (entries == null) return res;
+  for (final entry in entries) {
+    assert(entry.exercise != null, 'exercise should not be null');
+
+    res.add(ExerciseEntryForm(entry: entry));
+  }
+
   return res;
 }
 
@@ -244,40 +273,96 @@ class DiaryEntryDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exerciseEntries = workout.exerciseEntries;
-    return SafeArea(
-      child: Container(
-        constraints: const BoxConstraints(minWidth: double.infinity),
+    return Container(
+      constraints: const BoxConstraints(minWidth: double.infinity),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              workout.title,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ...getExerciseForms(workout.exerciseEntries),
+        ],
+      ),
+    );
+  }
+}
+
+class ExerciseEntryForm extends StatelessWidget {
+  const ExerciseEntryForm({
+    super.key,
+    required this.entry,
+  });
+
+  final ExerciseEntry entry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(workout.title),
-            if (exerciseEntries != null)
-              ...exerciseEntries.map((entry) {
-                if (entry.exercise == null) return const SizedBox.shrink();
-                final translations = context.l10n.exerciseTranslationsByKey[entry.exercise!.key];
-                if (translations == null) {
-                  throw UnknownExerciseKeyException(entry.exercise!.key);
-                }
-                return Form(
-                  child: Column(
-                    children: [
-                      Text(translations.name),
-                      Table(
-                        children: [
-                          TableRow(
-                            children: [
-                              Text(context.l10n.pages_diary_set),
-                              Text(context.l10n.pages_diary_weight),
-                              Text(context.l10n.pages_diary_reps),
-                            ],
-                          ),
-                          ...getSetRows(entry),
-                        ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Text(
+                context.l10n.getExerciseTranslation(entry.exercise?.key).name,
+                style:
+                    Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+            ),
+            Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: const <int, TableColumnWidth>{
+                0: FractionColumnWidth(0.1),
+                1: FractionColumnWidth(0.45),
+                2: FractionColumnWidth(0.45),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    Center(
+                      child: Text(
+                        context.l10n.pages_diary_set,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  ),
-                );
-              }),
+                    ),
+                    Center(
+                      child: Text(
+                        context.l10n.pages_diary_weight,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        context.l10n.pages_diary_reps,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                const TableRow(
+                  children: [
+                    SizedBox(height: 10),
+                    SizedBox(height: 10),
+                    SizedBox(height: 10),
+                  ],
+                ),
+                ...getSetRows(entry.sets),
+              ],
+            ),
           ],
         ),
       ),

@@ -109,8 +109,9 @@ extension ExerciseL10n on AppLocalizations {
     ),
   };
 
-  ExerciseTranslation getExerciseTranslation(String key) {
-    return exerciseTranslationsByKey[key] ??
-        ExerciseTranslation(name: db_seeds_unknownExercise, description: '');
+  ExerciseTranslation getExerciseTranslation(String? key) {
+    final unknown = ExerciseTranslation(name: db_seeds_unknownExercise, description: '');
+    if (key == null) return unknown;
+    return exerciseTranslationsByKey[key] ?? unknown;
   }
 }
