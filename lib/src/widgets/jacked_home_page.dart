@@ -30,22 +30,33 @@ class JackedHomePage extends StatefulWidget {
 }
 
 class _JackedHomePageState extends State<JackedHomePage> {
-  int currentPageIndex = 0;
-  bool isWorkoutActive = false;
+  int _currentPageIndex = 0;
+  bool _isWorkoutActive = false;
 
-  static const sheetMinSnap = 0.23;
-  static const sheetMaxSnap = 1.0;
+  final _sheetMaxSnap = 1.0;
+  double _sheetMinSnap = 0;
 
   late final DraggableScrollableController _sheetController = DraggableScrollableController();
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final height = MediaQuery.of(context).size.height;
+
+      setState(() {
+        _sheetMinSnap = 150.0 / height;
+      });
+    });
   }
 
   double get navBarSlide {
     if (!_sheetController.isAttached) return 0.0;
-    return ((_sheetController.size - sheetMinSnap) / (sheetMaxSnap - sheetMinSnap)).clamp(0.0, 1.0);
+    return ((_sheetController.size - _sheetMinSnap) / (_sheetMaxSnap - _sheetMinSnap)).clamp(
+      0.0,
+      1.0,
+    );
   }
 
   @override
@@ -94,7 +105,7 @@ class _JackedHomePageState extends State<JackedHomePage> {
             constructAppBar(context.l10n.homepage_workout, context.l10n.homepage_help_workout),
             constructAppBar(context.l10n.homepage_program, context.l10n.homepage_help_program),
             constructAppBar(context.l10n.homepage_exercises, context.l10n.homepage_help_exercises),
-          ][currentPageIndex],
+          ][_currentPageIndex],
           body: Padding(
             // padding matches height of navbar
             padding: const EdgeInsets.only(bottom: 80.0),
@@ -109,16 +120,16 @@ class _JackedHomePageState extends State<JackedHomePage> {
               WorkoutPage(
                 onStartWorkout: () {
                   setState(() {
-                    isWorkoutActive = true;
+                    _isWorkoutActive = true;
                   });
                 },
               ),
               const ProgramPage(),
               ExercisesPage(exerciseSvc: widget.exerciseSvc),
-            ][currentPageIndex],
+            ][_currentPageIndex],
           ),
         ),
-        if (isWorkoutActive)
+        if (_isWorkoutActive)
           Material(
             type: MaterialType.transparency,
             child: SafeArea(
@@ -128,19 +139,19 @@ class _JackedHomePageState extends State<JackedHomePage> {
                 exerciseSvc: widget.exerciseSvc,
                 workoutSvc: widget.workoutSvc,
                 exerciseEntryService: widget.exerciseEntryService,
-                sheetMinSnap: sheetMinSnap,
-                sheetMaxSnap: sheetMaxSnap,
+                sheetMinSnap: _sheetMinSnap,
+                sheetMaxSnap: _sheetMaxSnap,
                 controller: _sheetController,
                 onCancelWorkout: () async {
                   await Future.delayed(const Duration(milliseconds: 300));
                   setState(() {
-                    isWorkoutActive = false;
+                    _isWorkoutActive = false;
                   });
                 },
                 onSaveWorkout: () async {
                   await Future.delayed(const Duration(milliseconds: 300));
                   setState(() {
-                    isWorkoutActive = false;
+                    _isWorkoutActive = false;
                   });
                 },
               ),
@@ -161,9 +172,9 @@ class _JackedHomePageState extends State<JackedHomePage> {
                   bottom: false,
                   child: NavigationBar(
                     onDestinationSelected: (index) => setState(() {
-                      currentPageIndex = index;
+                      _currentPageIndex = index;
                     }),
-                    selectedIndex: currentPageIndex,
+                    selectedIndex: _currentPageIndex,
                     destinations: <Widget>[
                       NavigationDestination(
                         icon: const Icon(Icons.person_2_outlined),
