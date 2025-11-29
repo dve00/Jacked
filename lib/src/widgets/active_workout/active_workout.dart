@@ -3,6 +3,7 @@ import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
+import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class ActiveWorkout extends StatefulWidget {
   final ExerciseService exerciseSvc;
@@ -101,33 +102,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
           ),
         );
       },
-    );
-  }
-}
-
-class DraggableHeaderSheet extends StatelessWidget {
-  const DraggableHeaderSheet({
-    super.key,
-    required this.scrollController,
-    required this.headerBody,
-    required this.body,
-  });
-
-  final ScrollController scrollController;
-  final Widget headerBody;
-  final Widget body;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      controller: scrollController,
-      child: Column(
-        children: [
-          const DraggableHeader(),
-          body,
-        ],
-      ),
     );
   }
 }
