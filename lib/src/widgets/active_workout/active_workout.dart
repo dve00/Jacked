@@ -82,30 +82,52 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               ),
             ],
           ),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            controller: scrollController,
-            child: Column(
-              children: [
-                const DraggableHeader(),
-                ActiveWorkoutBody(
-                  exerciseSvc: widget.exerciseSvc,
-                  workoutSvc: widget.workoutSvc,
-                  exerciseEntrySvc: widget.exerciseEntryService,
-                  onCancelWorkout: () async {
-                    await closeSheet();
-                    widget.onCancelWorkout();
-                  },
-                  onSaveWorkout: () async {
-                    await closeSheet();
-                    widget.onSaveWorkout();
-                  },
-                ),
-              ],
+          child: DraggableHeaderSheet(
+            scrollController: scrollController,
+            headerBody: const MinimizedWorkoutHeader(),
+            body: ActiveWorkoutBody(
+              exerciseSvc: widget.exerciseSvc,
+              workoutSvc: widget.workoutSvc,
+              exerciseEntrySvc: widget.exerciseEntryService,
+              onCancelWorkout: () async {
+                await closeSheet();
+                widget.onCancelWorkout();
+              },
+              onSaveWorkout: () async {
+                await closeSheet();
+                widget.onSaveWorkout();
+              },
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class DraggableHeaderSheet extends StatelessWidget {
+  const DraggableHeaderSheet({
+    super.key,
+    required this.scrollController,
+    required this.headerBody,
+    required this.body,
+  });
+
+  final ScrollController scrollController;
+  final Widget headerBody;
+  final Widget body;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      controller: scrollController,
+      child: Column(
+        children: [
+          const DraggableHeader(),
+          body,
+        ],
+      ),
     );
   }
 }
