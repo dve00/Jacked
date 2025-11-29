@@ -11,36 +11,96 @@ import 'package:jacked/src/widgets/pages/workout_page.dart';
 import 'package:jacked/src/widgets/pages/you_page.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
-class JackedHomePage extends StatefulWidget {
+class JackedHomePage extends StatelessWidget {
   final ExerciseService exerciseSvc;
+  final ExerciseEntryService exerciseEntrySvc;
   final ExerciseSetService exerciseSetSvc;
-  final ExerciseEntryService exerciseEntryService;
   final WorkoutService workoutSvc;
 
-  const JackedHomePage({
+  final navigationKey = GlobalKey<_JackedNavigationState>();
+  final scrollController = DraggableScrollableController();
+
+  JackedHomePage({
     super.key,
     required this.exerciseSvc,
+    required this.exerciseEntrySvc,
     required this.exerciseSetSvc,
-    required this.exerciseEntryService,
     required this.workoutSvc,
   });
 
   @override
-  State<JackedHomePage> createState() => _JackedHomePageState();
+  Widget build(BuildContext context) {
+    final sheetMinSnap =
+        (150 + MediaQuery.of(context).padding.bottom) / MediaQuery.of(context).size.height;
+    return JackedNavigation(
+      key: navigationKey,
+      scrollController: scrollController,
+      pages: [
+        const YouPage(),
+        DiaryPage(
+          workoutSvc: workoutSvc,
+          exerciseEntrySvc: exerciseEntrySvc,
+          exerciseSetSvc: exerciseSetSvc,
+          exerciseSvc: exerciseSvc,
+        ),
+        WorkoutPage(
+          onStartWorkout: () {
+            navigationKey.currentState?.setWorkoutActive();
+          },
+        ),
+        const ProgramPage(),
+        ExercisesPage(exerciseSvc: exerciseSvc),
+      ],
+      activeWorkout: ActiveWorkout(
+        controller: scrollController,
+        sheetMinSnap: sheetMinSnap,
+        sheetMaxSnap: 1.0,
+        exerciseSvc: exerciseSvc,
+        workoutSvc: workoutSvc,
+        exerciseEntryService: exerciseEntrySvc,
+        onCancelWorkout: () async {
+          await Future.delayed(const Duration(milliseconds: 300));
+          navigationKey.currentState?.setWorkoutInactive();
+        },
+        onSaveWorkout: () async {
+          await Future.delayed(const Duration(milliseconds: 300));
+          navigationKey.currentState?.setWorkoutInactive();
+        },
+      ),
+    );
+  }
 }
 
-class _JackedHomePageState extends State<JackedHomePage> {
+class JackedNavigation extends StatefulWidget {
+  final DraggableScrollableController scrollController;
+  final List<Widget> pages;
+  final Widget activeWorkout;
+
+  const JackedNavigation({
+    super.key,
+    required this.scrollController,
+    required this.pages,
+    required this.activeWorkout,
+  });
+
+  @override
+  State<JackedNavigation> createState() => _JackedNavigationState();
+}
+
+class _JackedNavigationState extends State<JackedNavigation> {
   int _currentPageIndex = 0;
   bool _isWorkoutActive = false;
 
   final _sheetMaxSnap = 1.0;
   double _sheetMinSnap = 0;
 
-  late final DraggableScrollableController _sheetController = DraggableScrollableController();
+  late DraggableScrollableController _sheetController;
 
   @override
   void initState() {
     super.initState();
+
+    _sheetController = widget.scrollController;
 
     /// compute the correct height for the minimized active workout sheet
     /// 150 is the navbar height + draggable header height
@@ -50,6 +110,18 @@ class _JackedHomePageState extends State<JackedHomePage> {
       setState(() {
         _sheetMinSnap = 150.0 / height;
       });
+    });
+  }
+
+  void setWorkoutInactive() {
+    setState(() {
+      _isWorkoutActive = false;
+    });
+  }
+
+  void setWorkoutActive() {
+    setState(() {
+      _isWorkoutActive = true;
     });
   }
 
@@ -111,54 +183,10 @@ class _JackedHomePageState extends State<JackedHomePage> {
           body: Padding(
             // padding matches height of navbar
             padding: const EdgeInsets.only(bottom: 80.0),
-            child: <Widget>[
-              const YouPage(),
-              DiaryPage(
-                workoutSvc: widget.workoutSvc,
-                exerciseEntrySvc: widget.exerciseEntryService,
-                exerciseSetSvc: widget.exerciseSetSvc,
-                exerciseSvc: widget.exerciseSvc,
-              ),
-              WorkoutPage(
-                onStartWorkout: () {
-                  setState(() {
-                    _isWorkoutActive = true;
-                  });
-                },
-              ),
-              const ProgramPage(),
-              ExercisesPage(exerciseSvc: widget.exerciseSvc),
-            ][_currentPageIndex],
+            child: widget.pages[_currentPageIndex],
           ),
         ),
-        if (_isWorkoutActive)
-          Material(
-            type: MaterialType.transparency,
-            child: SafeArea(
-              top: true,
-              bottom: false,
-              child: ActiveWorkout(
-                exerciseSvc: widget.exerciseSvc,
-                workoutSvc: widget.workoutSvc,
-                exerciseEntryService: widget.exerciseEntryService,
-                sheetMinSnap: _sheetMinSnap,
-                sheetMaxSnap: _sheetMaxSnap,
-                controller: _sheetController,
-                onCancelWorkout: () async {
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  setState(() {
-                    _isWorkoutActive = false;
-                  });
-                },
-                onSaveWorkout: () async {
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  setState(() {
-                    _isWorkoutActive = false;
-                  });
-                },
-              ),
-            ),
-          ),
+        if (_isWorkoutActive) widget.activeWorkout,
         Positioned(
           left: 0,
           right: 0,

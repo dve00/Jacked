@@ -10,6 +10,7 @@ import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
+import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class DiaryPage extends StatelessWidget {
   final WorkoutService workoutSvc;
@@ -157,16 +158,42 @@ class DiaryEntry extends StatelessWidget {
         if (populatedWorkout == null) return const SizedBox.shrink();
         return GestureDetector(
           onTap: () {
-            showModalBottomSheet(
+            final controller = DraggableScrollableController();
+            showGeneralDialog(
               context: context,
-              isScrollControlled: true,
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
-              useSafeArea: true,
-              builder: (context) {
-                return DiaryEntryDetails(
-                  workout: populatedWorkout,
+              transitionDuration: const Duration(milliseconds: 200),
+              pageBuilder: (context, _, _) {
+                controller.addListener(() {
+                  if (controller.size < 0.15) {
+                    Navigator.of(context).maybePop();
+                  }
+                });
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    await controller.animateTo(
+                      0.0,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOut,
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      // the sheet must ignore taps on the barrier
+                      GestureDetector(
+                        onTap: () {}, // absorb
+                        child: DraggableHeaderSheet(
+                          sheetMinSnap: 0.1,
+                          sheetMaxSnap: 1,
+                          controller: controller,
+                          headerBody: const Center(),
+                          body: Material(
+                            child: DiaryEntryDetails(workout: populatedWorkout),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -274,7 +301,7 @@ class DiaryEntryDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minWidth: double.infinity),
+      constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
