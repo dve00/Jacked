@@ -38,7 +38,7 @@ Future<void> seedTables({required Database db, required bool debug}) async {
   await seedExercisesTable(db, seedExercises);
 
   if (debug) {
-    await seedWorkoutTable(db, seedWorkouts);
+    await seedWorkoutsTable(db, seedWorkouts);
     await seedExerciseEntriesTable(db, seedExerciseEntries);
     await seedExerciseSetsTable(db, seedExerciseSets);
   }
@@ -97,7 +97,7 @@ Future<void> seedExercisesTable(Database db, List<Exercise> seedExercises) async
   }
 }
 
-Future<void> seedWorkoutTable(Database db, List<Workout> seedWorkouts) async {
+Future<void> seedWorkoutsTable(Database db, List<Workout> seedWorkouts) async {
   for (final workout in seedWorkouts) {
     await db.execute(
       '''

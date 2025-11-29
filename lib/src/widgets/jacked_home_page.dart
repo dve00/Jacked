@@ -42,6 +42,8 @@ class _JackedHomePageState extends State<JackedHomePage> {
   void initState() {
     super.initState();
 
+    /// compute the correct height for the minimized active workout sheet
+    /// 150 is the navbar height + draggable header height
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final height = MediaQuery.of(context).size.height;
 

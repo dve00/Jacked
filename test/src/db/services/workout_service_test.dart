@@ -57,7 +57,7 @@ void main() {
       version: 1,
       onCreate: (db, version) async {
         await createTables(db);
-        await seedWorkoutTable(db, seedWorkouts);
+        await seedWorkoutsTable(db, seedWorkouts);
       },
     );
     JackedDb.overrideDatabaseForTests(testDb);
