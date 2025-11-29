@@ -7,7 +7,7 @@ import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
-import 'package:jacked/src/widgets/shared/exercise_list.dart';
+import 'package:jacked/src/widgets/shared/widgets/exercise_list.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 
 class ActiveWorkoutBody extends StatefulWidget {
