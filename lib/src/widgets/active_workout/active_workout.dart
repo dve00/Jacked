@@ -83,23 +83,47 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               ),
             ],
           ),
-          child: DraggableHeaderSheet(
-            scrollController: scrollController,
-            headerBody: const MinimizedWorkoutHeader(),
-            body: ActiveWorkoutBody(
-              exerciseSvc: widget.exerciseSvc,
-              workoutSvc: widget.workoutSvc,
-              exerciseEntrySvc: widget.exerciseEntryService,
-              onCancelWorkout: () async {
-                await closeSheet();
-                widget.onCancelWorkout();
-              },
-              onSaveWorkout: () async {
-                await closeSheet();
-                widget.onSaveWorkout();
-              },
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            controller: scrollController,
+            child: Column(
+              children: [
+                const DraggableHeader(
+                  body: MinimizedWorkoutHeader(),
+                ),
+                ActiveWorkoutBody(
+                  exerciseSvc: widget.exerciseSvc,
+                  workoutSvc: widget.workoutSvc,
+                  exerciseEntrySvc: widget.exerciseEntryService,
+                  onCancelWorkout: () async {
+                    await closeSheet();
+                    widget.onCancelWorkout();
+                  },
+                  onSaveWorkout: () async {
+                    await closeSheet();
+                    widget.onSaveWorkout();
+                  },
+                ),
+              ],
             ),
           ),
+          // child: DraggableHeaderSheet(
+          //   scrollController: scrollController,
+          //   headerBody: const MinimizedWorkoutHeader(),
+          //   body: ActiveWorkoutBody(
+          //     exerciseSvc: widget.exerciseSvc,
+          //     workoutSvc: widget.workoutSvc,
+          //     exerciseEntrySvc: widget.exerciseEntryService,
+          //     onCancelWorkout: () async {
+          //       await closeSheet();
+          //       widget.onCancelWorkout();
+          //     },
+          //     onSaveWorkout: () async {
+          //       await closeSheet();
+          //       widget.onSaveWorkout();
+          //     },
+          //   ),
+          // ),
         );
       },
     );

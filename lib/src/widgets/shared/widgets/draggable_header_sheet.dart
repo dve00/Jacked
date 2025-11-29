@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 
-class DraggableHeaderSheet extends StatelessWidget {
-  const DraggableHeaderSheet({
-    super.key,
-    required this.scrollController,
-    required this.headerBody,
-    required this.body,
-  });
+// class DraggableHeaderSheet extends StatelessWidget {
+//   const DraggableHeaderSheet({
+//     super.key,
+//     required this.scrollController,
+//     required this.headerBody,
+//     required this.body,
+//   });
 
-  final ScrollController scrollController;
-  final Widget headerBody;
-  final Widget body;
+//   final ScrollController scrollController;
+//   final Widget headerBody;
+//   final Widget body;
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      controller: scrollController,
-      child: Column(
-        children: [
-          DraggableHeader(
-            body: headerBody,
-          ),
-          body,
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       physics: const ClampingScrollPhysics(),
+//       controller: scrollController,
+//       child: Column(
+//         children: [
+//           DraggableHeader(
+//             body: headerBody,
+//           ),
+//           body,
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class DraggableHeader extends StatelessWidget {
   const DraggableHeader({
