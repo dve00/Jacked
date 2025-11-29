@@ -13,8 +13,8 @@ void main() async {
   runApp(
     Jacked(
       exerciseSvc: await ExerciseService.instance,
-      exerciseEntryService: await ExerciseEntryService.instance,
-      exerciseSetService: await ExerciseSetService.instance,
+      exerciseEntrySvc: await ExerciseEntryService.instance,
+      exerciseSetSvc: await ExerciseSetService.instance,
       workoutSvc: await WorkoutService.instance,
     ),
   );
@@ -22,15 +22,15 @@ void main() async {
 
 class Jacked extends StatelessWidget {
   final ExerciseService exerciseSvc;
-  final ExerciseEntryService exerciseEntryService;
-  final ExerciseSetService exerciseSetService;
+  final ExerciseEntryService exerciseEntrySvc;
+  final ExerciseSetService exerciseSetSvc;
   final WorkoutService workoutSvc;
 
   const Jacked({
     super.key,
     required this.exerciseSvc,
-    required this.exerciseEntryService,
-    required this.exerciseSetService,
+    required this.exerciseEntrySvc,
+    required this.exerciseSetSvc,
     required this.workoutSvc,
   });
 
@@ -47,8 +47,8 @@ class Jacked extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       home: JackedHomePage(
         exerciseSvc: exerciseSvc,
-        exerciseEntryService: exerciseEntryService,
-        exerciseSetSvc: exerciseSetService,
+        exerciseEntrySvc: exerciseEntrySvc,
+        exerciseSetSvc: exerciseSetSvc,
         workoutSvc: workoutSvc,
       ),
     );

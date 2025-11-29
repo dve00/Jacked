@@ -62,7 +62,8 @@ class DraggableHeaderSheetState extends State<DraggableHeaderSheet> {
         return Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            // 28 is the default Material 3 radius for bottom sheets
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,

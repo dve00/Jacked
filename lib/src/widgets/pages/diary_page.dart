@@ -10,6 +10,7 @@ import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
+import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class DiaryPage extends StatelessWidget {
   final WorkoutService workoutSvc;
@@ -155,18 +156,23 @@ class DiaryEntry extends StatelessWidget {
         }
         final populatedWorkout = snapshot.requireData;
         if (populatedWorkout == null) return const SizedBox.shrink();
+        final sheetKey = GlobalKey<DraggableHeaderSheetState>();
         return GestureDetector(
           onTap: () {
-            showModalBottomSheet(
+            showDialog(
               context: context,
-              isScrollControlled: true,
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
-              useSafeArea: true,
               builder: (context) {
-                return DiaryEntryDetails(
-                  workout: populatedWorkout,
+                return DraggableHeaderSheet(
+                  key: sheetKey,
+                  sheetMinSnap: 0.25,
+                  sheetMaxSnap: 1,
+                  controller: DraggableScrollableController(),
+                  headerBody: const Center(),
+                  body: Material(
+                    child: DiaryEntryDetails(
+                      workout: populatedWorkout,
+                    ),
+                  ),
                 );
               },
             );
