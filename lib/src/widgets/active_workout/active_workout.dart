@@ -106,41 +106,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   }
 }
 
-class DraggableHeader extends StatelessWidget {
-  const DraggableHeader({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(border: BorderDirectional(bottom: BorderSide())),
-      height: 70,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const MinimizedWorkoutHeader(),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class MinimizedWorkoutHeader extends StatelessWidget {
   const MinimizedWorkoutHeader({
     super.key,
