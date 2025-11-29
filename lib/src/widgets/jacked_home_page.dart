@@ -138,12 +138,12 @@ class _JackedHomePageState extends State<JackedHomePage> {
               top: true,
               bottom: false,
               child: ActiveWorkout(
+                controller: _sheetController,
+                sheetMinSnap: _sheetMinSnap,
+                sheetMaxSnap: _sheetMaxSnap,
                 exerciseSvc: widget.exerciseSvc,
                 workoutSvc: widget.workoutSvc,
                 exerciseEntryService: widget.exerciseEntryService,
-                sheetMinSnap: _sheetMinSnap,
-                sheetMaxSnap: _sheetMaxSnap,
-                controller: _sheetController,
                 onCancelWorkout: () async {
                   await Future.delayed(const Duration(milliseconds: 300));
                   setState(() {
