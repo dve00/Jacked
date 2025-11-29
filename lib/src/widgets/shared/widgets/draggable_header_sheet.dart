@@ -51,42 +51,49 @@ class DraggableHeaderSheetState extends State<DraggableHeaderSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      controller: widget.controller,
-      initialChildSize: _minChildSize,
-      minChildSize: _minChildSize,
-      maxChildSize: widget.sheetMaxSnap,
-      snapAnimationDuration: const Duration(milliseconds: 200),
-      snap: true,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            // 28 is the default Material 3 radius for bottom sheets
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                spreadRadius: 5,
-                blurRadius: 10,
-                offset: Offset(0, -2),
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: DraggableScrollableSheet(
+        controller: widget.controller,
+        initialChildSize: _minChildSize,
+        minChildSize: _minChildSize,
+        maxChildSize: widget.sheetMaxSnap,
+        snapAnimationDuration: const Duration(milliseconds: 200),
+        snap: true,
+        builder: (context, scrollController) {
+          return Material(
+            type: MaterialType.transparency,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                // 28 is the default Material 3 radius for bottom sheets
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    spreadRadius: 5,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            controller: scrollController,
-            child: Column(
-              children: [
-                DraggableHeader(
-                  body: widget.headerBody,
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                controller: scrollController,
+                child: Column(
+                  children: [
+                    DraggableHeader(
+                      body: widget.headerBody,
+                    ),
+                    widget.body,
+                  ],
                 ),
-                widget.body,
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

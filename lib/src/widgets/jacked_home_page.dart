@@ -186,15 +186,7 @@ class _JackedNavigationState extends State<JackedNavigation> {
             child: widget.pages[_currentPageIndex],
           ),
         ),
-        if (_isWorkoutActive)
-          Material(
-            type: MaterialType.transparency,
-            child: SafeArea(
-              top: true,
-              bottom: false,
-              child: widget.activeWorkout,
-            ),
-          ),
+        if (_isWorkoutActive) widget.activeWorkout,
         Positioned(
           left: 0,
           right: 0,
