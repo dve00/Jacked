@@ -157,6 +157,7 @@ class DiaryEntry extends StatelessWidget {
         final populatedWorkout = snapshot.requireData;
         if (populatedWorkout == null) return const SizedBox.shrink();
         return GestureDetector(
+          key: const Key('diary_entry'),
           onTap: () {
             final controller = DraggableScrollableController();
             showGeneralDialog(
@@ -186,7 +187,7 @@ class DiaryEntry extends StatelessWidget {
                           sheetMinSnap: 0.1,
                           sheetMaxSnap: 1,
                           controller: controller,
-                          headerBody: const Center(),
+                          headerBody: const SizedBox.shrink(),
                           body: Material(
                             child: DiaryEntryDetails(workout: populatedWorkout),
                           ),
@@ -301,25 +302,22 @@ class DiaryEntryDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseForms = getExerciseForms(workout.exerciseEntries);
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        itemCount: workout.exerciseEntries?.length ?? 0 + 1,
-        itemBuilder: (context, idx) {
-          if (idx == 0) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                workout.title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+    return ListView.builder(
+      itemCount: workout.exerciseEntries?.length ?? 0 + 1,
+      itemBuilder: (context, idx) {
+        if (idx == 0) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              workout.title,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-            );
-          }
-          return exerciseForms[idx - 1];
-        },
-      ),
+            ),
+          );
+        }
+        return exerciseForms[idx - 1];
+      },
     );
   }
 }

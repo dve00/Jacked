@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
@@ -108,7 +109,7 @@ void main() {
         expect(find.text('Bench Press 1.0kg x 1'), findsOneWidget);
 
         // when - the diary entry is tapped
-        await tester.tap(find.byType(DiaryEntry));
+        await tester.tap(find.byKey(const Key('diary_entry')));
         await tester.pumpAndSettle();
 
         // then - a modal bottom sheet is opened

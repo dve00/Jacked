@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class DraggableHeaderSheet extends StatefulWidget {
@@ -54,49 +56,61 @@ class DraggableHeaderSheetState extends State<DraggableHeaderSheet> {
     return SafeArea(
       top: true,
       bottom: false,
-      child: DraggableScrollableSheet(
-        controller: widget.controller,
-        initialChildSize: _minChildSize,
-        minChildSize: _minChildSize,
-        maxChildSize: widget.sheetMaxSnap,
-        snapAnimationDuration: const Duration(milliseconds: 200),
-        snap: true,
-        builder: (context, scrollController) {
-          return Material(
-            type: MaterialType.transparency,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                // 28 is the default Material 3 radius for bottom sheets
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    spreadRadius: 5,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                controller: scrollController,
-                child: Column(
-                  children: [
-                    DraggableHeader(
-                      body: widget.headerBody,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
+        child: DraggableScrollableSheet(
+          controller: widget.controller,
+          initialChildSize: _minChildSize,
+          minChildSize: _minChildSize,
+          maxChildSize: widget.sheetMaxSnap,
+          snapAnimationDuration: const Duration(milliseconds: 200),
+          snap: true,
+          builder: (context, scrollController) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return Material(
+                  type: MaterialType.transparency,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      // 28 is the default Material 3 radius for bottom sheets
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          spreadRadius: 5,
+                          blurRadius: 10,
+                          offset: Offset(0, -2),
+                        ),
+                      ],
                     ),
-                    widget.body,
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      controller: scrollController,
+                      child: Column(
+                        children: [
+                          DraggableHeader(
+                            body: widget.headerBody,
+                          ),
+                          SizedBox(
+                            height: max(0.0, constraints.maxHeight - draggableHeaderHeight),
+                            child: widget.body,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+const draggableHeaderHeight = 70.0;
 
 class DraggableHeader extends StatelessWidget {
   const DraggableHeader({
@@ -110,7 +124,7 @@ class DraggableHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(border: BorderDirectional(bottom: BorderSide())),
-      height: 70,
+      height: draggableHeaderHeight,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
