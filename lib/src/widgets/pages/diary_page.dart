@@ -300,22 +300,25 @@ class DiaryEntryDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              workout.title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+    final exerciseForms = getExerciseForms(workout.exerciseEntries);
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: ListView.builder(
+        itemCount: workout.exerciseEntries?.length ?? 0 + 1,
+        itemBuilder: (context, idx) {
+          if (idx == 0) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                workout.title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ),
-          ...getExerciseForms(workout.exerciseEntries),
-        ],
+            );
+          }
+          return exerciseForms[idx - 1];
+        },
       ),
     );
   }
