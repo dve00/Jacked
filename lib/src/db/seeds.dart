@@ -64,7 +64,12 @@ const seedExerciseSets = <ExerciseSet>[
   ExerciseSet(id: 1, exerciseEntryId: 1, reps: 1, weight: 1.0),
   ExerciseSet(id: 2, exerciseEntryId: 1, reps: 2, weight: 2.0),
   ExerciseSet(id: 3, exerciseEntryId: 2, reps: 3, weight: 3.0),
-  ExerciseSet(id: 4, exerciseEntryId: 2, duration: Duration(seconds: 4)),
+  ExerciseSet(id: 4, exerciseEntryId: 2, reps: 2, weight: 2.0),
+  ExerciseSet(id: 5, exerciseEntryId: 3, reps: 3, weight: 3.0),
+  ExerciseSet(id: 6, exerciseEntryId: 4, reps: 4, weight: 4.0),
+  ExerciseSet(id: 7, exerciseEntryId: 5, reps: 5, weight: 5.0),
+  ExerciseSet(id: 8, exerciseEntryId: 6, reps: 6, weight: 6.0),
+  ExerciseSet(id: 9, exerciseEntryId: 7, reps: 7, weight: 7.0),
 ];
 
 class UnknownExerciseKeyException implements Exception {

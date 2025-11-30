@@ -235,11 +235,17 @@ class DiaryEntry extends StatelessWidget {
   }
 }
 
-List<TableRow> getSetRows(List<ExerciseSet>? sets) {
+List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
   final res = <TableRow>[];
-  if (sets == null) return res;
+  if (sets == null || sets.isEmpty) return res;
+
+  final formatter = NumberFormat.decimalPattern(locale)
+    ..minimumFractionDigits = 0
+    ..maximumFractionDigits = 2;
+
   const spacerRow = TableRow(
     children: [
+      SizedBox(height: 10),
       SizedBox(height: 10),
       SizedBox(height: 10),
       SizedBox(height: 10),
@@ -255,7 +261,10 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets) {
           Padding(
             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
             child: TextFormField(
-              decoration: InputDecoration(
+              controller: TextEditingController(text: formatter.format(sets[i].weight ?? 0)),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration.collapsed(
+                hintText: '',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
               enabled: false,
@@ -263,12 +272,16 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets) {
             ),
           ),
           TextFormField(
-            decoration: InputDecoration(
+            controller: TextEditingController(text: formatter.format(sets[i].reps ?? 0)),
+            textAlign: TextAlign.center,
+            decoration: InputDecoration.collapsed(
+              hintText: '',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             ),
             enabled: false,
             readOnly: true,
           ),
+          const Icon(Icons.check_circle_outline),
         ],
       ),
     );
@@ -332,6 +345,8 @@ class ExerciseEntryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(entry.sets != null, 'sets should not be null');
+    assert(entry.sets!.isNotEmpty, 'sets should not be empty');
     return Form(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -355,8 +370,9 @@ class ExerciseEntryForm extends StatelessWidget {
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               columnWidths: const <int, TableColumnWidth>{
                 0: FractionColumnWidth(0.1),
-                1: FractionColumnWidth(0.45),
-                2: FractionColumnWidth(0.45),
+                1: FractionColumnWidth(0.4),
+                2: FractionColumnWidth(0.4),
+                3: FractionColumnWidth(0.1),
               },
               children: [
                 TableRow(
@@ -379,6 +395,9 @@ class ExerciseEntryForm extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
+                    const Icon(
+                      Icons.check_circle_outline,
+                    ),
                   ],
                 ),
                 const TableRow(
@@ -386,9 +405,10 @@ class ExerciseEntryForm extends StatelessWidget {
                     SizedBox(height: 10),
                     SizedBox(height: 10),
                     SizedBox(height: 10),
+                    SizedBox(height: 10),
                   ],
                 ),
-                ...getSetRows(entry.sets),
+                ...getSetRows(entry.sets, Localizations.localeOf(context).toString()),
               ],
             ),
           ],

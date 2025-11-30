@@ -236,7 +236,7 @@ void main() {
         }
         in inputs) {
       test(name, () {
-        expect(getSetRows(entry).length, equals(want));
+        expect(getSetRows(entry, 'en').length, equals(want));
       });
     }
   });
