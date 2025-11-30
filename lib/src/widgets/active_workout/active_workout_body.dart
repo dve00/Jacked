@@ -61,13 +61,13 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.8,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: formData.length + 1,
-          itemBuilder: (_, i) {
-            if (i == 0) {
-              return Column(
+      child: ListView.builder(
+        itemCount: formData.length + 1,
+        itemBuilder: (_, i) {
+          if (i == 0) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
@@ -138,11 +138,14 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
                     ),
                   ),
                 ],
-              );
-            }
-            return ExerciseForm(formData: formData[i - 1]);
-          },
-        ),
+              ),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ExerciseForm(formData: formData[i - 1]),
+          );
+        },
       ),
     );
   }
