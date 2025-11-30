@@ -249,6 +249,7 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
       SizedBox(height: 10),
       SizedBox(height: 10),
       SizedBox(height: 10),
+      SizedBox(height: 10),
     ],
   );
   for (var i = 0; i < sets.length; i++) {
@@ -258,6 +259,7 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
           Card.filled(
             child: Center(child: Text('${i + 1}')),
           ),
+          const Center(child: Text('4kg x 12')),
           Padding(
             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
             child: TextFormField(
@@ -316,7 +318,7 @@ class DiaryEntryDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final exerciseForms = getExerciseForms(workout.exerciseEntries);
     return ListView.builder(
-      itemCount: workout.exerciseEntries?.length ?? 0 + 1,
+      itemCount: exerciseForms.length + 1,
       itemBuilder: (context, idx) {
         if (idx == 0) {
           return Padding(
@@ -370,9 +372,10 @@ class ExerciseEntryForm extends StatelessWidget {
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               columnWidths: const <int, TableColumnWidth>{
                 0: FractionColumnWidth(0.1),
-                1: FractionColumnWidth(0.4),
-                2: FractionColumnWidth(0.4),
-                3: FractionColumnWidth(0.1),
+                1: FractionColumnWidth(0.3),
+                2: FractionColumnWidth(0.25),
+                3: FractionColumnWidth(0.25),
+                4: FractionColumnWidth(0.1),
               },
               children: [
                 TableRow(
@@ -380,6 +383,12 @@ class ExerciseEntryForm extends StatelessWidget {
                     Center(
                       child: Text(
                         context.l10n.pages_diary_set,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        context.l10n.pages_diary_previous,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -402,6 +411,7 @@ class ExerciseEntryForm extends StatelessWidget {
                 ),
                 const TableRow(
                   children: [
+                    SizedBox(height: 10),
                     SizedBox(height: 10),
                     SizedBox(height: 10),
                     SizedBox(height: 10),
