@@ -8,6 +8,7 @@ class ExerciseEntry extends Equatable {
   final int exerciseId;
   final Exercise? exercise;
   final List<ExerciseSet>? sets;
+  final List<ExerciseSet>? previousSets;
 
   const ExerciseEntry({
     this.id,
@@ -15,6 +16,7 @@ class ExerciseEntry extends Equatable {
     required this.exerciseId,
     this.exercise,
     this.sets,
+    this.previousSets,
   });
 
   ExerciseEntry copyWith({
