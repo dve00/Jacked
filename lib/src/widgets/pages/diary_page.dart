@@ -273,15 +273,18 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
               readOnly: true,
             ),
           ),
-          TextFormField(
-            controller: TextEditingController(text: formatter.format(sets[i].reps ?? 0)),
-            textAlign: TextAlign.center,
-            decoration: InputDecoration.collapsed(
-              hintText: '',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+            child: TextFormField(
+              controller: TextEditingController(text: formatter.format(sets[i].reps ?? 0)),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration.collapsed(
+                hintText: '',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              enabled: false,
+              readOnly: true,
             ),
-            enabled: false,
-            readOnly: true,
           ),
           const Icon(Icons.check_circle_outline),
         ],
