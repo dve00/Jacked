@@ -12,7 +12,6 @@ environment:
 
 dependencies:
   collection: ^1.19.1
-  cupertino_icons: ^1.0.8
   equatable: ^2.0.7
   flutter:
     sdk: flutter
@@ -20,7 +19,6 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   path: ^1.9.1
-  shared_preferences: ^2.5.3
   sqflite: ^2.4.2
 
 dev_dependencies:
