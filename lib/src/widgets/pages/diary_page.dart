@@ -72,14 +72,26 @@ Future<Workout?> loadWorkoutData(
   if (workoutId == null) return null;
   final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(workoutId);
   for (int i = 0; i < exerciseEntries.length; i++) {
-    final exercise = await exerciseSvc.get(exerciseEntries[i].exerciseId);
+    final exerciseId = exerciseEntries[i].exerciseId;
+    final exercise = await exerciseSvc.get(exerciseId);
     exerciseEntries[i] = exerciseEntries[i].copyWith(exercise: exercise);
+    final previousEntry = await exerciseEntrySvc.getMostRecentExerciseEntry(
+      exerciseId: exerciseId,
+      startTime: workout.startTime,
+    );
+    final previousEntryId = previousEntry?.id;
     final exerciseEntryId = exerciseEntries[i].id;
     if (exerciseEntryId != null) {
       final sets = await exerciseSetSvc.listByExerciseEntryId(
         exerciseEntryId,
       );
       exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
+      if (previousEntryId != null) {
+        final previousSets = await exerciseSetSvc.listByExerciseEntryId(
+          previousEntryId,
+        );
+        exerciseEntries[i] = exerciseEntries[i].copyWith(previousSets: previousSets);
+      }
     }
   }
   return workout.copyWith(exerciseEntries: exerciseEntries);
@@ -235,7 +247,7 @@ class DiaryEntry extends StatelessWidget {
   }
 }
 
-List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
+List<TableRow> getSetRows(List<ExerciseSet>? sets, List<ExerciseSet>? previousSets, String locale) {
   final res = <TableRow>[];
   if (sets == null || sets.isEmpty) return res;
 
@@ -253,13 +265,23 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets, String locale) {
     ],
   );
   for (var i = 0; i < sets.length; i++) {
+    ExerciseSet? previousSet;
+    if (previousSets != null) {
+      if (i + 1 < previousSets.length) {
+        previousSet = previousSets[i];
+      }
+    }
     res.add(
       TableRow(
         children: [
           Card.filled(
             child: Center(child: Text('${i + 1}')),
           ),
-          const Center(child: Text('4kg x 12')),
+          Center(
+            child: Text(
+              previousSet != null ? '${previousSet.weight}kg x ${previousSet.reps}' : '-',
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
             child: TextFormField(
@@ -421,7 +443,11 @@ class ExerciseEntryForm extends StatelessWidget {
                     SizedBox(height: 10),
                   ],
                 ),
-                ...getSetRows(entry.sets, Localizations.localeOf(context).toString()),
+                ...getSetRows(
+                  entry.sets,
+                  entry.previousSets,
+                  Localizations.localeOf(context).toString(),
+                ),
               ],
             ),
           ],

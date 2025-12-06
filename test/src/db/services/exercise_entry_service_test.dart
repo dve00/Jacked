@@ -71,23 +71,26 @@ void main() {
         {
           'name': 'returns null',
           'exerciseId': 99,
+          'startTime': DateTime(2025, 12, 2),
           'want': null,
         },
         {
           'name': 'returns most recent entry',
           'exerciseId': 2,
+          'startTime': DateTime(2025, 12, 2),
           'want': const ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2),
         },
       ];
       for (final {
             'name': name as String,
             'exerciseId': exerciseId as int,
+            'startTime': startTime as DateTime,
             'want': want as ExerciseEntry?,
           }
           in inputs) {
         test(name, () async {
           expect(
-            await svc.getMostRecentExerciseEntry(exerciseId),
+            await svc.getMostRecentExerciseEntry(exerciseId: exerciseId, startTime: startTime),
             want,
           );
         });

@@ -25,12 +25,14 @@ class ExerciseEntry extends Equatable {
     int? exerciseId,
     Exercise? exercise,
     List<ExerciseSet>? sets,
+    List<ExerciseSet>? previousSets,
   }) => ExerciseEntry(
     id: id ?? this.id,
     workoutId: workoutId ?? this.workoutId,
     exerciseId: exerciseId ?? this.exerciseId,
     exercise: exercise ?? this.exercise,
     sets: sets ?? this.sets,
+    previousSets: previousSets ?? this.previousSets,
   );
 
   factory ExerciseEntry.fromMap(Map<String, Object?> map) => ExerciseEntry(

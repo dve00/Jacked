@@ -25,17 +25,21 @@ class ExerciseEntryService {
   Future<List<ExerciseEntry>> list() async =>
       (await db.query(table)).map(ExerciseEntry.fromMap).toList();
 
-  Future<ExerciseEntry?> getMostRecentExerciseEntry(int exerciseId) async {
+  Future<ExerciseEntry?> getMostRecentExerciseEntry({
+    required int exerciseId,
+    required DateTime startTime,
+  }) async {
     final result = await db.rawQuery(
       '''
           SELECT ee.*
           FROM ExerciseEntries ee
           JOIN Workouts w ON w.id = ee.workoutId
-          WHERE ee.exerciseId = ?
+          WHERE ee.exerciseId = ? AND
+          w.startTime < ?
           ORDER BY w.startTime DESC
           LIMIT 1
         ''',
-      [exerciseId],
+      [exerciseId, startTime.microsecondsSinceEpoch],
     );
 
     return result.isNotEmpty ? ExerciseEntry.fromMap(result.first) : null;
