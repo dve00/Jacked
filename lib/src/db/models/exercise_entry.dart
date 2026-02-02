@@ -48,5 +48,5 @@ class ExerciseEntry extends Equatable {
   };
 
   @override
-  List<Object?> get props => [id, workoutId, exerciseId, sets];
+  List<Object?> get props => [id, workoutId, exerciseId, sets, previousSets];
 }

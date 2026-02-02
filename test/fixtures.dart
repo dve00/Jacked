@@ -52,3 +52,13 @@ ExerciseSet fixtureExerciseSet([ExerciseSet Function(ExerciseSet)? mod]) {
 
   return exerciseSet;
 }
+
+Exercise fixtureExercise([Exercise Function(Exercise)? mod]) {
+  var exercise = const Exercise(id: 1, key: 'bench_press');
+
+  if (mod != null) {
+    exercise = mod(exercise);
+  }
+
+  return exercise;
+}

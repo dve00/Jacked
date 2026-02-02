@@ -4,7 +4,7 @@ import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout.dart';
-import 'package:jacked/src/widgets/pages/diary_page.dart';
+import 'package:jacked/src/widgets/pages/diary_page/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 import 'package:jacked/src/widgets/pages/program_page.dart';
 import 'package:jacked/src/widgets/pages/workout_page.dart';

@@ -9,6 +9,7 @@ import 'package:jacked/src/db/services/exercise_entry_service.dart';
 import 'package:jacked/src/db/services/exercise_service.dart';
 import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/widgets/pages/diary_page/workout_hydrator.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
@@ -58,43 +59,6 @@ class DiaryPage extends StatelessWidget {
       },
     );
   }
-}
-
-Future<Workout?> loadWorkoutData(
-  Workout workout,
-  ExerciseEntryService exerciseEntrySvc,
-  ExerciseService exerciseSvc,
-  ExerciseSetService exerciseSetSvc,
-) async {
-  assert(workout.id != null, 'The workout id should never be null');
-
-  final workoutId = workout.id;
-  if (workoutId == null) return null;
-  final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(workoutId);
-  for (int i = 0; i < exerciseEntries.length; i++) {
-    final exerciseId = exerciseEntries[i].exerciseId;
-    final exercise = await exerciseSvc.get(exerciseId);
-    exerciseEntries[i] = exerciseEntries[i].copyWith(exercise: exercise);
-    final previousEntry = await exerciseEntrySvc.getMostRecentExerciseEntry(
-      exerciseId: exerciseId,
-      startTime: workout.startTime,
-    );
-    final previousEntryId = previousEntry?.id;
-    final exerciseEntryId = exerciseEntries[i].id;
-    if (exerciseEntryId != null) {
-      final sets = await exerciseSetSvc.listByExerciseEntryId(
-        exerciseEntryId,
-      );
-      exerciseEntries[i] = exerciseEntries[i].copyWith(sets: sets);
-      if (previousEntryId != null) {
-        final previousSets = await exerciseSetSvc.listByExerciseEntryId(
-          previousEntryId,
-        );
-        exerciseEntries[i] = exerciseEntries[i].copyWith(previousSets: previousSets);
-      }
-    }
-  }
-  return workout.copyWith(exerciseEntries: exerciseEntries);
 }
 
 String getPreviewSet(List<ExerciseSet>? sets) {
@@ -151,14 +115,15 @@ class DiaryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final duration = workout.endTime?.difference(workout.startTime);
+    final workoutHydrator = WorkoutHydrator(
+      workout: workout,
+      exerciseEntrySvc: exerciseEntrySvc,
+      exerciseSetSvc: exerciseSetSvc,
+      exerciseSvc: exerciseSvc,
+    );
 
     return FutureBuilder(
-      future: loadWorkoutData(
-        workout,
-        exerciseEntrySvc,
-        exerciseSvc,
-        exerciseSetSvc,
-      ),
+      future: workoutHydrator.hydrateWorkout(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center();
