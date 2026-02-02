@@ -7,6 +7,7 @@ import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../fixtures.dart';
 import '../../../mocks.dart';
 import '../../../test_config.dart';
 
@@ -58,16 +59,6 @@ void main() {
         ],
         'wantError': false,
       },
-      {
-        'name': 'throws - no exercise id',
-        'formData': <ExerciseFormData>[
-          ExerciseFormData(
-            exercise: const Exercise(key: 'bench_press'),
-            key: GlobalKey<FormState>(),
-          ),
-        ],
-        'wantError': true,
-      },
     ];
     for (var {
           'name': name as String,
@@ -114,14 +105,17 @@ void main() {
         () => exerciseSvc.list(),
       ).thenAnswer(
         (_) async => <Exercise>[
-          const Exercise(
-            key: 'bench_press',
-          ),
+          fixtureExercise(),
         ],
       );
 
       // and - a workout id
       when(() => workoutSvc.create(any())).thenAnswer((_) async => 1);
+
+      // and - a failing create exercise entry call
+      when(
+        () => exerciseEntrySvc.create(const ExerciseEntry(workoutId: 1, exerciseId: 1)),
+      ).thenThrow(Exception());
 
       // when - an active workout body is pumped
       await tester.pumpWidget(

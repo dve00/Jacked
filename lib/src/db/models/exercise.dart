@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 class Exercise extends Equatable {
-  final int? id;
+  final int id;
   final String key;
 
   const Exercise({
-    this.id,
+    required this.id,
     required this.key,
   });
 
@@ -23,13 +23,25 @@ class Exercise extends Equatable {
     );
   }
 
-  Map<String, Object?> toMap({bool includeId = false}) {
+  Map<String, Object?> toMap() {
     return {
-      if (includeId && id != null) 'id': id,
+      'id': id,
       'key': key,
     };
   }
 
   @override
   List<Object?> get props => [id, key];
+}
+
+class NewExercise {
+  final String key;
+
+  const NewExercise({required this.key});
+
+  Map<String, Object?> toMap() {
+    return {
+      'key': key,
+    };
+  }
 }

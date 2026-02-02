@@ -11,6 +11,7 @@ import 'package:jacked/src/db/services/exercise_set_service.dart';
 import 'package:jacked/src/db/services/workout_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import '../../fixtures.dart';
 import '../../test_config.dart';
 
 void main() {
@@ -54,9 +55,9 @@ void main() {
       );
 
       // then - an exercise can be created and queried
-      const exercise = Exercise(key: 'bench_press');
-      await exerciseSvc.create(exercise);
-      expect(await exerciseSvc.get(1), equals(exercise.copyWith(id: 1)));
+      const newExercise = NewExercise(key: 'bench_press');
+      await exerciseSvc.create(newExercise);
+      expect(await exerciseSvc.get(1), equals(fixtureExercise()));
 
       // then - an exercise entry can be created and queried
       const exerciseEntry = ExerciseEntry(workoutId: 1, exerciseId: 1);

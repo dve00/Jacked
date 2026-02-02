@@ -42,14 +42,16 @@ Future<bool> saveWorkout(
   );
   final workoutId = await workoutSvc.create(workout);
   for (var data in formData) {
-    final exerciseId = data.exercise.id;
-    if (exerciseId == null) return false;
-    await exerciseEntrySvc.create(
-      ExerciseEntry(
-        workoutId: workoutId,
-        exerciseId: exerciseId,
-      ),
-    );
+    try {
+      await exerciseEntrySvc.create(
+        ExerciseEntry(
+          workoutId: workoutId,
+          exerciseId: data.exercise.id,
+        ),
+      );
+    } catch (e) {
+      return false;
+    }
   }
   return true;
 }

@@ -77,7 +77,7 @@ void main() {
       test('insert - success', () async {
         final want = List<Exercise>.from(seedExercises);
         want.add(const Exercise(id: 6, key: 'test exercise'));
-        final got = await svc.create(const Exercise(key: 'test exercise'));
+        final got = await svc.create(const NewExercise(key: 'test exercise'));
         expect(
           await svc.list(),
           equals(want),
@@ -85,9 +85,10 @@ void main() {
         expect(got, equals(6));
       });
       test('insert - already exists', () async {
-        final got = await svc.create(const Exercise(key: 'bench_press'));
-        expect(got, equals(0));
-        expect(await svc.list(), equals(seedExercises));
+        expect(
+          () => svc.create(const NewExercise(key: 'bench_press')),
+          throwsA(isA<DatabaseException>()),
+        );
       });
     });
 
