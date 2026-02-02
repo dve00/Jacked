@@ -42,7 +42,6 @@ class ExerciseEntry extends Equatable {
   );
 
   Map<String, Object?> toMap() => {
-    'id': id,
     'workoutId': workoutId,
     'exerciseId': exerciseId,
   };

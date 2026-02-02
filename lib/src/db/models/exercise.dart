@@ -25,7 +25,6 @@ class Exercise extends Equatable {
 
   Map<String, Object?> toMap() {
     return {
-      'id': id,
       'key': key,
     };
   }

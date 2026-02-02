@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class ExerciseSet extends Equatable {
-  final int? id;
+  final int id;
   final int exerciseEntryId;
   final int? reps;
 
@@ -13,7 +13,7 @@ class ExerciseSet extends Equatable {
   final int? rpe;
 
   const ExerciseSet({
-    this.id,
+    required this.id,
     required this.exerciseEntryId,
     this.reps,
     this.weight,
@@ -58,4 +58,35 @@ class ExerciseSet extends Equatable {
 
   @override
   List<Object?> get props => [id, exerciseEntryId, reps, weight, duration, rpe];
+}
+
+class NewExerciseSet extends Equatable {
+  final int exerciseEntryId;
+  final int? reps;
+
+  /// weight in kg
+  final double? weight;
+
+  /// duration in seconds
+  final Duration? duration;
+  final int? rpe;
+
+  const NewExerciseSet({
+    required this.exerciseEntryId,
+    this.reps,
+    this.weight,
+    this.duration,
+    this.rpe,
+  });
+
+  Map<String, Object?> toMap() => {
+    'exerciseEntryId': exerciseEntryId,
+    'reps': reps,
+    'weight': weight,
+    'duration': duration?.inSeconds,
+    'rpe': rpe,
+  };
+
+  @override
+  List<Object?> get props => [exerciseEntryId, reps, weight, duration, rpe];
 }

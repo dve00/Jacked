@@ -66,9 +66,8 @@ void main() {
       );
 
       // then - an exercise set can be created and queried
-      const exerciseSet = ExerciseSet(exerciseEntryId: 1);
-      await exerciseSetSvc.create(exerciseSet);
-      expect(await exerciseSetSvc.get(1), equals(exerciseSet.copyWith(id: 1)));
+      await exerciseSetSvc.create(const NewExerciseSet(exerciseEntryId: 1));
+      expect(await exerciseSetSvc.get(1), equals(fixtureExerciseSet()));
 
       // then - an exercise set can be created and queried
       final workout = Workout(title: 'W1', startTime: DateTime(2025, 11, 27));

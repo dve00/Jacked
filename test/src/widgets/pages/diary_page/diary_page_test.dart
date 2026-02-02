@@ -96,7 +96,9 @@ void main() {
         // and - an exercise set
         when(
           () => exerciseSetSvc.listByExerciseEntryId(1),
-        ).thenAnswer((_) async => [const ExerciseSet(exerciseEntryId: 1, reps: 1, weight: 1.0)]);
+        ).thenAnswer(
+          (_) async => [const ExerciseSet(id: 1, exerciseEntryId: 1, reps: 1, weight: 1.0)],
+        );
 
         // when - the widget is pumped
         await tester.pumpWidget(

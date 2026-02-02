@@ -80,7 +80,7 @@ void main() {
       test('insert - success', () async {
         final want = List<ExerciseSet>.from(seedExerciseSets);
         want.add(const ExerciseSet(id: 5, exerciseEntryId: 5, reps: 5));
-        final got = await svc.create(const ExerciseSet(exerciseEntryId: 5, reps: 5));
+        final got = await svc.create(const NewExerciseSet(exerciseEntryId: 5, reps: 5));
         expect(
           await svc.list(),
           equals(want),
