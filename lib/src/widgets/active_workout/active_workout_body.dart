@@ -44,7 +44,7 @@ Future<bool> saveWorkout(
   for (var data in formData) {
     try {
       await exerciseEntrySvc.create(
-        ExerciseEntry(
+        NewExerciseEntry(
           workoutId: workoutId,
           exerciseId: data.exercise.id,
         ),

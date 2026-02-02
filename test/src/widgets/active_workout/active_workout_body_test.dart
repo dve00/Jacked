@@ -21,7 +21,7 @@ void main() {
     workoutSvc = MockWorkoutService();
     exerciseEntrySvc = MockExerciseEntryService();
     registerFallbackValue(Workout(title: 'New Workout', startTime: DateTime.now()));
-    registerFallbackValue(const ExerciseEntry(workoutId: 1, exerciseId: 1));
+    registerFallbackValue(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
   });
 
   group('saveWorkout()', () {
@@ -114,7 +114,7 @@ void main() {
 
       // and - a failing create exercise entry call
       when(
-        () => exerciseEntrySvc.create(const ExerciseEntry(workoutId: 1, exerciseId: 1)),
+        () => exerciseEntrySvc.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1)),
       ).thenThrow(Exception());
 
       // when - an active workout body is pumped
@@ -171,7 +171,7 @@ void main() {
 
       // and - an exercise entry id
       Future<int> createExerciseEntryMock() =>
-          exerciseEntrySvc.create(const ExerciseEntry(workoutId: 1, exerciseId: 1));
+          exerciseEntrySvc.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
       when(createExerciseEntryMock).thenAnswer((_) async => 1);
 
       // when - an active workout body is pumped

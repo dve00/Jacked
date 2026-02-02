@@ -67,6 +67,7 @@ Future<void> createTables(Database db) async {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       workoutId INTEGER NOT NULL,
       exerciseId INTEGER NOT NULL,
+      UNIQUE(workoutId, exerciseId),
       FOREIGN KEY (workoutId) REFERENCES Workouts(id) ON DELETE CASCADE,
       FOREIGN KEY (exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE
     );

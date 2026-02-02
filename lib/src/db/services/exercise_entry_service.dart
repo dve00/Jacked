@@ -58,8 +58,7 @@ class ExerciseEntryService {
     return maps.isNotEmpty ? ExerciseEntry.fromMap(maps.first) : null;
   }
 
-  Future<int> create(ExerciseEntry item) async =>
-      db.insert(table, item.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
+  Future<int> create(NewExerciseEntry item) async => db.insert(table, item.toMap());
 
   Future<bool> update(ExerciseEntry item) async =>
       await db.update(

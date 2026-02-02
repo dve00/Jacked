@@ -24,13 +24,6 @@ ExerciseEntry fixtureExerciseEntry([ExerciseEntry Function(ExerciseEntry)? mod])
     id: 1,
     workoutId: 1,
     exerciseId: 1,
-    exercise: Exercise(
-      id: 1,
-      key: 'bench_press',
-    ),
-    sets: <ExerciseSet>[
-      ExerciseSet(exerciseEntryId: 1, reps: 8, weight: 20),
-    ],
   );
 
   if (mod != null) {

@@ -55,14 +55,15 @@ void main() {
       );
 
       // then - an exercise can be created and queried
-      const newExercise = NewExercise(key: 'bench_press');
-      await exerciseSvc.create(newExercise);
+      await exerciseSvc.create(const NewExercise(key: 'bench_press'));
       expect(await exerciseSvc.get(1), equals(fixtureExercise()));
 
       // then - an exercise entry can be created and queried
-      const exerciseEntry = ExerciseEntry(workoutId: 1, exerciseId: 1);
-      await exerciseEntrySvc.create(exerciseEntry);
-      expect(await exerciseEntrySvc.get(1), equals(exerciseEntry.copyWith(id: 1)));
+      await exerciseEntrySvc.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
+      expect(
+        await exerciseEntrySvc.get(1),
+        equals(fixtureExerciseEntry((ee) => ee.copyWith(sets: null))),
+      );
 
       // then - an exercise set can be created and queried
       const exerciseSet = ExerciseSet(exerciseEntryId: 1);

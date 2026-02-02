@@ -129,7 +129,7 @@ void main() {
       test('insert - success', () async {
         final want = List<ExerciseEntry>.from(seedExerciseEntries);
         want.add(const ExerciseEntry(id: 7, workoutId: 6, exerciseId: 6));
-        final got = await svc.create(const ExerciseEntry(workoutId: 6, exerciseId: 6));
+        final got = await svc.create(const NewExerciseEntry(workoutId: 6, exerciseId: 6));
         expect(
           await svc.list(),
           equals(want),
@@ -140,7 +140,7 @@ void main() {
 
     group('update', () {
       test('update - success', () async {
-        const update = ExerciseEntry(id: 1, workoutId: 2, exerciseId: 2);
+        const update = ExerciseEntry(id: 1, workoutId: 99, exerciseId: 99);
         final got = await svc.update(update);
         expect(await svc.list(), equals([update, ...seedExerciseEntries.slice(1)]));
         expect(got, equals(true));

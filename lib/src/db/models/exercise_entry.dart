@@ -3,7 +3,7 @@ import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 
 class ExerciseEntry extends Equatable {
-  final int? id;
+  final int id;
   final int workoutId;
   final int exerciseId;
   final Exercise? exercise;
@@ -11,7 +11,7 @@ class ExerciseEntry extends Equatable {
   final List<ExerciseSet>? previousSets;
 
   const ExerciseEntry({
-    this.id,
+    required this.id,
     required this.workoutId,
     required this.exerciseId,
     this.exercise,
@@ -42,11 +42,29 @@ class ExerciseEntry extends Equatable {
   );
 
   Map<String, Object?> toMap() => {
-    if (id != null) 'id': id,
+    'id': id,
     'workoutId': workoutId,
     'exerciseId': exerciseId,
   };
 
   @override
   List<Object?> get props => [id, workoutId, exerciseId, sets, previousSets];
+}
+
+class NewExerciseEntry extends Equatable {
+  final int workoutId;
+  final int exerciseId;
+
+  const NewExerciseEntry({
+    required this.workoutId,
+    required this.exerciseId,
+  });
+
+  Map<String, Object?> toMap() => {
+    'workoutId': workoutId,
+    'exerciseId': exerciseId,
+  };
+
+  @override
+  List<Object?> get props => [workoutId, exerciseId];
 }

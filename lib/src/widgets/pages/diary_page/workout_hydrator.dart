@@ -22,10 +22,8 @@ class WorkoutHydrator {
     final exercise = await exerciseSvc.get(exerciseId);
     exerciseEntry = exerciseEntry.copyWith(exercise: exercise);
 
-    final exerciseEntryId = exerciseEntry.id;
-    if (exerciseEntryId == null) return exerciseEntry;
     final sets = await exerciseSetSvc.listByExerciseEntryId(
-      exerciseEntryId,
+      exerciseEntry.id,
     );
     exerciseEntry = exerciseEntry.copyWith(sets: sets);
 
@@ -33,10 +31,9 @@ class WorkoutHydrator {
       exerciseId: exerciseId,
       startTime: workout.startTime,
     );
-    final previousEntryId = previousEntry?.id;
-    if (previousEntryId == null) return exerciseEntry;
+    if (previousEntry == null) return exerciseEntry;
     final previousSets = await exerciseSetSvc.listByExerciseEntryId(
-      previousEntryId,
+      previousEntry.id,
     );
     return exerciseEntry.copyWith(previousSets: previousSets);
   }

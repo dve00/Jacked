@@ -189,7 +189,12 @@ void main() {
       {
         'name': 'one entry',
         'entries': <ExerciseEntry>[
-          fixtureExerciseEntry(),
+          fixtureExerciseEntry(
+            (ee) => ee.copyWith(
+              exercise: fixtureExercise(),
+              sets: <ExerciseSet>[fixtureExerciseSet((es) => es.copyWith(reps: 8, weight: 20))],
+            ),
+          ),
         ],
         'want': <ExercisePreview>[
           const ExercisePreview(
@@ -201,8 +206,18 @@ void main() {
       {
         'name': 'two entries',
         'entries': <ExerciseEntry>[
-          fixtureExerciseEntry(),
-          fixtureExerciseEntry(),
+          fixtureExerciseEntry(
+            (ee) => ee.copyWith(
+              exercise: fixtureExercise(),
+              sets: <ExerciseSet>[fixtureExerciseSet((es) => es.copyWith(reps: 8, weight: 20))],
+            ),
+          ),
+          fixtureExerciseEntry(
+            (ee) => ee.copyWith(
+              exercise: fixtureExercise(),
+              sets: <ExerciseSet>[fixtureExerciseSet((es) => es.copyWith(reps: 8, weight: 20))],
+            ),
+          ),
         ],
         'want': <ExercisePreview>[
           const ExercisePreview(
