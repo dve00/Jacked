@@ -48,9 +48,7 @@ class WorkoutHydrator {
   }
 
   Future<Workout?> hydrateWorkout() async {
-    final id = workout.id;
-    if (id == null) return null;
-    final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(id);
+    final exerciseEntries = await exerciseEntrySvc.listByWorkoutId(workout.id);
     final hydratedExerciseEntries = await _hydrateExerciseEntries(exerciseEntries);
     return workout.copyWith(exerciseEntries: hydratedExerciseEntries);
   }

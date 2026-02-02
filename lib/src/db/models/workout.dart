@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 
 class Workout extends Equatable {
-  final int? id;
+  final int id;
   final String title;
   final DateTime startTime;
   final DateTime? endTime;
@@ -10,7 +10,7 @@ class Workout extends Equatable {
   final List<ExerciseEntry>? exerciseEntries;
 
   const Workout({
-    this.id,
+    required this.id,
     required this.title,
     required this.startTime,
     this.endTime,
@@ -62,9 +62,8 @@ class Workout extends Equatable {
     );
   }
 
-  Map<String, Object?> toMap({bool includeId = false}) {
+  Map<String, Object?> toMap() {
     return {
-      if (includeId && id != null) 'id': id,
       'title': title,
       'startTime': startTime.microsecondsSinceEpoch,
       'endTime': endTime?.microsecondsSinceEpoch,
@@ -74,4 +73,32 @@ class Workout extends Equatable {
 
   @override
   List<Object?> get props => [id, title, startTime, endTime, description, exerciseEntries];
+}
+
+class NewWorkout extends Equatable {
+  final String title;
+  final DateTime startTime;
+  final DateTime? endTime;
+  final String? description;
+  final List<ExerciseEntry>? exerciseEntries;
+
+  const NewWorkout({
+    required this.title,
+    required this.startTime,
+    this.endTime,
+    this.description,
+    this.exerciseEntries,
+  });
+
+  Map<String, Object?> toMap() {
+    return {
+      'title': title,
+      'startTime': startTime.microsecondsSinceEpoch,
+      'endTime': endTime?.microsecondsSinceEpoch,
+      'description': description,
+    };
+  }
+
+  @override
+  List<Object?> get props => [title, startTime, endTime, description, exerciseEntries];
 }

@@ -20,7 +20,7 @@ void main() {
     exerciseSvc = MockExerciseService();
     workoutSvc = MockWorkoutService();
     exerciseEntrySvc = MockExerciseEntryService();
-    registerFallbackValue(Workout(title: 'New Workout', startTime: DateTime.now()));
+    registerFallbackValue(NewWorkout(title: 'New Workout', startTime: DateTime.now()));
     registerFallbackValue(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
   });
 

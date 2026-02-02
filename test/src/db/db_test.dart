@@ -70,9 +70,8 @@ void main() {
       expect(await exerciseSetSvc.get(1), equals(fixtureExerciseSet()));
 
       // then - an exercise set can be created and queried
-      final workout = Workout(title: 'W1', startTime: DateTime(2025, 11, 27));
-      await workoutSvc.create(workout);
-      expect(await workoutSvc.get(1), equals(workout.copyWith(id: 1)));
+      await workoutSvc.create(NewWorkout(title: 'Workout 1', startTime: DateTime(2025, 11, 23)));
+      expect(await workoutSvc.get(1), equals(fixtureWorkout()));
 
       db.close();
     });

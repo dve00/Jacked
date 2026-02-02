@@ -8,8 +8,6 @@ Workout fixtureWorkout([Workout Function(Workout)? mod]) {
     id: 1,
     title: 'Workout 1',
     startTime: DateTime(2025, 11, 23),
-    endTime: DateTime(2025, 11, 23),
-    description: 'Some workout description',
   );
 
   if (mod != null) {

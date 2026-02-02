@@ -111,7 +111,7 @@ void main() {
       test('insert - success', () async {
         final want = List<Workout>.from(seedWorkouts);
         want.add(Workout(id: 6, title: 'Test123', startTime: DateTime(2025, 9, 8)));
-        final got = await svc.create(Workout(title: 'Test123', startTime: DateTime(2025, 9, 8)));
+        final got = await svc.create(NewWorkout(title: 'Test123', startTime: DateTime(2025, 9, 8)));
         expect(
           await svc.list(),
           equals(want),

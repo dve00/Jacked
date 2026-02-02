@@ -35,12 +35,12 @@ Future<bool> saveWorkout(
   ExerciseEntryService exerciseEntrySvc,
   List<ExerciseFormData> formData,
 ) async {
-  final workout = Workout(
+  final newWorkout = NewWorkout(
     title: 'Saved Workout',
     startTime: DateTime.now(),
     endTime: DateTime.now(),
   );
-  final workoutId = await workoutSvc.create(workout);
+  final workoutId = await workoutSvc.create(newWorkout);
   for (var data in formData) {
     try {
       await exerciseEntrySvc.create(
