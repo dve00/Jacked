@@ -12,14 +12,14 @@ import '../../../mocks.dart';
 import '../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseRepo;
-  late MockWorkoutService workoutRepo;
-  late MockExerciseEntryService exerciseEntryRepo;
+  late MockExerciseRepo exerciseRepo;
+  late MockWorkoutRepo workoutRepo;
+  late MockExerciseEntryRepo exerciseEntryRepo;
 
   setUp(() {
-    exerciseRepo = MockExerciseService();
-    workoutRepo = MockWorkoutService();
-    exerciseEntryRepo = MockExerciseEntryService();
+    exerciseRepo = MockExerciseRepo();
+    workoutRepo = MockWorkoutRepo();
+    exerciseEntryRepo = MockExerciseEntryRepo();
     registerFallbackValue(NewWorkout(title: 'New Workout', startTime: DateTime.now()));
     registerFallbackValue(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
   });

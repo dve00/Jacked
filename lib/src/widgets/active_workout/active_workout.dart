@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_repository.dart';
-import 'package:jacked/src/db/repositories/workout_repository.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
 import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class ActiveWorkout extends StatelessWidget {
+  final Repositories repos;
   final DraggableScrollableController controller;
   final double sheetMinSnap;
   final double sheetMaxSnap;
-  final ExerciseRepository exerciseRepo;
-  final WorkoutRepository workoutRepo;
-  final ExerciseEntryRepository exerciseEntryService;
   final VoidCallback onCancelWorkout;
   final VoidCallback onSaveWorkout;
 
@@ -19,12 +15,10 @@ class ActiveWorkout extends StatelessWidget {
 
   ActiveWorkout({
     super.key,
+    required this.repos,
     required this.controller,
     required this.sheetMinSnap,
     required this.sheetMaxSnap,
-    required this.exerciseRepo,
-    required this.workoutRepo,
-    required this.exerciseEntryService,
     required this.onCancelWorkout,
     required this.onSaveWorkout,
   });
@@ -38,9 +32,9 @@ class ActiveWorkout extends StatelessWidget {
       sheetMaxSnap: sheetMaxSnap,
       headerBody: const MinimizedWorkoutHeader(),
       body: ActiveWorkoutBody(
-        exerciseRepo: exerciseRepo,
-        workoutRepo: workoutRepo,
-        exerciseEntryRepo: exerciseEntryService,
+        exerciseRepo: repos.exerciseRepo,
+        workoutRepo: repos.workoutRepo,
+        exerciseEntryRepo: repos.exerciseEntryRepo,
         onCancelWorkout: () async {
           await sheetKey.currentState?.closeSheet();
           onCancelWorkout();

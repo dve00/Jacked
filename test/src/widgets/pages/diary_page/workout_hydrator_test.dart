@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/widgets/pages/diary_page/workout_hydrator.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -8,30 +9,29 @@ import '../../../../fixtures.dart';
 import '../../../../mocks.dart';
 
 void main() {
-  late MockExerciseService exerciseRepo;
-  late MockExerciseEntryService exerciseEntryRepo;
-  late MockExerciseSetService exerciseSetRepo;
+  late Repositories repos;
 
   setUp(() {
-    exerciseRepo = MockExerciseService();
-    exerciseEntryRepo = MockExerciseEntryService();
-    exerciseSetRepo = MockExerciseSetService();
+    repos = Repositories(
+      exerciseRepo: MockExerciseRepo(),
+      exerciseEntryRepo: MockExerciseEntryRepo(),
+      exerciseSetRepo: MockExerciseSetRepo(),
+      workoutRepo: MockWorkoutRepo(),
+    );
   });
 
   group('WorkoutHydrator', () {
     group('hydrateWorkout', () {
       test('no exercise entries', () async {
         // given - exercise entries
-        when(() => exerciseEntryRepo.listByWorkoutId(1)).thenAnswer(
+        when(() => repos.exerciseEntryRepo.listByWorkoutId(1)).thenAnswer(
           (_) async => <ExerciseEntry>[],
         );
 
         // when - the workout is hydrated
         final got = await WorkoutHydrator(
+          repos: repos,
           workout: fixtureWorkout(),
-          exerciseEntryRepo: exerciseEntryRepo,
-          exerciseSetRepo: exerciseSetRepo,
-          exerciseRepo: exerciseRepo,
         ).hydrateWorkout();
 
         expect(
@@ -46,23 +46,23 @@ void main() {
 
       test('one exercise entry', () async {
         // given - an exercise entry
-        when(() => exerciseEntryRepo.listByWorkoutId(1)).thenAnswer(
+        when(() => repos.exerciseEntryRepo.listByWorkoutId(1)).thenAnswer(
           (_) async => <ExerciseEntry>[
             fixtureExerciseEntry((ee) => ee.copyWith(exercise: null, sets: null)),
           ],
         );
 
         // given - an exercise
-        when(() => exerciseRepo.get(1)).thenAnswer((_) async => fixtureExercise());
+        when(() => repos.exerciseRepo.get(1)).thenAnswer((_) async => fixtureExercise());
 
         // given - an exercise set
         when(
-          () => exerciseSetRepo.listByExerciseEntryId(1),
+          () => repos.exerciseSetRepo.listByExerciseEntryId(1),
         ).thenAnswer((_) async => <ExerciseSet>[fixtureExerciseSet()]);
 
         // given - a previous exercise entry
         when(
-          () => exerciseEntryRepo.getMostRecentExerciseEntry(
+          () => repos.exerciseEntryRepo.getMostRecentExerciseEntry(
             exerciseId: 1,
             startTime: fixtureWorkout().startTime,
           ),
@@ -70,15 +70,13 @@ void main() {
 
         // given - a previous exercise set
         when(
-          () => exerciseSetRepo.listByExerciseEntryId(2),
+          () => repos.exerciseSetRepo.listByExerciseEntryId(2),
         ).thenAnswer((_) async => <ExerciseSet>[fixtureExerciseSet((es) => es.copyWith(id: 2))]);
 
         // when - the workout is hydrated
         final got = await WorkoutHydrator(
+          repos: repos,
           workout: fixtureWorkout(),
-          exerciseEntryRepo: exerciseEntryRepo,
-          exerciseSetRepo: exerciseSetRepo,
-          exerciseRepo: exerciseRepo,
         ).hydrateWorkout();
 
         expect(

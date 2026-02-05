@@ -4,31 +4,22 @@ import 'package:intl/intl.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
-import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/pages/diary_page/workout_hydrator.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class DiaryPage extends StatelessWidget {
-  final WorkoutRepository workoutRepo;
-  final ExerciseRepository exerciseRepo;
-  final ExerciseEntryRepository exerciseEntryRepo;
-  final ExerciseSetRepository exerciseSetRepo;
+  final Repositories repos;
 
   const DiaryPage({
     super.key,
-    required this.exerciseRepo,
-    required this.exerciseEntryRepo,
-    required this.exerciseSetRepo,
-    required this.workoutRepo,
+    required this.repos,
   });
 
   Future<List<Workout>> listWorkouts() async {
-    return workoutRepo.list(orderBy: 'startTime desc');
+    return repos.workoutRepo.list(orderBy: 'startTime desc');
   }
 
   @override
@@ -48,10 +39,8 @@ class DiaryPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final workout = workouts[index];
             return DiaryEntry(
+              repos: repos,
               workout: workout,
-              exerciseEntryRepo: exerciseEntryRepo,
-              exerciseSetRepo: exerciseSetRepo,
-              exerciseRepo: exerciseRepo,
             );
           },
           itemCount: workouts.length,
@@ -99,16 +88,12 @@ List<ExercisePreview> getExercisePreviews(
 }
 
 class DiaryEntry extends StatelessWidget {
-  final ExerciseRepository exerciseRepo;
-  final ExerciseEntryRepository exerciseEntryRepo;
-  final ExerciseSetRepository exerciseSetRepo;
+  final Repositories repos;
   final Workout workout;
 
   const DiaryEntry({
     super.key,
-    required this.exerciseRepo,
-    required this.exerciseEntryRepo,
-    required this.exerciseSetRepo,
+    required this.repos,
     required this.workout,
   });
 
@@ -116,10 +101,8 @@ class DiaryEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final duration = workout.endTime?.difference(workout.startTime);
     final workoutHydrator = WorkoutHydrator(
+      repos: repos,
       workout: workout,
-      exerciseEntryRepo: exerciseEntryRepo,
-      exerciseSetRepo: exerciseSetRepo,
-      exerciseRepo: exerciseRepo,
     );
 
     return FutureBuilder(

@@ -1,38 +1,32 @@
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 
 class WorkoutHydrator {
+  final Repositories repos;
   final Workout workout;
-  final ExerciseEntryRepository exerciseEntryRepo;
-  final ExerciseRepository exerciseRepo;
-  final ExerciseSetRepository exerciseSetRepo;
 
   WorkoutHydrator({
+    required this.repos,
     required this.workout,
-    required this.exerciseEntryRepo,
-    required this.exerciseRepo,
-    required this.exerciseSetRepo,
   });
 
   Future<ExerciseEntry> _hydrateExerciseEntry(ExerciseEntry exerciseEntry) async {
     final exerciseId = exerciseEntry.exerciseId;
-    final exercise = await exerciseRepo.get(exerciseId);
+    final exercise = await repos.exerciseRepo.get(exerciseId);
     exerciseEntry = exerciseEntry.copyWith(exercise: exercise);
 
-    final sets = await exerciseSetRepo.listByExerciseEntryId(
+    final sets = await repos.exerciseSetRepo.listByExerciseEntryId(
       exerciseEntry.id,
     );
     exerciseEntry = exerciseEntry.copyWith(sets: sets);
 
-    final previousEntry = await exerciseEntryRepo.getMostRecentExerciseEntry(
+    final previousEntry = await repos.exerciseEntryRepo.getMostRecentExerciseEntry(
       exerciseId: exerciseId,
       startTime: workout.startTime,
     );
     if (previousEntry == null) return exerciseEntry;
-    final previousSets = await exerciseSetRepo.listByExerciseEntryId(
+    final previousSets = await repos.exerciseSetRepo.listByExerciseEntryId(
       previousEntry.id,
     );
     return exerciseEntry.copyWith(previousSets: previousSets);
@@ -48,7 +42,7 @@ class WorkoutHydrator {
   }
 
   Future<Workout?> hydrateWorkout() async {
-    final exerciseEntries = await exerciseEntryRepo.listByWorkoutId(workout.id);
+    final exerciseEntries = await repos.exerciseEntryRepo.listByWorkoutId(workout.id);
     final hydratedExerciseEntries = await _hydrateExerciseEntries(exerciseEntries);
     return workout.copyWith(exerciseEntries: hydratedExerciseEntries);
   }

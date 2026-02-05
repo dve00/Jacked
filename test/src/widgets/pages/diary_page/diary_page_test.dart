@@ -4,6 +4,7 @@ import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/widgets/pages/diary_page/diary_page.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,35 +13,34 @@ import '../../../../mocks.dart';
 import '../../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseRepo;
-  late MockWorkoutService workoutRepo;
-  late MockExerciseEntryService exerciseEntryRepo;
-  late MockExerciseSetService exerciseSetRepo;
+  late Repositories repos;
 
   setUp(() {
-    exerciseRepo = MockExerciseService();
-    workoutRepo = MockWorkoutService();
-    exerciseEntryRepo = MockExerciseEntryService();
-    exerciseSetRepo = MockExerciseSetService();
+    repos = Repositories(
+      exerciseRepo: MockExerciseRepo(),
+      exerciseEntryRepo: MockExerciseEntryRepo(),
+      exerciseSetRepo: MockExerciseSetRepo(),
+      workoutRepo: MockWorkoutRepo(),
+    );
   });
 
   group('Diary Page', () {
     testWidgets('has workout list', (tester) async {
       // given - two exercises
       when(
-        () => exerciseRepo.get(1),
+        () => repos.exerciseRepo.get(1),
       ).thenAnswer(
         (_) async => const Exercise(id: 1, key: 'bench_press'),
       );
       when(
-        () => exerciseRepo.get(2),
+        () => repos.exerciseRepo.get(2),
       ).thenAnswer(
         (_) async => const Exercise(id: 2, key: 'lat_pulldown'),
       );
 
       // and - two workouts
       when(
-        () => workoutRepo.list(orderBy: 'startTime desc'),
+        () => repos.workoutRepo.list(orderBy: 'startTime desc'),
       ).thenAnswer(
         (_) async => [
           Workout(id: 1, title: 'W1', startTime: DateTime(2025, 11, 27)),
@@ -50,20 +50,17 @@ void main() {
 
       // and - two exercise entries
       when(
-        () => exerciseEntryRepo.listByWorkoutId(1),
+        () => repos.exerciseEntryRepo.listByWorkoutId(1),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
       when(
-        () => exerciseEntryRepo.listByWorkoutId(2),
+        () => repos.exerciseEntryRepo.listByWorkoutId(2),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2)]);
 
       // when - the widget is pumped
       await tester.pumpWidget(
         makeTestApp(
           DiaryPage(
-            exerciseEntryRepo: exerciseEntryRepo,
-            exerciseSetRepo: exerciseSetRepo,
-            exerciseRepo: exerciseRepo,
-            workoutRepo: workoutRepo,
+            repos: repos,
           ),
         ),
       );
@@ -78,24 +75,27 @@ void main() {
       testWidgets('shows previous and opens details on tap', (tester) async {
         // given - an exercise
         when(
-          () => exerciseRepo.get(1),
+          () => repos.exerciseRepo.get(1),
         ).thenAnswer(
           (_) async => const Exercise(id: 1, key: 'bench_press'),
         );
 
         // and - an exercise entry
         when(
-          () => exerciseEntryRepo.listByWorkoutId(1),
+          () => repos.exerciseEntryRepo.listByWorkoutId(1),
         ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
 
         // and - a previous exercise entry
         when(
-          () => exerciseEntryRepo.getMostRecentExerciseEntry(exerciseId: 1, startTime: startTime),
+          () => repos.exerciseEntryRepo.getMostRecentExerciseEntry(
+            exerciseId: 1,
+            startTime: startTime,
+          ),
         ).thenAnswer((_) async => null);
 
         // and - an exercise set
         when(
-          () => exerciseSetRepo.listByExerciseEntryId(1),
+          () => repos.exerciseSetRepo.listByExerciseEntryId(1),
         ).thenAnswer(
           (_) async => [const ExerciseSet(id: 1, exerciseEntryId: 1, reps: 1, weight: 1.0)],
         );
@@ -104,9 +104,7 @@ void main() {
         await tester.pumpWidget(
           makeTestApp(
             DiaryEntry(
-              exerciseEntryRepo: exerciseEntryRepo,
-              exerciseSetRepo: exerciseSetRepo,
-              exerciseRepo: exerciseRepo,
+              repos: repos,
               workout: Workout(id: 1, title: 'W1', startTime: startTime),
             ),
           ),

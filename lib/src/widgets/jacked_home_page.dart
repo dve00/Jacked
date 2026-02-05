@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_repository.dart';
-import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
-import 'package:jacked/src/db/repositories/workout_repository.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
@@ -12,20 +9,14 @@ import 'package:jacked/src/widgets/pages/you_page.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class JackedHomePage extends StatelessWidget {
-  final ExerciseRepository exerciseRepo;
-  final ExerciseEntryRepository exerciseEntryRepo;
-  final ExerciseSetRepository exerciseSetRepo;
-  final WorkoutRepository workoutRepo;
+  final Repositories repos;
 
   final navigationKey = GlobalKey<_JackedNavigationState>();
   final scrollController = DraggableScrollableController();
 
   JackedHomePage({
     super.key,
-    required this.exerciseRepo,
-    required this.exerciseEntryRepo,
-    required this.exerciseSetRepo,
-    required this.workoutRepo,
+    required this.repos,
   });
 
   @override
@@ -38,10 +29,7 @@ class JackedHomePage extends StatelessWidget {
       pages: [
         const YouPage(),
         DiaryPage(
-          workoutRepo: workoutRepo,
-          exerciseEntryRepo: exerciseEntryRepo,
-          exerciseSetRepo: exerciseSetRepo,
-          exerciseRepo: exerciseRepo,
+          repos: repos,
         ),
         WorkoutPage(
           onStartWorkout: () {
@@ -49,15 +37,13 @@ class JackedHomePage extends StatelessWidget {
           },
         ),
         const ProgramPage(),
-        ExercisesPage(exerciseRepo: exerciseRepo),
+        ExercisesPage(repos: repos),
       ],
       activeWorkout: ActiveWorkout(
+        repos: repos,
         controller: scrollController,
         sheetMinSnap: sheetMinSnap,
         sheetMaxSnap: 1.0,
-        exerciseRepo: exerciseRepo,
-        workoutRepo: workoutRepo,
-        exerciseEntryService: exerciseEntryRepo,
         onCancelWorkout: () async {
           await Future.delayed(const Duration(milliseconds: 300));
           navigationKey.currentState?.setWorkoutInactive();

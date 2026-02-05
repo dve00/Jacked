@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/repositories/exercise_repository.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/exercise_list.dart';
 
 class ExercisesPage extends StatelessWidget {
-  final ExerciseRepository exerciseRepo;
+  final Repositories repos;
 
-  const ExercisesPage({super.key, required this.exerciseRepo});
+  const ExercisesPage({
+    super.key,
+    required this.repos,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ExerciseList(
-      exercisesRepo: exerciseRepo,
+      exercisesRepo: repos.exerciseRepo,
       onSelectedExercise: (exercise) {
         showDialog(
           context: context,

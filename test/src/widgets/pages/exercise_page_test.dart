@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jacked/src/db/repositories/repositories.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
 import 'package:jacked/src/widgets/shared/widgets/exercise_list.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,19 +9,24 @@ import '../../../mocks.dart';
 import '../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseRepo;
+  late Repositories repos;
 
   setUp(() {
-    exerciseRepo = MockExerciseService();
+    repos = Repositories(
+      exerciseRepo: MockExerciseRepo(),
+      exerciseEntryRepo: MockExerciseEntryRepo(),
+      exerciseSetRepo: MockExerciseSetRepo(),
+      workoutRepo: MockWorkoutRepo(),
+    );
   });
 
   group('ExercisePage', () {
     testWidgets('has exercise list', (tester) async {
-      when(() => exerciseRepo.list()).thenAnswer((_) async => [fixtureExercise()]);
+      when(() => repos.exerciseRepo.list()).thenAnswer((_) async => [fixtureExercise()]);
       await tester.pumpWidget(
         makeTestApp(
           ExercisesPage(
-            exerciseRepo: exerciseRepo,
+            repos: repos,
           ),
         ),
       );
