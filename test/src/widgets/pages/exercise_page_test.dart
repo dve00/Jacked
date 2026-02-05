@@ -8,19 +8,19 @@ import '../../../mocks.dart';
 import '../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseSvc;
+  late MockExerciseService exerciseRepo;
 
   setUp(() {
-    exerciseSvc = MockExerciseService();
+    exerciseRepo = MockExerciseService();
   });
 
   group('ExercisePage', () {
     testWidgets('has exercise list', (tester) async {
-      when(() => exerciseSvc.list()).thenAnswer((_) async => [fixtureExercise()]);
+      when(() => exerciseRepo.list()).thenAnswer((_) async => [fixtureExercise()]);
       await tester.pumpWidget(
         makeTestApp(
           ExercisesPage(
-            exerciseSvc: exerciseSvc,
+            exerciseRepo: exerciseRepo,
           ),
         ),
       );

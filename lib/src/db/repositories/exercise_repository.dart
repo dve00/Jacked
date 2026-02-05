@@ -2,18 +2,18 @@ import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ExerciseService {
-  ExerciseService._({required this.db});
+class ExerciseRepository {
+  ExerciseRepository._({required this.db});
 
-  static ExerciseService? _instance;
+  static ExerciseRepository? _instance;
 
   final table = 'Exercises';
   Database db;
 
-  static Future<ExerciseService> get instance async {
+  static Future<ExerciseRepository> get instance async {
     if (_instance != null) return _instance!;
     final db = await JackedDb.database;
-    _instance = ExerciseService._(db: db);
+    _instance = ExerciseRepository._(db: db);
     return _instance!;
   }
 

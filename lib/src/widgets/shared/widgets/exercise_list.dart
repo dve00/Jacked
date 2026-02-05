@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class ExerciseList extends StatelessWidget {
-  final ExerciseService exercisesSvc;
+  final ExerciseRepository exercisesRepo;
   final void Function(Exercise) onSelectedExercise;
 
   const ExerciseList({
     super.key,
-    required this.exercisesSvc,
+    required this.exercisesRepo,
     required this.onSelectedExercise,
   });
 
   Future<List<Exercise>> listExercisesFuture() async {
-    return exercisesSvc.list();
+    return exercisesRepo.list();
   }
 
   @override

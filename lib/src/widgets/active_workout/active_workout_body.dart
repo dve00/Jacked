@@ -3,9 +3,9 @@ import 'package:jacked/src/db/models/exercise.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/exercise_list.dart';
 import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
@@ -13,16 +13,16 @@ import 'package:jacked/src/widgets/shared/widgets/jacked_button.dart';
 class ActiveWorkoutBody extends StatefulWidget {
   const ActiveWorkoutBody({
     super.key,
-    required this.exerciseSvc,
-    required this.workoutSvc,
-    required this.exerciseEntrySvc,
+    required this.exerciseRepo,
+    required this.workoutRepo,
+    required this.exerciseEntryRepo,
     required this.onCancelWorkout,
     required this.onSaveWorkout,
   });
 
-  final ExerciseService exerciseSvc;
-  final WorkoutService workoutSvc;
-  final ExerciseEntryService exerciseEntrySvc;
+  final ExerciseRepository exerciseRepo;
+  final WorkoutRepository workoutRepo;
+  final ExerciseEntryRepository exerciseEntryRepo;
   final VoidCallback onCancelWorkout;
   final VoidCallback onSaveWorkout;
 
@@ -31,8 +31,8 @@ class ActiveWorkoutBody extends StatefulWidget {
 }
 
 Future<bool> saveWorkout(
-  WorkoutService workoutSvc,
-  ExerciseEntryService exerciseEntrySvc,
+  WorkoutRepository workoutRepo,
+  ExerciseEntryRepository exerciseEntryRepo,
   List<ExerciseFormData> formData,
 ) async {
   final newWorkout = NewWorkout(
@@ -40,10 +40,10 @@ Future<bool> saveWorkout(
     startTime: DateTime.now(),
     endTime: DateTime.now(),
   );
-  final workoutId = await workoutSvc.create(newWorkout);
+  final workoutId = await workoutRepo.create(newWorkout);
   for (var data in formData) {
     try {
-      await exerciseEntrySvc.create(
+      await exerciseEntryRepo.create(
         NewExerciseEntry(
           workoutId: workoutId,
           exerciseId: data.exercise.id,
@@ -84,7 +84,7 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
                         context: context,
                         builder: (context) => Dialog(
                           child: ExerciseList(
-                            exercisesSvc: widget.exerciseSvc,
+                            exercisesRepo: widget.exerciseRepo,
                             onSelectedExercise: (exercise) {
                               setState(() {
                                 formData.add(
@@ -111,8 +111,8 @@ class _ActiveWorkoutBodyState extends State<ActiveWorkoutBody> {
                       label: context.l10n.active_workout_saveWorkout,
                       onPressed: () async {
                         if (!await saveWorkout(
-                          widget.workoutSvc,
-                          widget.exerciseEntrySvc,
+                          widget.workoutRepo,
+                          widget.exerciseEntryRepo,
                           formData,
                         )) {
                           if (context.mounted) {

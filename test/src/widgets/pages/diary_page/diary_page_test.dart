@@ -12,35 +12,35 @@ import '../../../../mocks.dart';
 import '../../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseSvc;
-  late MockWorkoutService workoutSvc;
-  late MockExerciseEntryService exerciseEntrySvc;
-  late MockExerciseSetService exerciseSetSvc;
+  late MockExerciseService exerciseRepo;
+  late MockWorkoutService workoutRepo;
+  late MockExerciseEntryService exerciseEntryRepo;
+  late MockExerciseSetService exerciseSetRepo;
 
   setUp(() {
-    exerciseSvc = MockExerciseService();
-    workoutSvc = MockWorkoutService();
-    exerciseEntrySvc = MockExerciseEntryService();
-    exerciseSetSvc = MockExerciseSetService();
+    exerciseRepo = MockExerciseService();
+    workoutRepo = MockWorkoutService();
+    exerciseEntryRepo = MockExerciseEntryService();
+    exerciseSetRepo = MockExerciseSetService();
   });
 
   group('Diary Page', () {
     testWidgets('has workout list', (tester) async {
       // given - two exercises
       when(
-        () => exerciseSvc.get(1),
+        () => exerciseRepo.get(1),
       ).thenAnswer(
         (_) async => const Exercise(id: 1, key: 'bench_press'),
       );
       when(
-        () => exerciseSvc.get(2),
+        () => exerciseRepo.get(2),
       ).thenAnswer(
         (_) async => const Exercise(id: 2, key: 'lat_pulldown'),
       );
 
       // and - two workouts
       when(
-        () => workoutSvc.list(orderBy: 'startTime desc'),
+        () => workoutRepo.list(orderBy: 'startTime desc'),
       ).thenAnswer(
         (_) async => [
           Workout(id: 1, title: 'W1', startTime: DateTime(2025, 11, 27)),
@@ -50,20 +50,20 @@ void main() {
 
       // and - two exercise entries
       when(
-        () => exerciseEntrySvc.listByWorkoutId(1),
+        () => exerciseEntryRepo.listByWorkoutId(1),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
       when(
-        () => exerciseEntrySvc.listByWorkoutId(2),
+        () => exerciseEntryRepo.listByWorkoutId(2),
       ).thenAnswer((_) async => [const ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2)]);
 
       // when - the widget is pumped
       await tester.pumpWidget(
         makeTestApp(
           DiaryPage(
-            exerciseEntrySvc: exerciseEntrySvc,
-            exerciseSetSvc: exerciseSetSvc,
-            exerciseSvc: exerciseSvc,
-            workoutSvc: workoutSvc,
+            exerciseEntryRepo: exerciseEntryRepo,
+            exerciseSetRepo: exerciseSetRepo,
+            exerciseRepo: exerciseRepo,
+            workoutRepo: workoutRepo,
           ),
         ),
       );
@@ -78,24 +78,24 @@ void main() {
       testWidgets('shows previous and opens details on tap', (tester) async {
         // given - an exercise
         when(
-          () => exerciseSvc.get(1),
+          () => exerciseRepo.get(1),
         ).thenAnswer(
           (_) async => const Exercise(id: 1, key: 'bench_press'),
         );
 
         // and - an exercise entry
         when(
-          () => exerciseEntrySvc.listByWorkoutId(1),
+          () => exerciseEntryRepo.listByWorkoutId(1),
         ).thenAnswer((_) async => [const ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1)]);
 
         // and - a previous exercise entry
         when(
-          () => exerciseEntrySvc.getMostRecentExerciseEntry(exerciseId: 1, startTime: startTime),
+          () => exerciseEntryRepo.getMostRecentExerciseEntry(exerciseId: 1, startTime: startTime),
         ).thenAnswer((_) async => null);
 
         // and - an exercise set
         when(
-          () => exerciseSetSvc.listByExerciseEntryId(1),
+          () => exerciseSetRepo.listByExerciseEntryId(1),
         ).thenAnswer(
           (_) async => [const ExerciseSet(id: 1, exerciseEntryId: 1, reps: 1, weight: 1.0)],
         );
@@ -104,9 +104,9 @@ void main() {
         await tester.pumpWidget(
           makeTestApp(
             DiaryEntry(
-              exerciseEntrySvc: exerciseEntrySvc,
-              exerciseSetSvc: exerciseSetSvc,
-              exerciseSvc: exerciseSvc,
+              exerciseEntryRepo: exerciseEntryRepo,
+              exerciseSetRepo: exerciseSetRepo,
+              exerciseRepo: exerciseRepo,
               workout: Workout(id: 1, title: 'W1', startTime: startTime),
             ),
           ),

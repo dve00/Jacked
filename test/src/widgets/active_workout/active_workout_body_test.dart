@@ -12,21 +12,21 @@ import '../../../mocks.dart';
 import '../../../test_config.dart';
 
 void main() {
-  late MockExerciseService exerciseSvc;
-  late MockWorkoutService workoutSvc;
-  late MockExerciseEntryService exerciseEntrySvc;
+  late MockExerciseService exerciseRepo;
+  late MockWorkoutService workoutRepo;
+  late MockExerciseEntryService exerciseEntryRepo;
 
   setUp(() {
-    exerciseSvc = MockExerciseService();
-    workoutSvc = MockWorkoutService();
-    exerciseEntrySvc = MockExerciseEntryService();
+    exerciseRepo = MockExerciseService();
+    workoutRepo = MockWorkoutService();
+    exerciseEntryRepo = MockExerciseEntryService();
     registerFallbackValue(NewWorkout(title: 'New Workout', startTime: DateTime.now()));
     registerFallbackValue(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
   });
 
   group('saveWorkout()', () {
     tearDown(() {
-      reset(workoutSvc);
+      reset(workoutRepo);
     });
 
     final inputs = [
@@ -68,15 +68,15 @@ void main() {
         in inputs) {
       test('saveWorkout() - $name', () async {
         // given - a workout id
-        Future<int> saveWorkoutMock() => workoutSvc.create(any());
+        Future<int> saveWorkoutMock() => workoutRepo.create(any());
         when(saveWorkoutMock).thenAnswer((_) async => 1);
 
         // and - an exercise entry id
-        Future<int> saveExerciseEntryMock() => exerciseEntrySvc.create(any());
+        Future<int> saveExerciseEntryMock() => exerciseEntryRepo.create(any());
         when(saveExerciseEntryMock).thenAnswer((_) async => 1);
 
         // when - saveWorkout is called
-        final res = await saveWorkout(workoutSvc, exerciseEntrySvc, formData);
+        final res = await saveWorkout(workoutRepo, exerciseEntryRepo, formData);
 
         // then - the workout is saved
         verify(saveWorkoutMock).called(1);
@@ -96,13 +96,13 @@ void main() {
 
   group('ActiveWorkoutBody', () {
     tearDown(() {
-      reset(exerciseSvc);
+      reset(exerciseRepo);
     });
 
     testWidgets('adding exercise without id shows error dialog', (tester) async {
       // given - an exercise without id
       when(
-        () => exerciseSvc.list(),
+        () => exerciseRepo.list(),
       ).thenAnswer(
         (_) async => <Exercise>[
           fixtureExercise(),
@@ -110,20 +110,20 @@ void main() {
       );
 
       // and - a workout id
-      when(() => workoutSvc.create(any())).thenAnswer((_) async => 1);
+      when(() => workoutRepo.create(any())).thenAnswer((_) async => 1);
 
       // and - a failing create exercise entry call
       when(
-        () => exerciseEntrySvc.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1)),
+        () => exerciseEntryRepo.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1)),
       ).thenThrow(Exception());
 
       // when - an active workout body is pumped
       await tester.pumpWidget(
         makeTestApp(
           ActiveWorkoutBody(
-            exerciseSvc: exerciseSvc,
-            workoutSvc: workoutSvc,
-            exerciseEntrySvc: exerciseEntrySvc,
+            exerciseRepo: exerciseRepo,
+            workoutRepo: workoutRepo,
+            exerciseEntryRepo: exerciseEntryRepo,
             onCancelWorkout: () {},
             onSaveWorkout: () {},
           ),
@@ -155,7 +155,7 @@ void main() {
     testWidgets('adding exercise adds form', (tester) async {
       // given - an exercise
       when(
-        () => exerciseSvc.list(),
+        () => exerciseRepo.list(),
       ).thenAnswer(
         (_) async => <Exercise>[
           const Exercise(
@@ -166,21 +166,21 @@ void main() {
       );
 
       // and - a workout id
-      Future<int> createWorkoutMock() => workoutSvc.create(any());
+      Future<int> createWorkoutMock() => workoutRepo.create(any());
       when(createWorkoutMock).thenAnswer((_) async => 1);
 
       // and - an exercise entry id
       Future<int> createExerciseEntryMock() =>
-          exerciseEntrySvc.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
+          exerciseEntryRepo.create(const NewExerciseEntry(workoutId: 1, exerciseId: 1));
       when(createExerciseEntryMock).thenAnswer((_) async => 1);
 
       // when - an active workout body is pumped
       await tester.pumpWidget(
         makeTestApp(
           ActiveWorkoutBody(
-            exerciseSvc: exerciseSvc,
-            workoutSvc: workoutSvc,
-            exerciseEntrySvc: exerciseEntrySvc,
+            exerciseRepo: exerciseRepo,
+            workoutRepo: workoutRepo,
+            exerciseEntryRepo: exerciseEntryRepo,
             onCancelWorkout: () {},
             onSaveWorkout: () {},
           ),

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../test_config.dart';
@@ -47,7 +47,7 @@ final seedWorkouts = <Workout>[
 
 void main() {
   late Database testDb;
-  late WorkoutService svc;
+  late WorkoutRepository repo;
 
   setupTestDatabase();
 
@@ -61,37 +61,37 @@ void main() {
       },
     );
     JackedDb.overrideDatabaseForTests(testDb);
-    svc = await WorkoutService.instance;
+    repo = await WorkoutRepository.instance;
   });
 
   tearDown(() async {
     await testDb.close();
     await deleteDatabase(inMemoryDatabasePath);
-    WorkoutService.resetForTests();
+    WorkoutRepository.resetForTests();
   });
 
   group('workout service', () {
     test('list', () async {
-      expect(await svc.list(), equals(seedWorkouts));
+      expect(await repo.list(), equals(seedWorkouts));
     });
 
     test('list with order by', () async {
-      expect(await svc.list(orderBy: 'startTime desc'), equals(seedWorkouts.reversed));
+      expect(await repo.list(orderBy: 'startTime desc'), equals(seedWorkouts.reversed));
     });
 
     group('delete', () {
       test('delete - success', () async {
-        final got = await svc.delete(1);
+        final got = await repo.delete(1);
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(seedWorkouts.slice(1)),
         );
         expect(got, equals(true));
       });
       test('delete - nothing deleted', () async {
-        final got = await svc.delete(999);
+        final got = await repo.delete(999);
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(seedWorkouts),
         );
         expect(got, equals(false));
@@ -100,10 +100,10 @@ void main() {
 
     group('getById', () {
       test('getById - success', () async {
-        expect(await svc.get(1), equals(seedWorkouts[0]));
+        expect(await repo.get(1), equals(seedWorkouts[0]));
       });
       test('getById - nothing found', () async {
-        expect(await svc.get(999), equals(null));
+        expect(await repo.get(999), equals(null));
       });
     });
 
@@ -111,9 +111,11 @@ void main() {
       test('insert - success', () async {
         final want = List<Workout>.from(seedWorkouts);
         want.add(Workout(id: 6, title: 'Test123', startTime: DateTime(2025, 9, 8)));
-        final got = await svc.create(NewWorkout(title: 'Test123', startTime: DateTime(2025, 9, 8)));
+        final got = await repo.create(
+          NewWorkout(title: 'Test123', startTime: DateTime(2025, 9, 8)),
+        );
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(want),
         );
         expect(got, equals(6));
@@ -124,14 +126,14 @@ void main() {
       test('update - success', () async {
         final today = DateTime.now();
         final update = Workout(id: 1, title: 'newTitle', startTime: today, endTime: today);
-        final got = await svc.update(update);
-        expect(await svc.list(), equals([update, ...seedWorkouts.slice(1)]));
+        final got = await repo.update(update);
+        expect(await repo.list(), equals([update, ...seedWorkouts.slice(1)]));
         expect(got, equals(true));
       });
       test('update - nothing updated', () async {
         final update = Workout(id: 999, title: 'foo', startTime: DateTime.now());
-        final got = await svc.update(update);
-        expect(await svc.list(), equals(seedWorkouts));
+        final got = await repo.update(update);
+        expect(await repo.list(), equals(seedWorkouts));
         expect(got, equals(false));
       });
     });

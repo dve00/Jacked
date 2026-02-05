@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jacked/src/db/db.dart';
 import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/workout.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../fixtures.dart';
@@ -20,7 +20,7 @@ const seedExerciseEntries = <ExerciseEntry>[
 
 void main() {
   late Database testDb;
-  late ExerciseEntryService svc;
+  late ExerciseEntryRepository repo;
 
   setupTestDatabase();
 
@@ -34,22 +34,22 @@ void main() {
       },
     );
     JackedDb.overrideDatabaseForTests(testDb);
-    svc = await ExerciseEntryService.instance;
+    repo = await ExerciseEntryRepository.instance;
   });
 
   tearDown(() async {
     await testDb.close();
     await deleteDatabase(inMemoryDatabasePath);
-    ExerciseEntryService.resetForTests();
+    ExerciseEntryRepository.resetForTests();
   });
 
   group('exercise entry service', () {
     test('list', () async {
-      expect(await svc.list(), equals(seedExerciseEntries));
+      expect(await repo.list(), equals(seedExerciseEntries));
     });
 
     test('listByWorkoutId', () async {
-      expect(await svc.listByWorkoutId(1), equals(seedExerciseEntries.slice(0, 1)));
+      expect(await repo.listByWorkoutId(1), equals(seedExerciseEntries.slice(0, 1)));
     });
 
     group('getMostRecentExerciseEntry', () {
@@ -90,7 +90,7 @@ void main() {
           in inputs) {
         test(name, () async {
           expect(
-            await svc.getMostRecentExerciseEntry(exerciseId: exerciseId, startTime: startTime),
+            await repo.getMostRecentExerciseEntry(exerciseId: exerciseId, startTime: startTime),
             want,
           );
         });
@@ -99,17 +99,17 @@ void main() {
 
     group('delete', () {
       test('delete - success', () async {
-        final got = await svc.delete(1);
+        final got = await repo.delete(1);
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(seedExerciseEntries.slice(1)),
         );
         expect(got, equals(true));
       });
       test('delete - nothing deleted', () async {
-        final got = await svc.delete(999);
+        final got = await repo.delete(999);
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(seedExerciseEntries),
         );
         expect(got, equals(false));
@@ -118,10 +118,10 @@ void main() {
 
     group('getById', () {
       test('getById - success', () async {
-        expect(await svc.get(1), equals(seedExerciseEntries[0]));
+        expect(await repo.get(1), equals(seedExerciseEntries[0]));
       });
       test('getById - nothing found', () async {
-        expect(await svc.get(999), equals(null));
+        expect(await repo.get(999), equals(null));
       });
     });
 
@@ -129,9 +129,9 @@ void main() {
       test('insert - success', () async {
         final want = List<ExerciseEntry>.from(seedExerciseEntries);
         want.add(const ExerciseEntry(id: 7, workoutId: 6, exerciseId: 6));
-        final got = await svc.create(const NewExerciseEntry(workoutId: 6, exerciseId: 6));
+        final got = await repo.create(const NewExerciseEntry(workoutId: 6, exerciseId: 6));
         expect(
-          await svc.list(),
+          await repo.list(),
           equals(want),
         );
         expect(got, equals(7));
@@ -141,14 +141,14 @@ void main() {
     group('update', () {
       test('update - success', () async {
         const update = ExerciseEntry(id: 1, workoutId: 99, exerciseId: 99);
-        final got = await svc.update(update);
-        expect(await svc.list(), equals([update, ...seedExerciseEntries.slice(1)]));
+        final got = await repo.update(update);
+        expect(await repo.list(), equals([update, ...seedExerciseEntries.slice(1)]));
         expect(got, equals(true));
       });
       test('update - nothing updated', () async {
         const update = ExerciseEntry(id: 999, workoutId: 1, exerciseId: 1);
-        final got = await svc.update(update);
-        expect(await svc.list(), equals(seedExerciseEntries));
+        final got = await repo.update(update);
+        expect(await repo.list(), equals(seedExerciseEntries));
         expect(got, equals(false));
       });
     });

@@ -1,13 +1,13 @@
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/exercise_set_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockExerciseService extends Mock implements ExerciseService {}
+class MockExerciseService extends Mock implements ExerciseRepository {}
 
-class MockWorkoutService extends Mock implements WorkoutService {}
+class MockWorkoutService extends Mock implements WorkoutRepository {}
 
-class MockExerciseEntryService extends Mock implements ExerciseEntryService {}
+class MockExerciseEntryService extends Mock implements ExerciseEntryRepository {}
 
-class MockExerciseSetService extends Mock implements ExerciseSetService {}
+class MockExerciseSetService extends Mock implements ExerciseSetRepository {}

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jacked/src/db/db.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/exercise_set_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/jacked_home_page.dart';
 import 'src/l10n/generated/app_localizations.dart';
 
@@ -12,26 +12,26 @@ void main() async {
   await JackedDb.database;
   runApp(
     Jacked(
-      exerciseSvc: await ExerciseService.instance,
-      exerciseEntrySvc: await ExerciseEntryService.instance,
-      exerciseSetSvc: await ExerciseSetService.instance,
-      workoutSvc: await WorkoutService.instance,
+      exerciseRepo: await ExerciseRepository.instance,
+      exerciseEntryRepo: await ExerciseEntryRepository.instance,
+      exerciseSetRepo: await ExerciseSetRepository.instance,
+      workoutRepo: await WorkoutRepository.instance,
     ),
   );
 }
 
 class Jacked extends StatelessWidget {
-  final ExerciseService exerciseSvc;
-  final ExerciseEntryService exerciseEntrySvc;
-  final ExerciseSetService exerciseSetSvc;
-  final WorkoutService workoutSvc;
+  final ExerciseRepository exerciseRepo;
+  final ExerciseEntryRepository exerciseEntryRepo;
+  final ExerciseSetRepository exerciseSetRepo;
+  final WorkoutRepository workoutRepo;
 
   const Jacked({
     super.key,
-    required this.exerciseSvc,
-    required this.exerciseEntrySvc,
-    required this.exerciseSetSvc,
-    required this.workoutSvc,
+    required this.exerciseRepo,
+    required this.exerciseEntryRepo,
+    required this.exerciseSetRepo,
+    required this.workoutRepo,
   });
 
   @override
@@ -46,10 +46,10 @@ class Jacked extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: JackedHomePage(
-        exerciseSvc: exerciseSvc,
-        exerciseEntrySvc: exerciseEntrySvc,
-        exerciseSetSvc: exerciseSetSvc,
-        workoutSvc: workoutSvc,
+        exerciseRepo: exerciseRepo,
+        exerciseEntryRepo: exerciseEntryRepo,
+        exerciseSetRepo: exerciseSetRepo,
+        workoutRepo: workoutRepo,
       ),
     );
   }

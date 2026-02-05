@@ -5,30 +5,30 @@ import 'package:jacked/src/db/models/exercise_entry.dart';
 import 'package:jacked/src/db/models/exercise_set.dart';
 import 'package:jacked/src/db/models/workout.dart';
 import 'package:jacked/src/db/seeds.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/exercise_set_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/pages/diary_page/workout_hydrator.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
 class DiaryPage extends StatelessWidget {
-  final WorkoutService workoutSvc;
-  final ExerciseService exerciseSvc;
-  final ExerciseEntryService exerciseEntrySvc;
-  final ExerciseSetService exerciseSetSvc;
+  final WorkoutRepository workoutRepo;
+  final ExerciseRepository exerciseRepo;
+  final ExerciseEntryRepository exerciseEntryRepo;
+  final ExerciseSetRepository exerciseSetRepo;
 
   const DiaryPage({
     super.key,
-    required this.exerciseSvc,
-    required this.exerciseEntrySvc,
-    required this.exerciseSetSvc,
-    required this.workoutSvc,
+    required this.exerciseRepo,
+    required this.exerciseEntryRepo,
+    required this.exerciseSetRepo,
+    required this.workoutRepo,
   });
 
   Future<List<Workout>> listWorkouts() async {
-    return workoutSvc.list(orderBy: 'startTime desc');
+    return workoutRepo.list(orderBy: 'startTime desc');
   }
 
   @override
@@ -49,9 +49,9 @@ class DiaryPage extends StatelessWidget {
             final workout = workouts[index];
             return DiaryEntry(
               workout: workout,
-              exerciseEntrySvc: exerciseEntrySvc,
-              exerciseSetSvc: exerciseSetSvc,
-              exerciseSvc: exerciseSvc,
+              exerciseEntryRepo: exerciseEntryRepo,
+              exerciseSetRepo: exerciseSetRepo,
+              exerciseRepo: exerciseRepo,
             );
           },
           itemCount: workouts.length,
@@ -99,16 +99,16 @@ List<ExercisePreview> getExercisePreviews(
 }
 
 class DiaryEntry extends StatelessWidget {
-  final ExerciseService exerciseSvc;
-  final ExerciseEntryService exerciseEntrySvc;
-  final ExerciseSetService exerciseSetSvc;
+  final ExerciseRepository exerciseRepo;
+  final ExerciseEntryRepository exerciseEntryRepo;
+  final ExerciseSetRepository exerciseSetRepo;
   final Workout workout;
 
   const DiaryEntry({
     super.key,
-    required this.exerciseSvc,
-    required this.exerciseEntrySvc,
-    required this.exerciseSetSvc,
+    required this.exerciseRepo,
+    required this.exerciseEntryRepo,
+    required this.exerciseSetRepo,
     required this.workout,
   });
 
@@ -117,9 +117,9 @@ class DiaryEntry extends StatelessWidget {
     final duration = workout.endTime?.difference(workout.startTime);
     final workoutHydrator = WorkoutHydrator(
       workout: workout,
-      exerciseEntrySvc: exerciseEntrySvc,
-      exerciseSetSvc: exerciseSetSvc,
-      exerciseSvc: exerciseSvc,
+      exerciseEntryRepo: exerciseEntryRepo,
+      exerciseSetRepo: exerciseSetRepo,
+      exerciseRepo: exerciseRepo,
     );
 
     return FutureBuilder(

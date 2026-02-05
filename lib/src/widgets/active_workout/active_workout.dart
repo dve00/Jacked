@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout_body.dart';
 import 'package:jacked/src/widgets/shared/widgets/draggable_header_sheet.dart';
 
@@ -9,9 +9,9 @@ class ActiveWorkout extends StatelessWidget {
   final DraggableScrollableController controller;
   final double sheetMinSnap;
   final double sheetMaxSnap;
-  final ExerciseService exerciseSvc;
-  final WorkoutService workoutSvc;
-  final ExerciseEntryService exerciseEntryService;
+  final ExerciseRepository exerciseRepo;
+  final WorkoutRepository workoutRepo;
+  final ExerciseEntryRepository exerciseEntryService;
   final VoidCallback onCancelWorkout;
   final VoidCallback onSaveWorkout;
 
@@ -22,8 +22,8 @@ class ActiveWorkout extends StatelessWidget {
     required this.controller,
     required this.sheetMinSnap,
     required this.sheetMaxSnap,
-    required this.exerciseSvc,
-    required this.workoutSvc,
+    required this.exerciseRepo,
+    required this.workoutRepo,
     required this.exerciseEntryService,
     required this.onCancelWorkout,
     required this.onSaveWorkout,
@@ -38,9 +38,9 @@ class ActiveWorkout extends StatelessWidget {
       sheetMaxSnap: sheetMaxSnap,
       headerBody: const MinimizedWorkoutHeader(),
       body: ActiveWorkoutBody(
-        exerciseSvc: exerciseSvc,
-        workoutSvc: workoutSvc,
-        exerciseEntrySvc: exerciseEntryService,
+        exerciseRepo: exerciseRepo,
+        workoutRepo: workoutRepo,
+        exerciseEntryRepo: exerciseEntryService,
         onCancelWorkout: () async {
           await sheetKey.currentState?.closeSheet();
           onCancelWorkout();

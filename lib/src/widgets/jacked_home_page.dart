@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jacked/src/db/services/exercise_entry_service.dart';
-import 'package:jacked/src/db/services/exercise_service.dart';
-import 'package:jacked/src/db/services/exercise_set_service.dart';
-import 'package:jacked/src/db/services/workout_service.dart';
+import 'package:jacked/src/db/repositories/exercise_entry_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_repository.dart';
+import 'package:jacked/src/db/repositories/exercise_set_repository.dart';
+import 'package:jacked/src/db/repositories/workout_repository.dart';
 import 'package:jacked/src/widgets/active_workout/active_workout.dart';
 import 'package:jacked/src/widgets/pages/diary_page/diary_page.dart';
 import 'package:jacked/src/widgets/pages/exercises_page.dart';
@@ -12,20 +12,20 @@ import 'package:jacked/src/widgets/pages/you_page.dart';
 import 'package:jacked/src/widgets/shared/build_context.dart';
 
 class JackedHomePage extends StatelessWidget {
-  final ExerciseService exerciseSvc;
-  final ExerciseEntryService exerciseEntrySvc;
-  final ExerciseSetService exerciseSetSvc;
-  final WorkoutService workoutSvc;
+  final ExerciseRepository exerciseRepo;
+  final ExerciseEntryRepository exerciseEntryRepo;
+  final ExerciseSetRepository exerciseSetRepo;
+  final WorkoutRepository workoutRepo;
 
   final navigationKey = GlobalKey<_JackedNavigationState>();
   final scrollController = DraggableScrollableController();
 
   JackedHomePage({
     super.key,
-    required this.exerciseSvc,
-    required this.exerciseEntrySvc,
-    required this.exerciseSetSvc,
-    required this.workoutSvc,
+    required this.exerciseRepo,
+    required this.exerciseEntryRepo,
+    required this.exerciseSetRepo,
+    required this.workoutRepo,
   });
 
   @override
@@ -38,10 +38,10 @@ class JackedHomePage extends StatelessWidget {
       pages: [
         const YouPage(),
         DiaryPage(
-          workoutSvc: workoutSvc,
-          exerciseEntrySvc: exerciseEntrySvc,
-          exerciseSetSvc: exerciseSetSvc,
-          exerciseSvc: exerciseSvc,
+          workoutRepo: workoutRepo,
+          exerciseEntryRepo: exerciseEntryRepo,
+          exerciseSetRepo: exerciseSetRepo,
+          exerciseRepo: exerciseRepo,
         ),
         WorkoutPage(
           onStartWorkout: () {
@@ -49,15 +49,15 @@ class JackedHomePage extends StatelessWidget {
           },
         ),
         const ProgramPage(),
-        ExercisesPage(exerciseSvc: exerciseSvc),
+        ExercisesPage(exerciseRepo: exerciseRepo),
       ],
       activeWorkout: ActiveWorkout(
         controller: scrollController,
         sheetMinSnap: sheetMinSnap,
         sheetMaxSnap: 1.0,
-        exerciseSvc: exerciseSvc,
-        workoutSvc: workoutSvc,
-        exerciseEntryService: exerciseEntrySvc,
+        exerciseRepo: exerciseRepo,
+        workoutRepo: workoutRepo,
+        exerciseEntryService: exerciseEntryRepo,
         onCancelWorkout: () async {
           await Future.delayed(const Duration(milliseconds: 300));
           navigationKey.currentState?.setWorkoutInactive();
