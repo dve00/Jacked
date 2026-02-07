@@ -10,7 +10,7 @@ import '../../../fixtures.dart';
 import '../../../test_config.dart';
 
 const seedExerciseEntries = <ExerciseEntry>[
-  ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1),
+  ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1, notes: 'some notes'),
   ExerciseEntry(id: 2, workoutId: 2, exerciseId: 2),
   ExerciseEntry(id: 3, workoutId: 3, exerciseId: 3),
   ExerciseEntry(id: 4, workoutId: 4, exerciseId: 4),

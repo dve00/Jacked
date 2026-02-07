@@ -266,13 +266,10 @@ List<TableRow> getSetRows(List<ExerciseSet>? sets, List<ExerciseSet>? previousSe
 }
 
 List<ExerciseEntryForm> getExerciseForms(List<ExerciseEntry>? entries) {
-  assert(entries != null, 'entries should not be null');
-
   final res = <ExerciseEntryForm>[];
   if (entries == null) return res;
-  for (final entry in entries) {
-    assert(entry.exercise != null, 'exercise should not be null');
 
+  for (final entry in entries) {
     res.add(ExerciseEntryForm(entry: entry));
   }
 
@@ -320,8 +317,6 @@ class ExerciseEntryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(entry.sets != null, 'sets should not be null');
-    assert(entry.sets!.isNotEmpty, 'sets should not be empty');
     return Form(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -341,6 +336,17 @@ class ExerciseEntryForm extends StatelessWidget {
                     ),
               ),
             ),
+            if (entry.notes != null)
+              TextFormField(
+                key: const Key('exercise-notes-field'),
+                controller: TextEditingController(text: entry.notes),
+                decoration: InputDecoration(
+                  hintText: '',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                enabled: false,
+                readOnly: true,
+              ),
             Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               columnWidths: const <int, TableColumnWidth>{

@@ -72,7 +72,7 @@ void main() {
 
     group('DiaryEntry', () {
       final startTime = DateTime(2025, 12, 4);
-      testWidgets('shows previous and opens details on tap', (tester) async {
+      testWidgets('shows previews and opens details on tap', (tester) async {
         // given - an exercise
         when(
           () => repos.exerciseRepo.get(1),
@@ -120,6 +120,58 @@ void main() {
 
         // then - a modal bottom sheet is opened
         expect(find.byType(DiaryEntryDetails), findsExactly(1));
+      });
+    });
+
+    group('DiaryEntryDetails', () {
+      testWidgets('shows no notes box when no note present', (tester) async {
+        // when - the widget is pumped without a note
+        await tester.pumpWidget(
+          makeTestApp(
+            DiaryEntryDetails(
+              workout: fixtureWorkout(
+                (w) => w.copyWith(
+                  exerciseEntries: <ExerciseEntry>[
+                    fixtureExerciseEntry(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        // then - a text field containing the notes is found
+        final field = find.byKey(const Key('exercise-notes-field'));
+        expect(field, findsNothing);
+      });
+      testWidgets('shows notes box only when notes present', (tester) async {
+        // when - the widget is pumped with a note
+        await tester.pumpWidget(
+          makeTestApp(
+            DiaryEntryDetails(
+              workout: fixtureWorkout(
+                (w) => w.copyWith(
+                  exerciseEntries: <ExerciseEntry>[
+                    fixtureExerciseEntry(
+                      (ee) => ee.copyWith(
+                        notes: 'some notes',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        // then - a text field containing the notes is found
+        final field = find.byKey(const Key('exercise-notes-field'));
+        expect(field, findsOneWidget);
+
+        final widget = tester.widget<TextFormField>(field);
+        expect(widget.initialValue, 'some notes');
       });
     });
   });

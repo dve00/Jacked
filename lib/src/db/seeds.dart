@@ -51,7 +51,7 @@ final seedWorkouts = <Workout>[
 ];
 
 const seedExerciseEntries = <ExerciseEntry>[
-  ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1),
+  ExerciseEntry(id: 1, workoutId: 1, exerciseId: 1, notes: 'Some notes'),
   ExerciseEntry(id: 2, workoutId: 1, exerciseId: 2),
   ExerciseEntry(id: 3, workoutId: 1, exerciseId: 3),
   ExerciseEntry(id: 4, workoutId: 2, exerciseId: 2),

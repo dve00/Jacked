@@ -67,6 +67,7 @@ Future<void> createTables(Database db) async {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       workoutId INTEGER NOT NULL,
       exerciseId INTEGER NOT NULL,
+      notes TEXT,
       UNIQUE(workoutId, exerciseId),
       FOREIGN KEY (workoutId) REFERENCES Workouts(id) ON DELETE CASCADE,
       FOREIGN KEY (exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE
@@ -126,13 +127,15 @@ Future<void> seedExerciseEntriesTable(Database db, List<ExerciseEntry> seedExerc
       '''
       INSERT OR IGNORE INTO ExerciseEntries (
         workoutId,
-        exerciseId
+        exerciseId,
+        notes
       )
-      VALUES (?, ?)
+      VALUES (?, ?, ?)
       ''',
       [
         exerciseEntry.workoutId,
         exerciseEntry.exerciseId,
+        exerciseEntry.notes,
       ],
     );
   }
